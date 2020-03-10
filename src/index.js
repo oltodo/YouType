@@ -1,15 +1,25 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-
 import { AppContainer } from "react-hot-loader";
+import { CssBaseline } from "@material-ui/core";
+import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import "./index.css";
+
+const theme = createMuiTheme({
+  palette: {
+    type: "dark"
+  }
+});
 
 const render = () => {
   ReactDOM.render(
     <AppContainer>
-      <App />
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <App />
+      </ThemeProvider>
     </AppContainer>,
     document.getElementById("root")
   );
