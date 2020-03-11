@@ -4,8 +4,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import get from "lodash/get";
 import find from "lodash/find";
 import inRange from "lodash/inRange";
+
+import WordPuzzle from "./components/WordPuzzle";
 import { parse } from "./utils/caption";
 
+import videoPath from "./data/video.mp4";
 import videoDataPath from "./data/video.json.raw";
 import captionsDataPath from "./data/en.xml.raw";
 
@@ -14,10 +17,13 @@ const useStyles = makeStyles({
     padding: 48,
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
+    maxWidth: 1280,
+    margin: [[0, "auto"]]
   },
   video: {
     boxShadow: [[0, 0, 10, "rgba(0, 0, 0, 0.5)"]],
+    marginBottom: 40,
     maxWidth: "100%",
     outline: 0
   }
@@ -69,6 +75,8 @@ function Playground() {
         return;
       }
 
+      video.disablePictureInPicture = true;
+
       video.ontimeupdate = () => {
         if (currentCaption) {
           if (
@@ -93,6 +101,7 @@ function Playground() {
   }
 
   const format = find(videoData.formats, ["itag", 22]);
+  format.url = videoPath;
 
   return (
     <div className={classes.root}>
@@ -102,9 +111,16 @@ function Playground() {
         src={format.url}
         type={format.mimmeType}
         controls
+        controlsList="nodownload nofullscreen noremoteplayback"
       />
 
-      <div>{currentCaption && currentCaption.text}</div>
+      {/* <div>{currentCaption && currentCaption.text}</div> */}
+      {currentCaption && (
+        <WordPuzzle
+          key={currentCaption.start}
+          text={currentCaption.text}
+        ></WordPuzzle>
+      )}
     </div>
   );
 }
