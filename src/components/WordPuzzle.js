@@ -19,14 +19,10 @@ const useStyles = makeStyles({
   },
   char: {
     height: 30,
+    fontSize: 18,
+    lineHeight: "30px",
     textAlign: "center",
-    marginRight: 2,
-
-    "& > span": {
-      fontSize: 18,
-      lineHeight: "30px",
-      opacity: 0.7
-    }
+    marginRight: 2
   },
   symbol: {},
   letter: {
@@ -75,7 +71,7 @@ function parseText(text) {
           }
 
           return {
-            id: currentId++,
+            index: currentId++,
             type: "letter",
             value: char,
             line: lineId,
@@ -126,7 +122,7 @@ function WordPuzzle({ text }) {
 
     if (currentLine === 0) return;
 
-    setCurrentChar(charsByLine[currentLine - 1][0].id);
+    setCurrentChar(charsByLine[currentLine - 1][0].index);
   };
 
   const moveDown = () => {
@@ -136,7 +132,7 @@ function WordPuzzle({ text }) {
 
     const nextLine = currentLine + 1;
 
-    setCurrentChar(charsByLine[nextLine][0].id);
+    setCurrentChar(charsByLine[nextLine][0].index);
   };
 
   const setChar = char => {
@@ -150,23 +146,35 @@ function WordPuzzle({ text }) {
   };
 
   const handleKeyPress = event => {
-    event.preventDefault();
-
     if (/^[a-zA-Z0-9]$/.test(event.key)) {
+      event.preventDefault();
       setChar(event.key);
       moveRight();
     }
 
     if (event.key === "Backspace") {
+      event.preventDefault();
       answers[currentChar].value = "";
       setAnswers([...answers]);
       moveLeft();
     }
 
-    if (event.key === "ArrowRight") moveRight();
-    if (event.key === "ArrowLeft") moveLeft();
-    if (event.key === "ArrowDown") moveDown();
-    if (event.key === "ArrowUp") moveUp();
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      moveRight();
+    }
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      moveLeft();
+    }
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      moveDown();
+    }
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      moveUp();
+    }
   };
 
   useEffect(() => {
@@ -177,29 +185,29 @@ function WordPuzzle({ text }) {
     };
   }, [currentChar]);
 
-  const renderChar = char => {
+  const renderChar = (char, charId) => {
     if (char.type === "symbol") {
       return (
-        <div className={classnames(classes.char, classes.symbol)} key={char.id}>
-          <span>{char.value}</span>
+        <div className={classnames(classes.char, classes.symbol)} key={charId}>
+          {char.value}
         </div>
       );
     }
 
-    const { value, solution } = answers[char.id];
+    const { value, solution } = answers[char.index];
     const isError = value.length && toLower(value) !== toLower(solution);
     const isSuccess = value.length && toLower(value) === toLower(solution);
 
     return (
       <div
-        key={char.id}
+        key={charId}
         className={classnames(classes.char, classes.letter, {
-          [classes.current]: currentChar === char.id,
+          [classes.current]: currentChar === char.index,
           [classes.success]: isSuccess,
           [classes.error]: isError
         })}
       >
-        <span>{value}</span>
+        {value}
       </div>
     );
   };
@@ -207,7 +215,7 @@ function WordPuzzle({ text }) {
   const renderWord = (word, wordId) => {
     return (
       <div className={classes.word} key={wordId}>
-        {word.map((char, index) => renderChar(char))}
+        {word.map((char, index) => renderChar(char, index))}
       </div>
     );
   };
