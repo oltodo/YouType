@@ -40,11 +40,11 @@ const useStyles = makeStyles({
     cursor: "pointer",
 
     "&:hover": {
-      background: "rgba(255,255,255,0.1)"
+      background: "rgba(255,255,255,0.05)"
     }
   },
   current: {
-    background: "rgba(255,255,255,0.1)"
+    background: "rgba(255,255,255,0.1) !important"
   },
   success: {
     borderBottomColor: "green"
@@ -129,6 +129,10 @@ function WordPuzzle({ text }, ref) {
     });
 
     setAnswers([...answers]);
+  };
+
+  const handleClickLetter = index => {
+    setCurrentChar(index);
   };
 
   useImperativeHandle(ref, () => ({
@@ -234,6 +238,9 @@ function WordPuzzle({ text }, ref) {
           [classes.success]: isSuccess,
           [classes.error]: isError
         })}
+        onClick={() => {
+          handleClickLetter(char.index);
+        }}
       >
         {value}
       </div>
