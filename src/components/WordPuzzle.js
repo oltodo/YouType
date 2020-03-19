@@ -1,9 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useState,
+  useImperativeHandle
+} from "react";
 import { makeStyles } from "@material-ui/core";
 import classnames from "classnames";
 import flattenDeep from "lodash/flattenDeep";
 import groupBy from "lodash/groupBy";
 import toLower from "lodash/toLower";
+import range from "lodash/range";
+import shuffle from "lodash/shuffle";
 
 const LETTER_WIDTH = 16;
 
@@ -97,7 +104,7 @@ function getDefaultAnswers(chars) {
     );
 }
 
-function WordPuzzle({ text }) {
+function WordPuzzle({ text }, ref) {
   const classes = useStyles();
 
   const chars = parseText(text);
@@ -109,81 +116,102 @@ function WordPuzzle({ text }) {
   const [answers, setAnswers] = useState(getDefaultAnswers(chars));
   const [currentChar, setCurrentChar] = useState(0);
 
-  const moveLeft = () => {
-    setCurrentChar(Math.max(0, currentChar - 1));
-  };
+  const handleGiveClue = () => {
+    const total = Math.ceil((answers.length * 10) / 100);
 
-  const moveRight = () => {
-    setCurrentChar(Math.min(answers.length - 1, currentChar + 1));
-  };
+    let indexes = range(0, answers.length);
+    indexes = indexes.filter(index => answers[index].value.length === 0);
+    indexes = shuffle(indexes);
+    indexes = indexes.slice(0, total);
 
-  const moveUp = () => {
-    const currentLine = chars[currentChar].line;
-
-    if (currentLine === 0) return;
-
-    setCurrentChar(charsByLine[currentLine - 1][0].index);
-  };
-
-  const moveDown = () => {
-    const currentLine = chars[currentChar].line;
-
-    if (currentLine === charsByLine.length - 1) return;
-
-    const nextLine = currentLine + 1;
-
-    setCurrentChar(charsByLine[nextLine][0].index);
-  };
-
-  const setChar = char => {
-    const { upper } = answers[currentChar];
-
-    answers[currentChar].value = upper
-      ? char.toUpperCase()
-      : char.toLowerCase();
+    indexes.forEach(index => {
+      answers[index].value = answers[index].solution;
+    });
 
     setAnswers([...answers]);
   };
 
-  const handleKeyPress = event => {
-    if (/^[a-zA-Z0-9]$/.test(event.key)) {
-      event.preventDefault();
-      setChar(event.key);
-      moveRight();
+  useImperativeHandle(ref, () => ({
+    giveClue() {
+      handleGiveClue();
     }
-
-    if (event.key === "Backspace") {
-      event.preventDefault();
-      answers[currentChar].value = "";
-      setAnswers([...answers]);
-      moveLeft();
-    }
-
-    if (event.key === "ArrowRight") {
-      event.preventDefault();
-      moveRight();
-    }
-    if (event.key === "ArrowLeft") {
-      event.preventDefault();
-      moveLeft();
-    }
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
-      moveDown();
-    }
-    if (event.key === "ArrowUp") {
-      event.preventDefault();
-      moveUp();
-    }
-  };
+  }));
 
   useEffect(() => {
+    const moveLeft = () => {
+      setCurrentChar(Math.max(0, currentChar - 1));
+    };
+
+    const moveRight = () => {
+      setCurrentChar(Math.min(answers.length - 1, currentChar + 1));
+    };
+
+    const moveUp = () => {
+      const currentLine = chars[currentChar].line;
+
+      if (currentLine === 0) return;
+
+      setCurrentChar(charsByLine[currentLine - 1][0].index);
+    };
+
+    const moveDown = () => {
+      const currentLine = chars[currentChar].line;
+
+      if (currentLine === charsByLine.length - 1) return;
+
+      const nextLine = currentLine + 1;
+
+      setCurrentChar(charsByLine[nextLine][0].index);
+    };
+
+    const setChar = char => {
+      const { upper } = answers[currentChar];
+
+      answers[currentChar].value = upper
+        ? char.toUpperCase()
+        : char.toLowerCase();
+
+      setAnswers([...answers]);
+    };
+
+    const handleKeyPress = event => {
+      if (/^[a-zA-Z0-9]$/.test(event.key)) {
+        event.preventDefault();
+        setChar(event.key);
+        moveRight();
+      }
+
+      if (event.key === "Backspace") {
+        event.preventDefault();
+        answers[currentChar].value = "";
+        setAnswers([...answers]);
+        moveLeft();
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        moveRight();
+      }
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        moveLeft();
+      }
+      if (event.key === "ArrowDown") {
+        event.preventDefault();
+        moveDown();
+      }
+      if (event.key === "ArrowUp") {
+        event.preventDefault();
+        moveUp();
+      }
+    };
+
     window.addEventListener("keydown", handleKeyPress);
 
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [currentChar]);
+  }, [answers, chars, charsByLine, currentChar]);
 
   const renderChar = (char, charId) => {
     if (char.type === "symbol") {
@@ -235,4 +263,4 @@ function WordPuzzle({ text }) {
   );
 }
 
-export default WordPuzzle;
+export default forwardRef(WordPuzzle);

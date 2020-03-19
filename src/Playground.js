@@ -9,6 +9,7 @@ import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+import KeyIcon from "@material-ui/icons/VpnKey";
 
 import Speed05Icon from "./components/icons/Speed05";
 import Speed07Icon from "./components/icons/Speed07";
@@ -43,7 +44,8 @@ const useStyles = makeStyles({
 
 function Playground() {
   const classes = useStyles();
-  const videoRef = useRef();
+  const videoRef = useRef(null);
+  const puzzleRef = useRef();
   const previousTimeRef = useRef(0);
 
   // const videoUrl = "https://www.youtube.com/watch?v=hLltkC-G5dY";
@@ -52,71 +54,8 @@ function Playground() {
   const [videoCaptions, setVideoCaptions] = useState(null);
   const [currentCaption, setCurrentCaption] = useState(null);
 
-  useEffect(() => {
-    if (!videoData) {
-      // const videoId = getVideoID(videoUrl);
-
-      // fetch(`http://localhost:8000/v/${videoId}`)
-      fetch(videoDataPath)
-        .then(res => res.json())
-        .then(data => {
-          const captionsList = get(
-            data,
-            "player_response.captions.playerCaptionsTracklistRenderer.captionTracks"
-          );
-          const captions = find(captionsList, ["languageCode", "en"]);
-
-          if (captions) {
-            // return fetch(caption.baseUrl)
-            return fetch(captionsDataPath)
-              .then(res => res.text())
-              .then(text => {
-                setVideoCaptions(parse(text));
-
-                return data;
-              });
-          }
-
-          return data;
-        })
-        .then(setVideoData);
-    }
-  }, [videoData]);
-
   const handlePlay = () => {
     videoRef.current.play();
-  };
-
-  const handleTimeUpdate = () => {
-    const video = videoRef.current;
-    const currentTime = video.currentTime;
-    const previousTime = previousTimeRef.current;
-
-    if (currentCaption) {
-      if (
-        inRange(currentTime, currentCaption.start, currentCaption.end - 0.01)
-      ) {
-        return;
-      }
-
-      if (
-        !video.paused &&
-        previousTime < currentCaption.end &&
-        currentTime >= currentCaption.end
-      ) {
-        video.pause();
-        video.currentTime = currentCaption.end - 0.01;
-        video.playbackRate = 1;
-        previousTimeRef.current = currentTime;
-        return;
-      }
-    }
-
-    const caption = find(videoCaptions, ({ start, end }) =>
-      inRange(currentTime, start, end)
-    );
-
-    setCurrentCaption(caption);
   };
 
   const handlePreviousCaption = () => {
@@ -164,50 +103,124 @@ function Playground() {
     handlePlay();
   };
 
-  const handleKeyPress = event => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      handlePlay();
-    }
-
-    if (event.key === " ") {
-      event.preventDefault();
-    }
-  };
-
   const handlePlayerFocus = () => {
     videoRef.current.blur();
   };
 
+  const handleGiveClue = () => {
+    puzzleRef.current.giveClue();
+  };
+
   useEffect(() => {
-    const video = videoRef.current;
+    if (!videoData) {
+      // const videoId = getVideoID(videoUrl);
+
+      // fetch(`http://localhost:8000/v/${videoId}`)
+      fetch(videoDataPath)
+        .then(res => res.json())
+        .then(data => {
+          const captionsList = get(
+            data,
+            "player_response.captions.playerCaptionsTracklistRenderer.captionTracks"
+          );
+          const captions = find(captionsList, ["languageCode", "en"]);
+
+          if (captions) {
+            // return fetch(caption.baseUrl)
+            return fetch(captionsDataPath)
+              .then(res => res.text())
+              .then(text => {
+                setVideoCaptions(parse(text));
+
+                return data;
+              });
+          }
+
+          return data;
+        })
+        .then(setVideoData);
+    }
+  }, [videoData]);
+
+  useEffect(() => {
+    const handleKeyPress = event => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        handlePlay();
+      }
+
+      if (event.key === " ") {
+        event.preventDefault();
+      }
+    };
 
     window.addEventListener("keydown", handleKeyPress);
 
-    if (video) {
-      // video.oncanplay = () => play();
-      video.ontimeupdate = () => handleTimeUpdate();
-      video.addEventListener("focus", handlePlayerFocus);
-    }
-
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
-
-      if (video) {
-        video.removeEventListener("focus", handlePlayerFocus);
-      }
     };
-  }, [videoData, currentCaption]);
+  }, []);
 
-  if (!videoData) {
-    return null;
-  }
+  useEffect(() => {
+    const video = videoRef.current;
 
-  const format = find(videoData.formats, ["itag", 22]);
-  format.url = videoPath;
+    video.addEventListener("focus", handlePlayerFocus);
 
-  return (
-    <div className={classes.root}>
+    return () => {
+      video.removeEventListener("focus", handlePlayerFocus);
+    };
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+
+    const handleTimeUpdate = () => {
+      const currentTime = video.currentTime;
+      const previousTime = previousTimeRef.current;
+
+      if (currentCaption) {
+        if (
+          inRange(currentTime, currentCaption.start, currentCaption.end - 0.01)
+        ) {
+          return;
+        }
+
+        if (
+          !video.paused &&
+          previousTime < currentCaption.end &&
+          currentTime >= currentCaption.end
+        ) {
+          video.pause();
+          video.currentTime = currentCaption.end - 0.01;
+          video.playbackRate = 1;
+          previousTimeRef.current = currentTime;
+          return;
+        }
+      }
+
+      const caption = find(videoCaptions, ({ start, end }) =>
+        inRange(currentTime, start, end)
+      );
+
+      setCurrentCaption(caption);
+    };
+
+    video.oncanplay = () => {
+      // video.currentTime = 202;
+      // handlePlay()
+    };
+    video.ontimeupdate = () => handleTimeUpdate();
+  }, [currentCaption, videoCaptions]);
+
+  const renderVideo = () => {
+    if (!videoData) {
+      return <video ref={videoRef} className={classes.video} />;
+    }
+
+    const format = find(videoData.formats, ["itag", 22]);
+    format.url = videoPath;
+
+    return (
       <video
         ref={videoRef}
         className={classes.video}
@@ -216,15 +229,16 @@ function Playground() {
         controls
         controlsList="nodownload nofullscreen noremoteplayback"
       />
+    );
+  };
 
+  return (
+    <div className={classes.root}>
+      {renderVideo()}
       {/* <div>{currentCaption && currentCaption.text}</div> */}
 
       <div className={classes.toolbar}>
-        <ButtonGroup
-          size="small"
-          variant="contained"
-          aria-label="outlined primary button group"
-        >
+        <ButtonGroup size="small" aria-label="outlined primary button group">
           <Tooltip title="Previous caption">
             <Button onClick={handlePreviousCaption}>
               <ArrowLeftIcon />
@@ -245,6 +259,11 @@ function Playground() {
               <Speed1Icon />
             </Button>
           </Tooltip>
+          <Tooltip title="Give a clue">
+            <Button onClick={() => handleGiveClue()}>
+              <KeyIcon />
+            </Button>
+          </Tooltip>
           <Tooltip title="Next caption">
             <Button onClick={handleNextCaption}>
               <ArrowRightIcon />
@@ -255,6 +274,7 @@ function Playground() {
 
       {currentCaption && (
         <WordPuzzle
+          ref={puzzleRef}
           key={currentCaption.start}
           text={currentCaption.text}
         ></WordPuzzle>
