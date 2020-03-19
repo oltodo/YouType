@@ -107,13 +107,10 @@ function getDefaultAnswers(chars) {
 function WordPuzzle({ text }, ref) {
   const classes = useStyles();
 
-  const chars = parseText(text);
-  const charsByLine = Object.values(groupBy(chars, "line"));
-  const charsByLineAndWord = charsByLine.map(line =>
-    Object.values(groupBy(line, "word"))
-  );
-
-  const [answers, setAnswers] = useState(getDefaultAnswers(chars));
+  const [chars, setChars] = useState([]);
+  const [charsByLine, setCharsByLine] = useState([]);
+  const [charsByLineAndWord, setCharsByLineAndWord] = useState([]);
+  const [answers, setAnswers] = useState([]);
   const [currentChar, setCurrentChar] = useState(0);
 
   const handleGiveClue = () => {
@@ -140,6 +137,19 @@ function WordPuzzle({ text }, ref) {
       handleGiveClue();
     }
   }));
+
+  useEffect(() => {
+    const chars$ = parseText(text);
+    const charsByLine$ = Object.values(groupBy(chars$, "line"));
+    const charsByLineAndWord$ = charsByLine$.map(line =>
+      Object.values(groupBy(line, "word"))
+    );
+
+    setCharsByLineAndWord(charsByLineAndWord$);
+    setCharsByLine(charsByLine$);
+    setChars(chars$);
+    setAnswers(getDefaultAnswers(chars$));
+  }, [text]);
 
   useEffect(() => {
     const moveLeft = () => {
