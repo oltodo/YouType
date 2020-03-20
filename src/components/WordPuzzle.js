@@ -11,8 +11,12 @@ import groupBy from "lodash/groupBy";
 import toLower from "lodash/toLower";
 import range from "lodash/range";
 import shuffle from "lodash/shuffle";
+import find from "lodash/find";
+import filter from "lodash/filter";
+import minBy from "lodash/minBy";
 
 const LETTER_WIDTH = 16;
+const SYMBOL_WIDTH = 4;
 
 const useStyles = makeStyles({
   line: {
@@ -57,36 +61,59 @@ const useStyles = makeStyles({
 function parseText(text) {
   let currentId = 0;
   let currentPosition = 0;
+  let maxWidth = 0;
 
-  return flattenDeep(
-    text.split("\n").map((line, lineId) => {
-      currentPosition = -LETTER_WIDTH * 2;
+  const lines = text.split("\n").map((line, lineId) => {
+    currentPosition = 0;
 
-      return line.split(" ").map((word, wordId) => {
+    return line.split(" ").reduce((acc, word, wordId) => {
+      if (wordId) {
         currentPosition += LETTER_WIDTH;
+      }
 
-        return Array.from(word).map((char, charId) => {
-          currentPosition += LETTER_WIDTH;
-
-          if (!/[a-zA-Z0-9]/.test(char)) {
-            return {
-              type: "symbol",
-              value: char,
-              line: lineId,
-              word: wordId
-            };
-          }
+      const words = Array.from(word).map(char => {
+        if (!/[a-zA-Z0-9]/.test(char)) {
+          currentPosition += SYMBOL_WIDTH;
+          maxWidth = Math.max(currentPosition, maxWidth);
 
           return {
-            index: currentId++,
-            type: "letter",
+            position: currentPosition - SYMBOL_WIDTH,
+            type: "symbol",
             value: char,
             line: lineId,
-            word: wordId,
-            position: currentPosition
+            word: wordId
           };
-        });
+        }
+
+        currentPosition += LETTER_WIDTH;
+        maxWidth = Math.max(currentPosition, maxWidth);
+
+        return {
+          position: currentPosition - LETTER_WIDTH,
+          index: currentId++,
+          type: "letter",
+          value: char,
+          line: lineId,
+          word: wordId
+        };
       });
+
+      return acc.concat(words);
+    }, []);
+  });
+
+  return flattenDeep(
+    lines.map(chars => {
+      const lastChar = chars[chars.length - 1];
+      const lineWidth =
+        lastChar.position +
+        (lastChar.type === "symbol" ? SYMBOL_WIDTH : LETTER_WIDTH);
+      const delta = (maxWidth - lineWidth) / 2;
+
+      return chars.map(char => ({
+        ...char,
+        position: char.position + delta
+      }));
     })
   );
 }
@@ -111,7 +138,7 @@ function WordPuzzle({ text }, ref) {
   const [charsByLine, setCharsByLine] = useState([]);
   const [charsByLineAndWord, setCharsByLineAndWord] = useState([]);
   const [answers, setAnswers] = useState([]);
-  const [currentChar, setCurrentChar] = useState(0);
+  const [currentCharIndex, setCurrentCharIndex] = useState(0);
 
   const handleGiveClue = () => {
     const total = Math.ceil((answers.length * 10) / 100);
@@ -129,7 +156,7 @@ function WordPuzzle({ text }, ref) {
   };
 
   const handleClickLetter = index => {
-    setCurrentChar(index);
+    setCurrentCharIndex(index);
   };
 
   useImperativeHandle(ref, () => ({
@@ -153,35 +180,47 @@ function WordPuzzle({ text }, ref) {
 
   useEffect(() => {
     const moveLeft = () => {
-      setCurrentChar(Math.max(0, currentChar - 1));
+      setCurrentCharIndex(Math.max(0, currentCharIndex - 1));
     };
 
     const moveRight = () => {
-      setCurrentChar(Math.min(answers.length - 1, currentChar + 1));
+      setCurrentCharIndex(Math.min(answers.length - 1, currentCharIndex + 1));
     };
 
     const moveUp = () => {
-      const currentLine = chars[currentChar].line;
+      const currentLine = find(chars, ["index", currentCharIndex]).line;
 
       if (currentLine === 0) return;
 
-      setCurrentChar(charsByLine[currentLine - 1][0].index);
+      const currentChar = find(chars, ["index", currentCharIndex]);
+      const nextLine = currentLine - 1;
+      const nextLineChars = filter(chars, { type: "letter", line: nextLine });
+      const nextChar = minBy(nextLineChars, char =>
+        Math.abs(char.position - currentChar.position)
+      );
+
+      setCurrentCharIndex(nextChar.index);
     };
 
     const moveDown = () => {
-      const currentLine = chars[currentChar].line;
+      const currentLine = find(chars, ["index", currentCharIndex]).line;
 
       if (currentLine === charsByLine.length - 1) return;
 
+      const currentChar = find(chars, ["index", currentCharIndex]);
       const nextLine = currentLine + 1;
+      const nextLineChars = filter(chars, { type: "letter", line: nextLine });
+      const nextChar = minBy(nextLineChars, char =>
+        Math.abs(char.position - currentChar.position)
+      );
 
-      setCurrentChar(charsByLine[nextLine][0].index);
+      setCurrentCharIndex(nextChar.index);
     };
 
     const setChar = char => {
-      const { upper } = answers[currentChar];
+      const { upper } = answers[currentCharIndex];
 
-      answers[currentChar].value = upper
+      answers[currentCharIndex].value = upper
         ? char.toUpperCase()
         : char.toLowerCase();
 
@@ -197,7 +236,7 @@ function WordPuzzle({ text }, ref) {
 
       if (event.key === "Backspace") {
         event.preventDefault();
-        answers[currentChar].value = "";
+        answers[currentCharIndex].value = "";
         setAnswers([...answers]);
         moveLeft();
       }
@@ -225,7 +264,7 @@ function WordPuzzle({ text }, ref) {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [answers, chars, charsByLine, currentChar]);
+  }, [answers, chars, charsByLine, currentCharIndex]);
 
   const renderChar = (char, charId) => {
     if (char.type === "symbol") {
@@ -244,7 +283,7 @@ function WordPuzzle({ text }, ref) {
       <div
         key={charId}
         className={classnames(classes.char, classes.letter, {
-          [classes.current]: currentChar === char.index,
+          [classes.current]: currentCharIndex === char.index,
           [classes.success]: isSuccess,
           [classes.error]: isError
         })}
