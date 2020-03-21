@@ -5,7 +5,6 @@ import * as serviceWorker from "./serviceWorker";
 import { AppContainer } from "react-hot-loader";
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
-import "./index.css";
 
 const theme = createMuiTheme({
   palette: {
