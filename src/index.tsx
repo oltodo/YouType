@@ -6,7 +6,7 @@ import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 import * as serviceWorker from "./serviceWorker";
-import configureStore from "./redux";
+import store from "./redux/store";
 import App from "./App";
 
 const theme = createMuiTheme({
@@ -14,8 +14,6 @@ const theme = createMuiTheme({
     type: "dark"
   }
 });
-
-const store = configureStore();
 
 const render = () => {
   ReactDOM.render(
