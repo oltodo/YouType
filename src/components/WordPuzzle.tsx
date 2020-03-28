@@ -15,18 +15,42 @@ import find from "lodash/find";
 import filter from "lodash/filter";
 import minBy from "lodash/minBy";
 
+type AbstractChar = {
+  type: string;
+  value: string;
+  line: number;
+  word: number;
+  position: number;
+};
+
+type Letter = AbstractChar & {
+  index: number;
+};
+
+type Symbol = AbstractChar & {};
+
+type Answer = {
+  value: string;
+  solution: string;
+  upper: boolean;
+};
+
+type WordPuzzleProps = {
+  text: string;
+};
+
 const LETTER_WIDTH = 16;
 const SYMBOL_WIDTH = 4;
 
 const useStyles = makeStyles({
+  root: {},
   line: {
     display: "flex",
     justifyContent: "center"
   },
   word: {
     display: "flex",
-    margin: [[0, 8]],
-    marginBottom: 8
+    margin: "0 8px 8px"
   },
   char: {
     height: 30,
@@ -58,30 +82,30 @@ const useStyles = makeStyles({
   }
 });
 
-function parseText(text) {
+function parseText(text: string): AbstractChar[] {
   let currentId = 0;
   let currentPosition = 0;
   let maxWidth = 0;
 
-  const lines = text.split("\n").map((line, lineId) => {
+  const lines: AbstractChar[][] = text.split("\n").map((line, lineId) => {
     currentPosition = 0;
 
-    return line.split(" ").reduce((acc, word, wordId) => {
+    return line.split(" ").reduce((acc: AbstractChar[], word, wordId) => {
       if (wordId) {
         currentPosition += LETTER_WIDTH;
       }
 
-      const words = Array.from(word).map(char => {
+      const words: AbstractChar[] = Array.from(word).map(char => {
         if (!/[a-zA-Z0-9]/.test(char)) {
           currentPosition += SYMBOL_WIDTH;
           maxWidth = Math.max(currentPosition, maxWidth);
 
           return {
-            position: currentPosition - SYMBOL_WIDTH,
             type: "symbol",
             value: char,
             line: lineId,
-            word: wordId
+            word: wordId,
+            position: currentPosition - SYMBOL_WIDTH
           };
         }
 
@@ -89,12 +113,12 @@ function parseText(text) {
         maxWidth = Math.max(currentPosition, maxWidth);
 
         return {
-          position: currentPosition - LETTER_WIDTH,
           index: currentId++,
           type: "letter",
           value: char,
           line: lineId,
-          word: wordId
+          word: wordId,
+          position: currentPosition - LETTER_WIDTH
         };
       });
 
@@ -118,7 +142,7 @@ function parseText(text) {
   );
 }
 
-function getDefaultAnswers(chars) {
+function getDefaultAnswers(chars: AbstractChar[]): Answer[] {
   return chars
     .filter(item => item.type === "letter")
     .map(
@@ -131,13 +155,15 @@ function getDefaultAnswers(chars) {
     );
 }
 
-function WordPuzzle({ text }, ref) {
+function WordPuzzle({ text }: WordPuzzleProps, ref: any) {
   const classes = useStyles();
 
-  const [chars, setChars] = useState([]);
-  const [charsByLine, setCharsByLine] = useState([]);
-  const [charsByLineAndWord, setCharsByLineAndWord] = useState([]);
-  const [answers, setAnswers] = useState([]);
+  const [chars, setChars] = useState<AbstractChar[]>([]);
+  const [charsByLine, setCharsByLine] = useState<AbstractChar[][]>([]);
+  const [charsByLineAndWord, setCharsByLineAndWord] = useState<
+    AbstractChar[][][]
+  >([]);
+  const [answers, setAnswers] = useState<Answer[]>([]);
   const [currentCharIndex, setCurrentCharIndex] = useState(0);
 
   const handleGiveClue = () => {
@@ -155,7 +181,7 @@ function WordPuzzle({ text }, ref) {
     setAnswers([...answers]);
   };
 
-  const handleClickLetter = index => {
+  const handleClickLetter = (index: number) => {
     setCurrentCharIndex(index);
   };
 
@@ -188,36 +214,48 @@ function WordPuzzle({ text }, ref) {
     };
 
     const moveUp = () => {
-      const currentLine = find(chars, ["index", currentCharIndex]).line;
+      const currentLine = find(chars, ["index", currentCharIndex])!.line;
 
       if (currentLine === 0) return;
 
-      const currentChar = find(chars, ["index", currentCharIndex]);
+      const currentChar: AbstractChar = find(chars, [
+        "index",
+        currentCharIndex
+      ])!;
       const nextLine = currentLine - 1;
-      const nextLineChars = filter(chars, { type: "letter", line: nextLine });
-      const nextChar = minBy(nextLineChars, char =>
+      const nextLineLetters = filter(chars, {
+        type: "letter",
+        line: nextLine
+      }) as Letter[];
+      const nextChar = minBy(nextLineLetters, (char: AbstractChar) =>
         Math.abs(char.position - currentChar.position)
-      );
+      ) as Letter;
 
       setCurrentCharIndex(nextChar.index);
     };
 
     const moveDown = () => {
-      const currentLine = find(chars, ["index", currentCharIndex]).line;
+      const currentLine = find(chars, ["index", currentCharIndex])!.line;
 
       if (currentLine === charsByLine.length - 1) return;
 
-      const currentChar = find(chars, ["index", currentCharIndex]);
+      const currentChar: AbstractChar = find(chars, [
+        "index",
+        currentCharIndex
+      ])!;
       const nextLine = currentLine + 1;
-      const nextLineChars = filter(chars, { type: "letter", line: nextLine });
-      const nextChar = minBy(nextLineChars, char =>
+      const nextLineLetters = filter(chars, {
+        type: "letter",
+        line: nextLine
+      }) as Letter[];
+      const nextChar = minBy(nextLineLetters, (char: AbstractChar) =>
         Math.abs(char.position - currentChar.position)
-      );
+      ) as Letter;
 
       setCurrentCharIndex(nextChar.index);
     };
 
-    const setChar = char => {
+    const setChar = (char: string) => {
       const { upper } = answers[currentCharIndex];
 
       answers[currentCharIndex].value = upper
@@ -227,7 +265,7 @@ function WordPuzzle({ text }, ref) {
       setAnswers([...answers]);
     };
 
-    const handleKeyPress = event => {
+    const handleKeyPress = (event: KeyboardEvent) => {
       if (/^[a-zA-Z0-9]$/.test(event.key)) {
         event.preventDefault();
         setChar(event.key);
@@ -266,16 +304,8 @@ function WordPuzzle({ text }, ref) {
     };
   }, [answers, chars, charsByLine, currentCharIndex]);
 
-  const renderChar = (char, charId) => {
-    if (char.type === "symbol") {
-      return (
-        <div className={classnames(classes.char, classes.symbol)} key={charId}>
-          {char.value}
-        </div>
-      );
-    }
-
-    const { value, solution } = answers[char.index];
+  const renderLetter = (letter: Letter, charId: string) => {
+    const { value, solution } = answers[letter.index];
     const isError = value.length && toLower(value) !== toLower(solution);
     const isSuccess = value.length && toLower(value) === toLower(solution);
 
@@ -283,12 +313,12 @@ function WordPuzzle({ text }, ref) {
       <div
         key={charId}
         className={classnames(classes.char, classes.letter, {
-          [classes.current]: currentCharIndex === char.index,
+          [classes.current]: currentCharIndex === letter.index,
           [classes.success]: isSuccess,
           [classes.error]: isError
         })}
         onClick={() => {
-          handleClickLetter(char.index);
+          handleClickLetter(letter.index);
         }}
       >
         {value}
@@ -296,18 +326,32 @@ function WordPuzzle({ text }, ref) {
     );
   };
 
-  const renderWord = (word, wordId) => {
+  const renderSymbol = (symbol: Symbol, charId: string) => {
     return (
-      <div className={classes.word} key={wordId}>
-        {word.map((char, index) => renderChar(char, index))}
+      <div className={classnames(classes.char, classes.symbol)} key={charId}>
+        {symbol.value}
       </div>
     );
   };
 
-  const renderLine = (line, lineId) => {
+  const renderWord = (word: AbstractChar[], wordId: string) => {
+    return (
+      <div className={classes.word} key={wordId}>
+        {word.map((char: AbstractChar, index) =>
+          char.type === "letter"
+            ? renderLetter(char as Letter, `${wordId}-${index}`)
+            : renderSymbol(char, `${wordId}-${index}`)
+        )}
+      </div>
+    );
+  };
+
+  const renderLine = (line: AbstractChar[][], lineId: number) => {
     return (
       <div className={classes.line} key={lineId}>
-        {line.map((word, index) => renderWord(word, `${lineId}-${index}`))}
+        {line.map((word: AbstractChar[], index) =>
+          renderWord(word, `${lineId}-${index}`)
+        )}
       </div>
     );
   };

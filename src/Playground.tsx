@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import get from "lodash/get";
 import find from "lodash/find";
 import inRange from "lodash/inRange";
-import { makeStyles } from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -22,37 +22,47 @@ import videoPath from "./data/video.mp4";
 import videoDataPath from "./data/video.json.raw";
 import captionsDataPath from "./data/en.xml.raw";
 
-const useStyles = makeStyles({
-  root: {
-    padding: 48,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    maxWidth: 1280,
-    margin: [[0, "auto"]]
-  },
-  video: {
-    boxShadow: [[0, 0, 10, "rgba(0, 0, 0, 0.5)"]],
-    marginBottom: 40,
-    maxWidth: "100%",
-    outline: 0
-  },
-  toolbar: {
-    marginBottom: 32
-  }
-});
+type Caption = {
+  index: number;
+  text: string;
+  start: number;
+  end: number;
+  duration: number;
+};
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      padding: 48,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      maxWidth: 1280,
+      margin: "0 auto"
+    },
+    video: {
+      boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
+      marginBottom: 40,
+      maxWidth: "100%",
+      outline: 0
+    },
+    toolbar: {
+      marginBottom: 32
+    }
+  })
+);
 
 function Playground() {
   const classes = useStyles();
-  const videoRef = useRef(null);
-  const puzzleRef = useRef();
+  const videoRef = useRef<HTMLVideoElement>(document.createElement("video"));
+  const puzzleRef = useRef<any>(null);
   const previousTimeRef = useRef(0);
 
   // const videoUrl = "https://www.youtube.com/watch?v=hLltkC-G5dY";
 
-  const [videoData, setVideoData] = useState(null);
-  const [videoCaptions, setVideoCaptions] = useState(null);
-  const [currentCaption, setCurrentCaption] = useState(null);
+  const [videoData, setVideoData] = useState<any>(null);
+  const [videoCaptions, setVideoCaptions] = useState<Caption[]>([]);
+  const [currentCaption, setCurrentCaption] = useState<Caption | null>(null);
 
   const handlePlay = () => {
     videoRef.current.play();
@@ -92,7 +102,7 @@ function Playground() {
     videoRef.current.currentTime = nextCaption.start + 0.01;
   };
 
-  const handleReplayCurrentCaption = speed => {
+  const handleReplayCurrentCaption = (speed: number) => {
     if (!currentCaption) {
       return;
     }
@@ -143,7 +153,7 @@ function Playground() {
   }, [videoData]);
 
   useEffect(() => {
-    const handleKeyPress = event => {
+    const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key === "Enter") {
         event.preventDefault();
         handlePlay();
@@ -200,7 +210,7 @@ function Playground() {
 
       const caption = find(videoCaptions, ({ start, end }) =>
         inRange(currentTime, start, end)
-      );
+      ) as Caption;
 
       setCurrentCaption(caption);
     };
@@ -213,7 +223,7 @@ function Playground() {
   }, [currentCaption, videoCaptions]);
 
   const renderVideo = () => {
-    if (!videoData) {
+    if (videoData === null) {
       return <video ref={videoRef} className={classes.video} />;
     }
 
@@ -224,11 +234,11 @@ function Playground() {
       <video
         ref={videoRef}
         className={classes.video}
-        src={format.url}
-        type={format.mimmeType}
         controls
         controlsList="nodownload nofullscreen noremoteplayback"
-      />
+      >
+        <source src={format.url} type={format.mimmeType} />
+      </video>
     );
   };
 
