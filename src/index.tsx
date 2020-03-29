@@ -7,7 +7,6 @@ import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 
 import * as serviceWorker from "./serviceWorker";
 import store from "./redux/store";
-import App from "./App";
 
 const theme = createMuiTheme({
   palette: {
@@ -16,6 +15,8 @@ const theme = createMuiTheme({
 });
 
 const render = () => {
+  const App = require("./App").default;
+
   ReactDOM.render(
     <AppContainer>
       <Provider store={store}>
@@ -36,8 +37,6 @@ serviceWorker.unregister();
 
 render();
 
-if (module.hot) {
-  module.hot.accept("./App", () => {
-    render();
-  });
+if (process.env.NODE_ENV === "development" && module.hot) {
+  module.hot.accept("./App", render);
 }

@@ -1,6 +1,8 @@
 import { combineReducers } from "@reduxjs/toolkit";
 
-const rootReducer = combineReducers({});
+import videoReducer from "./slices/video";
+
+const rootReducer = combineReducers({ video: videoReducer });
 
 export type RootState = ReturnType<typeof rootReducer>;
 

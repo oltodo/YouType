@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-// import { getVideoID } from "ytdl-core";
-import get from "lodash/get";
+import { useSelector, useDispatch } from "react-redux";
+import { videoFormat } from "ytdl-core";
 import find from "lodash/find";
 import inRange from "lodash/inRange";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
@@ -11,24 +11,14 @@ import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import KeyIcon from "@material-ui/icons/VpnKey";
 
+import { RootState } from "./redux/rootReducer";
+import { fetchVideo } from "./redux/slices/video";
+import { Caption } from "./utils/caption";
+import WordPuzzle from "./components/WordPuzzle";
+
 import Speed05Icon from "./components/icons/Speed05";
 import Speed07Icon from "./components/icons/Speed07";
 import Speed1Icon from "./components/icons/Speed1";
-
-import WordPuzzle from "./components/WordPuzzle";
-import { parse } from "./utils/caption";
-
-import videoPath from "./data/video.mp4";
-import videoDataPath from "./data/video.json.raw";
-import captionsDataPath from "./data/en.xml.raw";
-
-type Caption = {
-  index: number;
-  text: string;
-  start: number;
-  end: number;
-  duration: number;
-};
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,16 +42,16 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function Playground() {
+const Playground: React.FC = () => {
   const classes = useStyles();
   const videoRef = useRef<HTMLVideoElement>(document.createElement("video"));
   const puzzleRef = useRef<any>(null);
   const previousTimeRef = useRef(0);
 
-  // const videoUrl = "https://www.youtube.com/watch?v=hLltkC-G5dY";
+  const dispatch = useDispatch();
+  const video = useSelector((state: RootState) => state.video);
+  const { captions } = video;
 
-  const [videoData, setVideoData] = useState<any>(null);
-  const [videoCaptions, setVideoCaptions] = useState<Caption[]>([]);
   const [currentCaption, setCurrentCaption] = useState<Caption | null>(null);
 
   const handlePlay = () => {
@@ -72,7 +62,7 @@ function Playground() {
     videoRef.current.pause();
 
     if (!currentCaption) {
-      const nextCaption = videoCaptions[0];
+      const nextCaption = captions[0];
       videoRef.current.currentTime = nextCaption.start + 0.01;
       return;
     }
@@ -81,7 +71,7 @@ function Playground() {
       return;
     }
 
-    const nextCaption = videoCaptions[currentCaption.index - 1];
+    const nextCaption = captions[currentCaption.index - 1];
     videoRef.current.currentTime = nextCaption.start + 0.01;
   };
 
@@ -89,16 +79,16 @@ function Playground() {
     videoRef.current.pause();
 
     if (!currentCaption) {
-      const nextCaption = videoCaptions[0];
+      const nextCaption = captions[0];
       videoRef.current.currentTime = nextCaption.start + 0.01;
       return;
     }
 
-    if (currentCaption.index === videoCaptions.length - 1) {
+    if (currentCaption.index === captions.length - 1) {
       return;
     }
 
-    const nextCaption = videoCaptions[currentCaption.index + 1];
+    const nextCaption = captions[currentCaption.index + 1];
     videoRef.current.currentTime = nextCaption.start + 0.01;
   };
 
@@ -122,35 +112,8 @@ function Playground() {
   };
 
   useEffect(() => {
-    if (!videoData) {
-      // const videoId = getVideoID(videoUrl);
-
-      // fetch(`http://localhost:8000/v/${videoId}`)
-      fetch(videoDataPath)
-        .then(res => res.json())
-        .then(data => {
-          const captionsList = get(
-            data,
-            "player_response.captions.playerCaptionsTracklistRenderer.captionTracks"
-          );
-          const captions = find(captionsList, ["languageCode", "en"]);
-
-          if (captions) {
-            // return fetch(caption.baseUrl)
-            return fetch(captionsDataPath)
-              .then(res => res.text())
-              .then(text => {
-                setVideoCaptions(parse(text));
-
-                return data;
-              });
-          }
-
-          return data;
-        })
-        .then(setVideoData);
-    }
-  }, [videoData]);
+    dispatch(fetchVideo("https://www.youtube.com/watch?v=hLltkC-G5dY"));
+  }, [dispatch]);
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -208,7 +171,7 @@ function Playground() {
         }
       }
 
-      const caption = find(videoCaptions, ({ start, end }) =>
+      const caption = find(captions, ({ start, end }) =>
         inRange(currentTime, start, end)
       ) as Caption;
 
@@ -220,15 +183,14 @@ function Playground() {
       // handlePlay()
     };
     video.ontimeupdate = () => handleTimeUpdate();
-  }, [currentCaption, videoCaptions]);
+  }, [currentCaption, captions]);
 
   const renderVideo = () => {
-    if (videoData === null) {
-      return <video ref={videoRef} className={classes.video} />;
-    }
+    const format = find(video.formats, ["itag", 22]) as videoFormat;
 
-    const format = find(videoData.formats, ["itag", 22]);
-    format.url = videoPath;
+    if (!format) {
+      return null;
+    }
 
     return (
       <video
@@ -237,10 +199,14 @@ function Playground() {
         controls
         controlsList="nodownload nofullscreen noremoteplayback"
       >
-        <source src={format.url} type={format.mimmeType} />
+        <source src={format.url} type={format.mimeType} />
       </video>
     );
   };
+
+  if (video.error || video.isLoading) {
+    return null;
+  }
 
   return (
     <div className={classes.root}>
@@ -291,6 +257,6 @@ function Playground() {
       )}
     </div>
   );
-}
+};
 
 export default Playground;

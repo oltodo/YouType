@@ -1,6 +1,14 @@
 import decode from "parse-entities";
 
-export function parse(xml: string) {
+export type Caption = {
+  index: number;
+  text: string;
+  start: number;
+  end: number;
+  duration: number;
+};
+
+export function parse(xml: string): Caption[] {
   const parser = new DOMParser();
   const xmlDoc: Document = parser.parseFromString(xml, "text/xml");
   const caption = xmlDoc.children[0].children;
