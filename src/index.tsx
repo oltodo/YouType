@@ -10,8 +10,8 @@ import store from "./redux/store";
 
 const theme = createMuiTheme({
   palette: {
-    type: "dark"
-  }
+    type: "dark",
+  },
 });
 
 const render = () => {
@@ -26,7 +26,7 @@ const render = () => {
         </ThemeProvider>
       </Provider>
     </AppContainer>,
-    document.getElementById("root")
+    document.getElementById("root"),
   );
 };
 

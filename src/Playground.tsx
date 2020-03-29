@@ -28,18 +28,18 @@ const useStyles = makeStyles((theme: Theme) =>
       flexDirection: "column",
       alignItems: "center",
       maxWidth: 1280,
-      margin: "0 auto"
+      margin: "0 auto",
     },
     video: {
       boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
       marginBottom: 40,
       maxWidth: "100%",
-      outline: 0
+      outline: 0,
     },
     toolbar: {
-      marginBottom: 32
-    }
-  })
+      marginBottom: 32,
+    },
+  }),
 );
 
 const Playground: React.FC = () => {
@@ -152,17 +152,11 @@ const Playground: React.FC = () => {
       const previousTime = previousTimeRef.current;
 
       if (currentCaption) {
-        if (
-          inRange(currentTime, currentCaption.start, currentCaption.end - 0.01)
-        ) {
+        if (inRange(currentTime, currentCaption.start, currentCaption.end - 0.01)) {
           return;
         }
 
-        if (
-          !video.paused &&
-          previousTime < currentCaption.end &&
-          currentTime >= currentCaption.end
-        ) {
+        if (!video.paused && previousTime < currentCaption.end && currentTime >= currentCaption.end) {
           video.pause();
           video.currentTime = currentCaption.end - 0.01;
           video.playbackRate = 1;
@@ -171,9 +165,7 @@ const Playground: React.FC = () => {
         }
       }
 
-      const caption = find(captions, ({ start, end }) =>
-        inRange(currentTime, start, end)
-      ) as Caption;
+      const caption = find(captions, ({ start, end }) => inRange(currentTime, start, end)) as Caption;
 
       setCurrentCaption(caption);
     };
@@ -193,12 +185,7 @@ const Playground: React.FC = () => {
     }
 
     return (
-      <video
-        ref={videoRef}
-        className={classes.video}
-        controls
-        controlsList="nodownload nofullscreen noremoteplayback"
-      >
+      <video ref={videoRef} className={classes.video} controls controlsList="nodownload nofullscreen noremoteplayback">
         <source src={format.url} type={format.mimeType} />
       </video>
     );
@@ -249,11 +236,7 @@ const Playground: React.FC = () => {
       </div>
 
       {currentCaption && (
-        <WordPuzzle
-          ref={puzzleRef}
-          key={currentCaption.start}
-          text={currentCaption.text}
-        ></WordPuzzle>
+        <WordPuzzle ref={puzzleRef} key={currentCaption.start} text={currentCaption.text}></WordPuzzle>
       )}
     </div>
   );

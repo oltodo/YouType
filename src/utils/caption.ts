@@ -16,15 +16,12 @@ export function parse(xml: string): Caption[] {
   return Array.from(caption).map((curr: Element, index: number) => ({
     index,
     text: decode(curr.textContent || ""),
-    ...(function(start, duration) {
+    ...(function (start, duration) {
       return {
         start,
         end: start + duration,
-        duration
+        duration,
       };
-    })(
-      parseFloat(curr.getAttribute("start") || ""),
-      parseFloat(curr.getAttribute("dur") || "")
-    )
+    })(parseFloat(curr.getAttribute("start") || ""), parseFloat(curr.getAttribute("dur") || "")),
   }));
 }

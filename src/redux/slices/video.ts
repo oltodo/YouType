@@ -26,21 +26,18 @@ const initialState: VideoState = {
   formats: [],
   captions: [],
   isLoading: false,
-  error: null
+  error: null,
 };
 
 async function getVideo(url: string) {
   // const videoId = getVideoID(url);
 
   // fetch(`http://localhost:8000/v/${videoId}`)
-  return await fetch(videoDataUrl).then(res => res.json());
+  return await fetch(videoDataUrl).then((res) => res.json());
 }
 
 async function getCaptions(video: videoInfo) {
-  const captionsList = get(
-    video,
-    "player_response.captions.playerCaptionsTracklistRenderer.captionTracks"
-  );
+  const captionsList = get(video, "player_response.captions.playerCaptionsTracklistRenderer.captionTracks");
   const captions = find(captionsList, ["languageCode", "en"]);
 
   if (!captions) {
@@ -49,8 +46,8 @@ async function getCaptions(video: videoInfo) {
 
   // return fetch(caption.baseUrl)
   return fetch(captionsDataPath)
-    .then(res => res.text())
-    .then(data => parse(data));
+    .then((res) => res.text())
+    .then((data) => parse(data));
 }
 
 function startLoading(state: VideoState) {
@@ -69,32 +66,28 @@ const slice = createSlice({
     getVideoSuccess(state, { payload }: PayloadAction<VideoSuccessPayload>) {
       const {
         video: { formats },
-        captions
+        captions,
       } = payload;
 
       // TODO: don't override url
-      state.formats = formats.map(format => ({
+      state.formats = formats.map((format) => ({
         ...format,
-        url: videoUrl
+        url: videoUrl,
       }));
       state.captions = captions;
       state.isLoading = false;
       state.error = null;
     },
     getVideoStart: startLoading,
-    getVideoFailure: loadingFailed
-  }
+    getVideoFailure: loadingFailed,
+  },
 });
 
-export const {
-  getVideoStart,
-  getVideoSuccess,
-  getVideoFailure
-} = slice.actions;
+export const { getVideoStart, getVideoSuccess, getVideoFailure } = slice.actions;
 
 export default slice.reducer;
 
-export const fetchVideo = (url: string): AppThunk => async dispatch => {
+export const fetchVideo = (url: string): AppThunk => async (dispatch) => {
   try {
     dispatch(getVideoStart());
     const video = await getVideo(url);
