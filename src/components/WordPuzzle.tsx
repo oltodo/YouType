@@ -90,7 +90,7 @@ function parseText(text: string): AbstractChar[] {
         currentPosition += LETTER_WIDTH;
       }
 
-      const words: AbstractChar[] = Array.from(word).map((char) => {
+      const words: AbstractChar[] = Array.from(word).map(char => {
         if (!/[a-zA-Z0-9]/.test(char)) {
           currentPosition += SYMBOL_WIDTH;
           maxWidth = Math.max(currentPosition, maxWidth);
@@ -122,12 +122,12 @@ function parseText(text: string): AbstractChar[] {
   });
 
   return flattenDeep(
-    lines.map((chars) => {
+    lines.map(chars => {
       const lastChar = chars[chars.length - 1];
       const lineWidth = lastChar.position + (lastChar.type === "symbol" ? SYMBOL_WIDTH : LETTER_WIDTH);
       const delta = (maxWidth - lineWidth) / 2;
 
-      return chars.map((char) => ({
+      return chars.map(char => ({
         ...char,
         position: char.position + delta,
       }));
@@ -137,9 +137,9 @@ function parseText(text: string): AbstractChar[] {
 
 function getDefaultAnswers(chars: AbstractChar[]): Answer[] {
   return chars
-    .filter((item) => item.type === "letter")
+    .filter(item => item.type === "letter")
     .map(
-      (curr) => ({
+      curr => ({
         value: "",
         solution: curr.value,
         upper: curr.value.toUpperCase() === curr.value,
@@ -161,11 +161,11 @@ function WordPuzzle({ text }: WordPuzzleProps, ref: any) {
     const total = Math.ceil((answers.length * 10) / 100);
 
     let indexes = range(0, answers.length);
-    indexes = indexes.filter((index) => answers[index].value.length === 0);
+    indexes = indexes.filter(index => answers[index].value.length === 0);
     indexes = shuffle(indexes);
     indexes = indexes.slice(0, total);
 
-    indexes.forEach((index) => {
+    indexes.forEach(index => {
       answers[index].value = answers[index].solution;
     });
 
@@ -185,7 +185,7 @@ function WordPuzzle({ text }: WordPuzzleProps, ref: any) {
   useEffect(() => {
     const chars$ = parseText(text);
     const charsByLine$ = Object.values(groupBy(chars$, "line"));
-    const charsByLineAndWord$ = charsByLine$.map((line) => Object.values(groupBy(line, "word")));
+    const charsByLineAndWord$ = charsByLine$.map(line => Object.values(groupBy(line, "word")));
 
     setCharsByLineAndWord(charsByLineAndWord$);
     setCharsByLine(charsByLine$);

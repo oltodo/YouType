@@ -33,7 +33,7 @@ async function getVideo(url: string) {
   // const videoId = getVideoID(url);
 
   // fetch(`http://localhost:8000/v/${videoId}`)
-  return await fetch(videoDataUrl).then((res) => res.json());
+  return await fetch(videoDataUrl).then(res => res.json());
 }
 
 async function getCaptions(video: videoInfo) {
@@ -46,8 +46,8 @@ async function getCaptions(video: videoInfo) {
 
   // return fetch(caption.baseUrl)
   return fetch(captionsDataPath)
-    .then((res) => res.text())
-    .then((data) => parse(data));
+    .then(res => res.text())
+    .then(data => parse(data));
 }
 
 function startLoading(state: VideoState) {
@@ -70,7 +70,7 @@ const slice = createSlice({
       } = payload;
 
       // TODO: don't override url
-      state.formats = formats.map((format) => ({
+      state.formats = formats.map(format => ({
         ...format,
         url: videoUrl,
       }));
@@ -87,7 +87,7 @@ export const { getVideoStart, getVideoSuccess, getVideoFailure } = slice.actions
 
 export default slice.reducer;
 
-export const fetchVideo = (url: string): AppThunk => async (dispatch) => {
+export const fetchVideo = (url: string): AppThunk => async dispatch => {
   try {
     dispatch(getVideoStart());
     const video = await getVideo(url);
