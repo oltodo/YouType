@@ -13,6 +13,7 @@ import KeyIcon from "@material-ui/icons/VpnKey";
 
 import { RootState } from "./redux/rootReducer";
 import { fetchVideo } from "./redux/slices/video";
+import { initializeGame, setAnswer, deleteAnswer, setCurrentIndex, giveClue } from "./redux/slices/game";
 import { Caption } from "./utils/caption";
 import WordPuzzle from "./components/WordPuzzle";
 
@@ -45,12 +46,12 @@ const useStyles = makeStyles((theme: Theme) =>
 const Playground: React.FC = () => {
   const classes = useStyles();
   const videoRef = useRef<HTMLVideoElement>(document.createElement("video"));
-  const puzzleRef = useRef<any>(null);
   const previousTimeRef = useRef(0);
 
   const dispatch = useDispatch();
-  const video = useSelector((state: RootState) => state.video);
+  const [video, game] = useSelector((state: RootState) => [state.video, state.game]);
   const { captions } = video;
+  const { sequences } = game;
 
   const [currentCaption, setCurrentCaption] = useState<Caption | null>(null);
 
@@ -108,12 +109,20 @@ const Playground: React.FC = () => {
   };
 
   const handleGiveClue = () => {
-    puzzleRef.current.giveClue();
+    if (currentCaption) {
+      dispatch(giveClue(currentCaption.index));
+    }
   };
 
   useEffect(() => {
     dispatch(fetchVideo("https://www.youtube.com/watch?v=hLltkC-G5dY"));
   }, [dispatch]);
+
+  useEffect(() => {
+    if (captions) {
+      dispatch(initializeGame(captions));
+    }
+  }, [captions, dispatch]);
 
   useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
@@ -135,20 +144,20 @@ const Playground: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const video = videoRef.current;
+    const videoElt = videoRef.current;
 
-    video.addEventListener("focus", handlePlayerFocus);
+    videoElt.addEventListener("focus", handlePlayerFocus);
 
     return () => {
-      video.removeEventListener("focus", handlePlayerFocus);
+      videoElt.removeEventListener("focus", handlePlayerFocus);
     };
   }, []);
 
   useEffect(() => {
-    const video = videoRef.current;
+    const videoElt = videoRef.current;
 
     const handleTimeUpdate = () => {
-      const currentTime = video.currentTime;
+      const currentTime = videoElt.currentTime;
       const previousTime = previousTimeRef.current;
 
       if (currentCaption) {
@@ -156,10 +165,10 @@ const Playground: React.FC = () => {
           return;
         }
 
-        if (!video.paused && previousTime < currentCaption.end && currentTime >= currentCaption.end) {
-          video.pause();
-          video.currentTime = currentCaption.end - 0.01;
-          video.playbackRate = 1;
+        if (!videoElt.paused && previousTime < currentCaption.end && currentTime >= currentCaption.end) {
+          videoElt.pause();
+          videoElt.currentTime = currentCaption.end - 0.01;
+          videoElt.playbackRate = 1;
           previousTimeRef.current = currentTime;
           return;
         }
@@ -170,11 +179,11 @@ const Playground: React.FC = () => {
       setCurrentCaption(caption);
     };
 
-    video.oncanplay = () => {
+    videoElt.oncanplay = () => {
       // video.currentTime = 202;
       // handlePlay()
     };
-    video.ontimeupdate = () => handleTimeUpdate();
+    videoElt.ontimeupdate = () => handleTimeUpdate();
   }, [currentCaption, captions]);
 
   const renderVideo = () => {
@@ -188,6 +197,36 @@ const Playground: React.FC = () => {
       <video ref={videoRef} className={classes.video} controls controlsList="nodownload nofullscreen noremoteplayback">
         <source src={format.url} type={format.mimeType} />
       </video>
+    );
+  };
+
+  const renderPuzzle = () => {
+    if (!currentCaption) {
+      return null;
+    }
+
+    const sequence = find(sequences, ["index", currentCaption.index]);
+
+    if (!sequence) {
+      return null;
+    }
+
+    return (
+      <WordPuzzle
+        key={currentCaption.start}
+        sequence={sequence}
+        onMoved={index => {
+          dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index }));
+        }}
+        onTyped={(index, value) => {
+          dispatch(setAnswer({ sequenceIndex: sequence.index, index, value }));
+          dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index: index + 1 }));
+        }}
+        onRemoved={index => {
+          dispatch(deleteAnswer({ sequenceIndex: sequence.index, index }));
+          dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index: index - 1 }));
+        }}
+      ></WordPuzzle>
     );
   };
 
@@ -235,9 +274,7 @@ const Playground: React.FC = () => {
         </ButtonGroup>
       </div>
 
-      {currentCaption && (
-        <WordPuzzle ref={puzzleRef} key={currentCaption.start} text={currentCaption.text}></WordPuzzle>
-      )}
+      {renderPuzzle()}
     </div>
   );
 };

@@ -1,41 +1,17 @@
-import React, { forwardRef, useEffect, useState, useImperativeHandle } from "react";
+import React, { useEffect, useState, useRef, createRef, RefObject } from "react";
 import { makeStyles } from "@material-ui/core";
 import classnames from "classnames";
-import flattenDeep from "lodash/flattenDeep";
 import groupBy from "lodash/groupBy";
 import toLower from "lodash/toLower";
-import range from "lodash/range";
-import shuffle from "lodash/shuffle";
-import find from "lodash/find";
-import filter from "lodash/filter";
-import minBy from "lodash/minBy";
-
-type AbstractChar = {
-  type: string;
-  value: string;
-  line: number;
-  word: number;
-  position: number;
-};
-
-type Letter = AbstractChar & {
-  index: number;
-};
-
-type Symbol = AbstractChar & {};
-
-type Answer = {
-  value: string;
-  solution: string;
-  upper: boolean;
-};
+import { Sequence } from "../redux/slices/game";
+import { AbstractChar, Letter, Symbol } from "../utils/game";
 
 type WordPuzzleProps = {
-  text: string;
+  sequence: Sequence;
+  onMoved: (index: number) => void;
+  onTyped: (index: number, value: string) => void;
+  onRemoved: (index: number) => void;
 };
-
-const LETTER_WIDTH = 16;
-const SYMBOL_WIDTH = 4;
 
 const useStyles = makeStyles({
   root: {},
@@ -56,8 +32,8 @@ const useStyles = makeStyles({
   },
   symbol: {},
   letter: {
-    minWidth: LETTER_WIDTH,
-    maxWidth: LETTER_WIDTH,
+    minWidth: 16,
+    maxWidth: 16,
     borderBottom: "solid 1px rgba(255,255,255,0.3)",
     transition: "background .3s",
     cursor: "pointer",
@@ -77,187 +53,94 @@ const useStyles = makeStyles({
   },
 });
 
-function parseText(text: string): AbstractChar[] {
-  let currentId = 0;
-  let currentPosition = 0;
-  let maxWidth = 0;
+function findNearerIndex(refs: RefObject<RefObject<any>[]>, currentIndex: number, position: "above" | "below"): number {
+  if (refs.current === null) {
+    return -1;
+  }
 
-  const lines: AbstractChar[][] = text.split("\n").map((line, lineId) => {
-    currentPosition = 0;
+  const { current } = refs.current[currentIndex];
+  const currentOffset = current.getBoundingClientRect();
 
-    return line.split(" ").reduce((acc: AbstractChar[], word, wordId) => {
-      if (wordId) {
-        currentPosition += LETTER_WIDTH;
+  return refs.current.reduce(
+    (acc, ref, index) => {
+      const offset = ref.current.getBoundingClientRect();
+
+      if (
+        (position === "above" && currentOffset.y <= offset.y) ||
+        (position === "below" && currentOffset.y >= offset.y)
+      ) {
+        return acc;
       }
 
-      const words: AbstractChar[] = Array.from(word).map(char => {
-        if (!/[a-zA-Z0-9]/.test(char)) {
-          currentPosition += SYMBOL_WIDTH;
-          maxWidth = Math.max(currentPosition, maxWidth);
+      const distance = Math.abs(
+        Math.sqrt(Math.pow(offset.x - currentOffset.x, 2) + Math.pow(offset.y - currentOffset.y, 2)),
+      );
 
-          return {
-            type: "symbol",
-            value: char,
-            line: lineId,
-            word: wordId,
-            position: currentPosition - SYMBOL_WIDTH,
-          };
-        }
+      if (distance > acc[1]) {
+        return acc;
+      }
 
-        currentPosition += LETTER_WIDTH;
-        maxWidth = Math.max(currentPosition, maxWidth);
-
-        return {
-          index: currentId++,
-          type: "letter",
-          value: char,
-          line: lineId,
-          word: wordId,
-          position: currentPosition - LETTER_WIDTH,
-        };
-      });
-
-      return acc.concat(words);
-    }, []);
-  });
-
-  return flattenDeep(
-    lines.map(chars => {
-      const lastChar = chars[chars.length - 1];
-      const lineWidth = lastChar.position + (lastChar.type === "symbol" ? SYMBOL_WIDTH : LETTER_WIDTH);
-      const delta = (maxWidth - lineWidth) / 2;
-
-      return chars.map(char => ({
-        ...char,
-        position: char.position + delta,
-      }));
-    }),
-  );
+      return [index, distance];
+    },
+    [-1, Infinity],
+  )[0];
 }
 
-function getDefaultAnswers(chars: AbstractChar[]): Answer[] {
-  return chars
-    .filter(item => item.type === "letter")
-    .map(
-      curr => ({
-        value: "",
-        solution: curr.value,
-        upper: curr.value.toUpperCase() === curr.value,
-      }),
-      [],
-    );
-}
-
-function WordPuzzle({ text }: WordPuzzleProps, ref: any) {
+function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, ref: any) {
   const classes = useStyles();
 
-  const [chars, setChars] = useState<AbstractChar[]>([]);
-  const [charsByLine, setCharsByLine] = useState<AbstractChar[][]>([]);
+  const { chars, answers, currentIndex } = sequence;
+
   const [charsByLineAndWord, setCharsByLineAndWord] = useState<AbstractChar[][][]>([]);
-  const [answers, setAnswers] = useState<Answer[]>([]);
-  const [currentCharIndex, setCurrentCharIndex] = useState(0);
 
-  const handleGiveClue = () => {
-    const total = Math.ceil((answers.length * 10) / 100);
-
-    let indexes = range(0, answers.length);
-    indexes = indexes.filter(index => answers[index].value.length === 0);
-    indexes = shuffle(indexes);
-    indexes = indexes.slice(0, total);
-
-    indexes.forEach(index => {
-      answers[index].value = answers[index].solution;
-    });
-
-    setAnswers([...answers]);
-  };
+  const charRefs: RefObject<RefObject<any>[]> = useRef(answers.map(() => createRef()));
 
   const handleClickLetter = (index: number) => {
-    setCurrentCharIndex(index);
+    onMoved(index);
   };
 
-  useImperativeHandle(ref, () => ({
-    giveClue() {
-      handleGiveClue();
-    },
-  }));
-
   useEffect(() => {
-    const chars$ = parseText(text);
-    const charsByLine$ = Object.values(groupBy(chars$, "line"));
-    const charsByLineAndWord$ = charsByLine$.map(line => Object.values(groupBy(line, "word")));
-
-    setCharsByLineAndWord(charsByLineAndWord$);
-    setCharsByLine(charsByLine$);
-    setChars(chars$);
-    setAnswers(getDefaultAnswers(chars$));
-  }, [text]);
+    setCharsByLineAndWord(Object.values(groupBy(chars, "line")).map(line => Object.values(groupBy(line, "word"))));
+  }, [chars]);
 
   useEffect(() => {
     const moveLeft = () => {
-      setCurrentCharIndex(Math.max(0, currentCharIndex - 1));
+      onMoved(Math.max(0, currentIndex - 1));
     };
 
     const moveRight = () => {
-      setCurrentCharIndex(Math.min(answers.length - 1, currentCharIndex + 1));
+      onMoved(Math.min(answers.length - 1, currentIndex + 1));
     };
 
     const moveUp = () => {
-      const currentLine = find(chars, ["index", currentCharIndex])!.line;
+      const nextIndex = findNearerIndex(charRefs, currentIndex, "above");
 
-      if (currentLine === 0) return;
-
-      const currentChar: AbstractChar = find(chars, ["index", currentCharIndex])!;
-      const nextLine = currentLine - 1;
-      const nextLineLetters = filter(chars, {
-        type: "letter",
-        line: nextLine,
-      }) as Letter[];
-      const nextChar = minBy(nextLineLetters, (char: AbstractChar) =>
-        Math.abs(char.position - currentChar.position),
-      ) as Letter;
-
-      setCurrentCharIndex(nextChar.index);
+      if (nextIndex >= 0) {
+        onMoved(nextIndex);
+      }
     };
 
     const moveDown = () => {
-      const currentLine = find(chars, ["index", currentCharIndex])!.line;
+      const nextIndex = findNearerIndex(charRefs, currentIndex, "below");
 
-      if (currentLine === charsByLine.length - 1) return;
-
-      const currentChar: AbstractChar = find(chars, ["index", currentCharIndex])!;
-      const nextLine = currentLine + 1;
-      const nextLineLetters = filter(chars, {
-        type: "letter",
-        line: nextLine,
-      }) as Letter[];
-      const nextChar = minBy(nextLineLetters, (char: AbstractChar) =>
-        Math.abs(char.position - currentChar.position),
-      ) as Letter;
-
-      setCurrentCharIndex(nextChar.index);
-    };
-
-    const setChar = (char: string) => {
-      const { upper } = answers[currentCharIndex];
-
-      answers[currentCharIndex].value = upper ? char.toUpperCase() : char.toLowerCase();
-
-      setAnswers([...answers]);
+      if (nextIndex >= 0) {
+        onMoved(nextIndex);
+      }
     };
 
     const handleKeyPress = (event: KeyboardEvent) => {
+      if (event.altKey || event.ctrlKey || event.metaKey) {
+        return;
+      }
+
       if (/^[a-zA-Z0-9]$/.test(event.key)) {
         event.preventDefault();
-        setChar(event.key);
-        moveRight();
+        onTyped(currentIndex, event.key);
       }
 
       if (event.key === "Backspace") {
         event.preventDefault();
-        answers[currentCharIndex].value = "";
-        setAnswers([...answers]);
-        moveLeft();
+        onRemoved(currentIndex);
       }
 
       if (event.key === "ArrowRight") {
@@ -283,7 +166,7 @@ function WordPuzzle({ text }: WordPuzzleProps, ref: any) {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [answers, chars, charsByLine, currentCharIndex]);
+  }, [answers.length, currentIndex, onMoved, onRemoved, onTyped]);
 
   const renderLetter = (letter: Letter, charId: string) => {
     const { value, solution } = answers[letter.index];
@@ -293,8 +176,9 @@ function WordPuzzle({ text }: WordPuzzleProps, ref: any) {
     return (
       <div
         key={charId}
+        ref={charRefs.current![letter.index]}
         className={classnames(classes.char, classes.letter, {
-          [classes.current]: currentCharIndex === letter.index,
+          [classes.current]: currentIndex === letter.index,
           [classes.success]: isSuccess,
           [classes.error]: isError,
         })}
@@ -338,4 +222,4 @@ function WordPuzzle({ text }: WordPuzzleProps, ref: any) {
   return <div className={classes.root}>{charsByLineAndWord.map((line, index) => renderLine(line, index))}</div>;
 }
 
-export default forwardRef(WordPuzzle);
+export default WordPuzzle;
