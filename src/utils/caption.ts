@@ -1,12 +1,12 @@
 import decode from "parse-entities";
 
-export type Caption = {
+export interface Caption {
   index: number;
   text: string;
   start: number;
   end: number;
   duration: number;
-};
+}
 
 export function parse(xml: string): Caption[] {
   const parser = new DOMParser();

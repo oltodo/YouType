@@ -1,22 +1,22 @@
-export type AbstractChar = {
+export interface AbstractChar {
   type: string;
   value: string;
   line: number;
   word: number;
   position: number;
-};
+}
 
-export type Letter = AbstractChar & {
+export interface Letter extends AbstractChar {
   index: number;
-};
+}
 
-export type Symbol = AbstractChar & {};
+export interface Symbol extends AbstractChar {}
 
-export type Answer = {
+export interface Answer {
   value: string;
   solution: string;
   upper: boolean;
-};
+}
 
 function isSymbol(char: string) {
   return !/[a-zA-Z0-9]/.test(char);

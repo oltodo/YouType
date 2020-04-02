@@ -6,12 +6,12 @@ import toLower from "lodash/toLower";
 import { Sequence } from "../redux/slices/game";
 import { AbstractChar, Letter, Symbol } from "../utils/game";
 
-type WordPuzzleProps = {
+interface WordPuzzleProps {
   sequence: Sequence;
   onMoved: (index: number) => void;
   onTyped: (index: number, value: string) => void;
   onRemoved: (index: number) => void;
-};
+}
 
 const useStyles = makeStyles({
   root: {},
