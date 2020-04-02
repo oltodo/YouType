@@ -3,12 +3,12 @@ import { videoInfo, videoFormat } from "ytdl-core";
 import get from "lodash/get";
 import find from "lodash/find";
 
-import { AppThunk } from "../store";
-import { parse, Caption } from "../../utils/caption";
+import { AppThunk } from "redux/store";
+import { parse, Caption } from "utils/caption";
 
-import videoDataUrl from "../../data/video.json.raw";
-import videoUrl from "../../data/video.mp4";
-import captionsDataPath from "../../data/en.xml.raw";
+import videoDataUrl from "data/video.json.raw";
+import videoUrl from "data/video.mp4";
+import captionsDataPath from "data/en.xml.raw";
 
 interface VideoState {
   formats: videoFormat[];

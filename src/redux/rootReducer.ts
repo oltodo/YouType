@@ -1,7 +1,7 @@
 import { combineReducers } from "@reduxjs/toolkit";
 
-import videoReducer from "./slices/video";
-import gameReducer from "./slices/game";
+import videoReducer from "redux/slices/video";
+import gameReducer from "redux/slices/game";
 
 const rootReducer = combineReducers({
   video: videoReducer,

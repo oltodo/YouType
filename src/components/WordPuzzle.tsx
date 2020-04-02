@@ -3,8 +3,8 @@ import { makeStyles } from "@material-ui/core";
 import classnames from "classnames";
 import groupBy from "lodash/groupBy";
 import toLower from "lodash/toLower";
-import { Sequence } from "../redux/slices/game";
-import { AbstractChar, Letter, Symbol } from "../utils/game";
+import { Sequence } from "redux/slices/game";
+import { AbstractChar, Letter, Symbol } from "utils/game";
 
 interface WordPuzzleProps {
   sequence: Sequence;

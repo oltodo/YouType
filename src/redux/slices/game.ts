@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import shuffle from "lodash/shuffle";
 import range from "lodash/range";
-import { AppThunk } from "../store";
-import { Caption } from "../../utils/caption";
-import { parseCaption, getDefaultAnswers, Letter, Symbol, Answer } from "../../utils/game";
+import { AppThunk } from "redux/store";
+import { Caption } from "utils/caption";
+import { parseCaption, getDefaultAnswers, Letter, Symbol, Answer } from "utils/game";
 
 export interface Sequence extends Caption {
   chars: (Letter | Symbol)[];

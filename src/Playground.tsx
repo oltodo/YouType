@@ -11,15 +11,15 @@ import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import KeyIcon from "@material-ui/icons/VpnKey";
 
-import { RootState } from "./redux/rootReducer";
-import { fetchVideo } from "./redux/slices/video";
-import { initializeGame, setAnswer, deleteAnswer, setCurrentIndex, giveClue } from "./redux/slices/game";
-import { Caption } from "./utils/caption";
-import WordPuzzle from "./components/WordPuzzle";
+import { RootState } from "redux/rootReducer";
+import { fetchVideo } from "redux/slices/video";
+import { initializeGame, setAnswer, deleteAnswer, setCurrentIndex, giveClue } from "redux/slices/game";
+import { Caption } from "utils/caption";
+import WordPuzzle from "components/WordPuzzle";
 
-import Speed05Icon from "./components/icons/Speed05";
-import Speed07Icon from "./components/icons/Speed07";
-import Speed1Icon from "./components/icons/Speed1";
+import Speed05Icon from "components/icons/Speed05";
+import Speed07Icon from "components/icons/Speed07";
+import Speed1Icon from "components/icons/Speed1";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

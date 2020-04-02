@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 
 import * as serviceWorker from "./serviceWorker";
-import store from "./redux/store";
+import store from "redux/store";
 
 const render = () => {
   const App = require("./App").default;

@@ -1,8 +1,8 @@
 import React from "react";
-import Playground from "./Playground";
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import blue from "@material-ui/core/colors/blue";
+import Playground from "./Playground";
 
 const theme = createMuiTheme({
   palette: {
