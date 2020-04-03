@@ -4,22 +4,13 @@ import { videoFormat } from "ytdl-core";
 import find from "lodash/find";
 import inRange from "lodash/inRange";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
-import Button from "@material-ui/core/Button";
-import Tooltip from "@material-ui/core/Tooltip";
-import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import KeyIcon from "@material-ui/icons/VpnKey";
 
 import { RootState } from "redux/rootReducer";
 import { fetchVideo } from "redux/slices/video";
 import { initializeGame, setAnswer, deleteAnswer, setCurrentIndex, giveClue } from "redux/slices/game";
 import { Caption } from "utils/caption";
 import WordPuzzle from "components/WordPuzzle";
-
-import Speed05Icon from "components/icons/Speed05";
-import Speed07Icon from "components/icons/Speed07";
-import Speed1Icon from "components/icons/Speed1";
+import Toolbar from "components/Toolbar";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,6 +30,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     toolbar: {
       marginBottom: 32,
+      width: 440,
     },
   }),
 );
@@ -240,38 +232,14 @@ const Playground: React.FC = () => {
       {/* <div>{currentCaption && currentCaption.text}</div> */}
 
       <div className={classes.toolbar}>
-        <ButtonGroup size="small" aria-label="outlined primary button group">
-          <Tooltip title="Previous caption">
-            <Button onClick={handlePreviousCaption}>
-              <ArrowLeftIcon />
-            </Button>
-          </Tooltip>
-          <Tooltip title="Replay sequence">
-            <Button onClick={() => handleReplayCurrentCaption(0.5)}>
-              <Speed05Icon />
-            </Button>
-          </Tooltip>
-          <Tooltip title="Replay sequence">
-            <Button onClick={() => handleReplayCurrentCaption(0.7)}>
-              <Speed07Icon />
-            </Button>
-          </Tooltip>
-          <Tooltip title="Replay sequence">
-            <Button onClick={() => handleReplayCurrentCaption(1)}>
-              <Speed1Icon />
-            </Button>
-          </Tooltip>
-          <Tooltip title="Give a clue">
-            <Button onClick={() => handleGiveClue()}>
-              <KeyIcon />
-            </Button>
-          </Tooltip>
-          <Tooltip title="Next caption">
-            <Button onClick={handleNextCaption}>
-              <ArrowRightIcon />
-            </Button>
-          </Tooltip>
-        </ButtonGroup>
+        <Toolbar
+          onPreviousClicked={handlePreviousCaption}
+          onNextClicked={handleNextCaption}
+          onReplay05Clicked={() => handleReplayCurrentCaption(0.5)}
+          onReplay07Clicked={() => handleReplayCurrentCaption(0.7)}
+          onReplay1Clicked={() => handleReplayCurrentCaption(1)}
+          onJackpotClicked={() => handleGiveClue()}
+        ></Toolbar>
       </div>
 
       {renderPuzzle()}
