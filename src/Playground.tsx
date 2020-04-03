@@ -233,6 +233,7 @@ const Playground: React.FC = () => {
 
       <div className={classes.toolbar}>
         <Toolbar
+          disableActions={!currentCaption}
           onPreviousClicked={handlePreviousCaption}
           onNextClicked={handleNextCaption}
           onReplay05Clicked={() => handleReplayCurrentCaption(0.5)}

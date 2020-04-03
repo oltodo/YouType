@@ -11,6 +11,7 @@ import Refresh07Icon from "components/icons/Refresh07";
 import Refresh05Icon from "components/icons/Refresh05";
 
 interface Props {
+  disableActions?: boolean;
   onPreviousClicked: () => void;
   onNextClicked: () => void;
   onReplay05Clicked: () => void;
@@ -53,6 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Toolbar = ({
+  disableActions = true,
   onPreviousClicked,
   onNextClicked,
   onReplay05Clicked,
@@ -70,22 +72,22 @@ const Toolbar = ({
         </IconButton>
       </Tooltip>
       <Tooltip title="Replay sequence 50% slower" placement="top">
-        <IconButton className={classes.button} onClick={onReplay05Clicked} disableFocusRipple>
+        <IconButton className={classes.button} onClick={onReplay05Clicked} disableFocusRipple disabled={disableActions}>
           <Refresh05Icon />
         </IconButton>
       </Tooltip>
       <Tooltip title="Replay sequence 70% slower" placement="top">
-        <IconButton className={classes.button} onClick={onReplay07Clicked} disableFocusRipple>
+        <IconButton className={classes.button} onClick={onReplay07Clicked} disableFocusRipple disabled={disableActions}>
           <Refresh07Icon />
         </IconButton>
       </Tooltip>
       <Tooltip title="Replay sequence" placement="top">
-        <IconButton className={classes.button} onClick={onReplay1Clicked} disableFocusRipple>
+        <IconButton className={classes.button} onClick={onReplay1Clicked} disableFocusRipple disabled={disableActions}>
           <Refresh1Icon />
         </IconButton>
       </Tooltip>
       <Tooltip title="Jackpot (randomly fill the caption)" placement="top">
-        <IconButton className={classes.button} onClick={onJackpotClicked} disableFocusRipple>
+        <IconButton className={classes.button} onClick={onJackpotClicked} disableFocusRipple disabled={disableActions}>
           <CasinoIcon />
         </IconButton>
       </Tooltip>
