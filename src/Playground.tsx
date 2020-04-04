@@ -12,25 +12,38 @@ import { Caption } from "utils/caption";
 import WordPuzzle from "components/WordPuzzle";
 import Toolbar from "components/Toolbar";
 
+const TOOLBAR_HEIGHT = 56;
+const PUZZLE_HEIGHT = 156;
+const MARGINS = 40;
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      padding: 48,
+      boxSizing: "border-box",
+      padding: MARGINS,
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-      maxWidth: 1280,
+      height: "100vh",
+      maxHeight: "100vh",
       margin: "0 auto",
     },
+    videoWrapper: {
+      marginBottom: MARGINS,
+    },
     video: {
-      boxShadow: "0 0 10px rgba(0, 0, 0, 0.5)",
-      marginBottom: 40,
+      maxHeight: `calc(100vh - ${TOOLBAR_HEIGHT + PUZZLE_HEIGHT + MARGINS * 4}px)`,
       maxWidth: "100%",
       outline: 0,
     },
-    toolbar: {
+    toolbarWrapper: {
       marginBottom: 32,
       width: 440,
+      flexShrink: 0,
+    },
+    puzzleWrapper: {
+      width: "100%",
+      minHeight: PUZZLE_HEIGHT,
     },
   }),
 );
@@ -228,10 +241,8 @@ const Playground: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      {renderVideo()}
-      {/* <div>{currentCaption && currentCaption.text}</div> */}
-
-      <div className={classes.toolbar}>
+      <div className={classes.videoWrapper}>{renderVideo()}</div>
+      <div className={classes.toolbarWrapper}>
         <Toolbar
           disableActions={!currentCaption}
           onPreviousClicked={handlePreviousCaption}
@@ -242,8 +253,7 @@ const Playground: React.FC = () => {
           onJackpotClicked={() => handleGiveClue()}
         ></Toolbar>
       </div>
-
-      {renderPuzzle()}
+      <div className={classes.puzzleWrapper}>{renderPuzzle()}</div>
     </div>
   );
 };
