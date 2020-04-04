@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSpring, animated } from "react-spring";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
+import debounce from "lodash/debounce";
 
 import ChevronRightIcon from "components/icons/ChevronRight";
 import ChevronLeftIcon from "components/icons/ChevronLeft";
 import CasinoIcon from "components/icons/Casino";
-import Refresh1Icon from "components/icons/Refresh1";
+import EyeBulbIcon from "components/icons/EyeBulb";
+import RefreshIcon from "components/icons/Refresh";
 import Refresh07Icon from "components/icons/Refresh07";
 import Refresh05Icon from "components/icons/Refresh05";
 
@@ -50,6 +53,25 @@ const useStyles = makeStyles((theme: Theme) =>
         },
       },
     },
+    separator: {
+      width: 1,
+      height: 16,
+      margin: theme.spacing(0, 1),
+      background: "rgba(255,255,255,0.3)",
+    },
+    refreshGroup: {
+      position: "relative",
+      width: 48,
+      height: 48,
+    },
+    refreshGroupInner: {
+      position: "absolute",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+    },
   }),
 );
 
@@ -64,38 +86,82 @@ const Toolbar = ({
 }: Props) => {
   const classes = useStyles();
 
+  const [refreshGroupOpened, setRefreshGroupOpened] = useState(false);
+
+  const refreshGroupProps = useSpring({
+    right: refreshGroupOpened ? -88 : -24,
+    left: refreshGroupOpened ? -88 : -24,
+  });
+  const hideProps = useSpring({
+    opacity: refreshGroupOpened ? 0 : 1,
+    transform: refreshGroupOpened ? "scale(0.8)" : "scale(1)",
+  });
+
+  const handleMouseMove = debounce(() => {
+    if (disableActions) {
+      return;
+    }
+
+    setRefreshGroupOpened(true);
+  }, 100);
+
+  const handleMouseLeave = () => {
+    if (disableActions) {
+      return;
+    }
+
+    if (handleMouseMove.cancel) {
+      handleMouseMove.cancel();
+    }
+
+    setRefreshGroupOpened(false);
+  };
+
+  const renderButton = (
+    Icon: React.MemoExoticComponent<any>,
+    tooltip: string,
+    cb: () => void,
+    disabled: boolean = false,
+  ) => {
+    return (
+      <Tooltip title={tooltip} placement="top">
+        <span>
+          <IconButton className={classes.button} onClick={cb} disabled={disabled} disableFocusRipple>
+            <Icon />
+          </IconButton>
+        </span>
+      </Tooltip>
+    );
+  };
+
   return (
     <div className={classes.root}>
-      <Tooltip title="Go to previous sequence" placement="top">
-        <IconButton className={classes.button} onClick={onPreviousClicked} disableFocusRipple>
-          <ChevronLeftIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Replay sequence 50% slower" placement="top">
-        <IconButton className={classes.button} onClick={onReplay05Clicked} disableFocusRipple disabled={disableActions}>
-          <Refresh05Icon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Replay sequence 70% slower" placement="top">
-        <IconButton className={classes.button} onClick={onReplay07Clicked} disableFocusRipple disabled={disableActions}>
-          <Refresh07Icon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Replay sequence" placement="top">
-        <IconButton className={classes.button} onClick={onReplay1Clicked} disableFocusRipple disabled={disableActions}>
-          <Refresh1Icon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Jackpot (randomly fill the caption)" placement="top">
-        <IconButton className={classes.button} onClick={onJackpotClicked} disableFocusRipple disabled={disableActions}>
-          <CasinoIcon />
-        </IconButton>
-      </Tooltip>
-      <Tooltip title="Go to next sequence" placement="top">
-        <IconButton className={classes.button} onClick={onNextClicked} disableFocusRipple>
-          <ChevronRightIcon />
-        </IconButton>
-      </Tooltip>
+      {renderButton(ChevronLeftIcon, "Go to previous sequence", onPreviousClicked)}
+
+      <animated.div style={hideProps}>{renderButton(EyeBulbIcon, "Coming soon", onReplay1Clicked, true)}</animated.div>
+      <animated.span className={classes.separator} style={hideProps}></animated.span>
+
+      <div className={classes.refreshGroup}>
+        <animated.div
+          className={classes.refreshGroupInner}
+          style={{ ...refreshGroupProps, zIndex: refreshGroupOpened ? 1 : 0 }}
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+        >
+          {renderButton(Refresh05Icon, "Replay sequence 50% slower", onReplay05Clicked, disableActions)}
+          <span className={classes.separator}></span>
+          {renderButton(RefreshIcon, "Replay sequence", onReplay1Clicked, disableActions)}
+          <span className={classes.separator}></span>
+          {renderButton(Refresh07Icon, "Replay sequence 30% slower", onReplay07Clicked, disableActions)}
+        </animated.div>
+      </div>
+
+      <animated.span className={classes.separator} style={hideProps}></animated.span>
+      <animated.div style={hideProps}>
+        {renderButton(CasinoIcon, "Jackpot", onJackpotClicked, disableActions)}
+      </animated.div>
+
+      {renderButton(ChevronRightIcon, "Go to next sequence", onNextClicked)}
     </div>
   );
 };
