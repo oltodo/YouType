@@ -14,6 +14,8 @@ import Refresh07Icon from "components/icons/Refresh07";
 import Refresh05Icon from "components/icons/Refresh05";
 
 interface Props {
+  disablePrevious?: boolean;
+  disableNext?: boolean;
   disableActions?: boolean;
   onPreviousClicked: () => void;
   onNextClicked: () => void;
@@ -77,6 +79,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Toolbar = ({
   disableActions = true,
+  disablePrevious = true,
+  disableNext = true,
   onPreviousClicked,
   onNextClicked,
   onReplay05Clicked,
@@ -136,7 +140,7 @@ const Toolbar = ({
 
   return (
     <div className={classes.root}>
-      {renderButton(ChevronLeftIcon, "Go to previous sequence", onPreviousClicked)}
+      {renderButton(ChevronLeftIcon, "Go to previous sequence", onPreviousClicked, disablePrevious)}
 
       <animated.div style={hideProps}>{renderButton(EyeBulbIcon, "Coming soon", onReplay1Clicked, true)}</animated.div>
       <animated.span className={classes.separator} style={hideProps}></animated.span>
@@ -161,7 +165,7 @@ const Toolbar = ({
         {renderButton(CasinoIcon, "Jackpot", onJackpotClicked, disableActions)}
       </animated.div>
 
-      {renderButton(ChevronRightIcon, "Go to next sequence", onNextClicked)}
+      {renderButton(ChevronRightIcon, "Go to next sequence", onNextClicked, disableNext)}
     </div>
   );
 };

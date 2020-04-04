@@ -60,6 +60,26 @@ const Playground: React.FC = () => {
 
   const [currentCaption, setCurrentCaption] = useState<Caption | null>(null);
 
+  const isFirstSequence = () => {
+    if (!captions || captions.length === 0 || videoRef.current === null) {
+      return true;
+    }
+
+    const start = captions[0].start;
+
+    return videoRef.current.currentTime < start;
+  };
+
+  const isLastSequence = () => {
+    if (!captions || captions.length === 0 || videoRef.current === null) {
+      return true;
+    }
+
+    const start = captions[captions.length - 1].start;
+
+    return videoRef.current.currentTime >= start;
+  };
+
   const handlePlay = () => {
     videoRef.current.play();
   };
@@ -245,6 +265,8 @@ const Playground: React.FC = () => {
       <div className={classes.toolbarWrapper}>
         <Toolbar
           disableActions={!currentCaption}
+          disablePrevious={isFirstSequence()}
+          disableNext={isLastSequence()}
           onPreviousClicked={handlePreviousCaption}
           onNextClicked={handleNextCaption}
           onReplay05Clicked={() => handleReplayCurrentCaption(0.5)}
