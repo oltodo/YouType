@@ -9,5 +9,5 @@ export default createSvgIcon(
       opacity=".5"
     />
   </>,
-  "Refresh",
+  "Replay",
 );
