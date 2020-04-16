@@ -20,6 +20,7 @@ import {
 import { Caption } from "utils/caption";
 import WordPuzzle from "components/WordPuzzle";
 import Toolbar from "components/Toolbar";
+import GameDetails from "components/GameDetails";
 
 const TOOLBAR_HEIGHT = 56;
 const PUZZLE_HEIGHT = 156;
@@ -28,6 +29,9 @@ const MARGINS = 40;
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      display: "flex",
+    },
+    leftPanel: {
       boxSizing: "border-box",
       padding: MARGINS,
       display: "flex",
@@ -36,6 +40,11 @@ const useStyles = makeStyles((theme: Theme) =>
       height: "100vh",
       maxHeight: "100vh",
       margin: "0 auto",
+    },
+    rightPanel: {
+      borderLeft: "solid 1px rgba(255,255,255,0.1)",
+      width: 480,
+      padding: theme.spacing(5, 4),
     },
     videoWrapper: {
       marginBottom: MARGINS,
@@ -46,7 +55,7 @@ const useStyles = makeStyles((theme: Theme) =>
       outline: 0,
     },
     toolbarWrapper: {
-      marginBottom: 32,
+      marginBottom: theme.spacing(4),
       width: 440,
       flexShrink: 0,
     },
@@ -288,24 +297,29 @@ const Game: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <div className={classes.videoWrapper}>{renderVideo()}</div>
-      <div className={classes.toolbarWrapper}>
-        <Toolbar
-          disableActions={!currentCaption}
-          disablePrevious={isFirstSequence()}
-          disableNext={isLastSequence()}
-          onPreviousClicked={handlePreviousCaption}
-          onNextClicked={handleNextCaption}
-          onFillCurrentLetterClicked={handleFillCurrentLetter}
-          onFillCurrentWordClicked={handleFillCurrentWord}
-          onFillCurrentCaptionClicked={handleFillCurrentCaption}
-          onReplay05Clicked={() => handleReplayCurrentCaption(0.5)}
-          onReplay07Clicked={() => handleReplayCurrentCaption(0.7)}
-          onReplay1Clicked={() => handleReplayCurrentCaption(1)}
-          onJackpotClicked={() => handleGiveClue()}
-        />
+      <div className={classes.leftPanel}>
+        <div className={classes.videoWrapper}>{renderVideo()}</div>
+        <div className={classes.toolbarWrapper}>
+          <Toolbar
+            disableActions={!currentCaption}
+            disablePrevious={isFirstSequence()}
+            disableNext={isLastSequence()}
+            onPreviousClicked={handlePreviousCaption}
+            onNextClicked={handleNextCaption}
+            onFillCurrentLetterClicked={handleFillCurrentLetter}
+            onFillCurrentWordClicked={handleFillCurrentWord}
+            onFillCurrentCaptionClicked={handleFillCurrentCaption}
+            onReplay05Clicked={() => handleReplayCurrentCaption(0.5)}
+            onReplay07Clicked={() => handleReplayCurrentCaption(0.7)}
+            onReplay1Clicked={() => handleReplayCurrentCaption(1)}
+            onJackpotClicked={() => handleGiveClue()}
+          />
+        </div>
+        <div className={classes.puzzleWrapper}>{renderPuzzle()}</div>
       </div>
-      <div className={classes.puzzleWrapper}>{renderPuzzle()}</div>
+      <div className={classes.rightPanel}>
+        <GameDetails />
+      </div>
     </div>
   );
 };
