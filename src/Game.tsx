@@ -318,7 +318,7 @@ const Game: React.FC = () => {
         <div className={classes.puzzleWrapper}>{renderPuzzle()}</div>
       </div>
       <div className={classes.rightPanel}>
-        <GameDetails />
+        <GameDetails video={video} />
       </div>
     </div>
   );

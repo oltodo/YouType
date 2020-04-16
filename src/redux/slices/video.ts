@@ -10,7 +10,16 @@ import videoDataUrl from "data/video.json.raw";
 import videoUrl from "data/video.mp4";
 import captionsDataPath from "data/en.xml.raw";
 
-interface VideoState {
+interface VideoAuthor {
+  name: string;
+  avatar: string;
+}
+
+export interface VideoState {
+  title: string;
+  description: string;
+  author: VideoAuthor;
+  duration: number;
   formats: videoFormat[];
   captions: Caption[];
   isLoading: boolean;
@@ -23,6 +32,13 @@ interface VideoSuccessPayload {
 }
 
 const initialState: VideoState = {
+  title: "",
+  description: "",
+  author: {
+    name: "",
+    avatar: "",
+  },
+  duration: 0,
   formats: [],
   captions: [],
   isLoading: false,
@@ -65,11 +81,15 @@ const slice = createSlice({
   reducers: {
     getVideoSuccess(state, { payload }: PayloadAction<VideoSuccessPayload>) {
       const {
-        video: { formats },
+        video: { title, description, author, length_seconds, formats },
         captions,
       } = payload;
 
-      // TODO: don't override url
+      state.title = title;
+      state.description = description;
+      state.author.name = author.name;
+      state.author.avatar = author.avatar;
+      state.duration = parseInt(length_seconds, 10);
       state.formats = formats.map(format => ({
         ...format,
         url: videoUrl,
