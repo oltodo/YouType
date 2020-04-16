@@ -3,7 +3,6 @@ export interface AbstractChar {
   value: string;
   line: number;
   word: number;
-  position: number;
 }
 
 export interface Letter extends AbstractChar {
@@ -16,6 +15,7 @@ export interface Answer {
   value: string;
   solution: string;
   upper: boolean;
+  word: number;
 }
 
 function isSymbol(char: string) {
@@ -63,10 +63,11 @@ export function getDefaultAnswers(chars: AbstractChar[]): Answer[] {
   return chars
     .filter(item => item.type === "letter")
     .map(
-      curr => ({
+      ({ value, word }) => ({
         value: "",
-        solution: curr.value,
-        upper: curr.value.toUpperCase() === curr.value,
+        solution: value,
+        upper: value.toUpperCase() === value,
+        word,
       }),
       [],
     );

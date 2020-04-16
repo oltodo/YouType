@@ -7,7 +7,16 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 import { RootState } from "redux/rootReducer";
 import { fetchVideo } from "redux/slices/video";
-import { initializeGame, setAnswer, deleteAnswer, setCurrentIndex, giveClue } from "redux/slices/game";
+import {
+  initializeGame,
+  setAnswer,
+  deleteAnswer,
+  setCurrentIndex,
+  fillCurrentLetter,
+  fillCurrentWord,
+  fillWholeCaption,
+  giveClue,
+} from "redux/slices/game";
 import { Caption } from "utils/caption";
 import WordPuzzle from "components/WordPuzzle";
 import Toolbar from "components/Toolbar";
@@ -116,6 +125,24 @@ const Playground: React.FC = () => {
 
     const nextCaption = captions[currentCaption.index + 1];
     videoRef.current.currentTime = nextCaption.start + 0.01;
+  };
+
+  const handleFillCurrentLetter = () => {
+    if (currentCaption) {
+      dispatch(fillCurrentLetter(currentCaption.index));
+    }
+  };
+
+  const handleFillCurrentWord = () => {
+    if (currentCaption) {
+      dispatch(fillCurrentWord(currentCaption.index));
+    }
+  };
+
+  const handleFillCurrentCaption = () => {
+    if (currentCaption) {
+      dispatch(fillWholeCaption(currentCaption.index));
+    }
   };
 
   const handleReplayCurrentCaption = (speed: number) => {
@@ -251,7 +278,7 @@ const Playground: React.FC = () => {
           dispatch(deleteAnswer({ sequenceIndex: sequence.index, index }));
           dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index: index - 1 }));
         }}
-      ></WordPuzzle>
+      />
     );
   };
 
@@ -269,11 +296,14 @@ const Playground: React.FC = () => {
           disableNext={isLastSequence()}
           onPreviousClicked={handlePreviousCaption}
           onNextClicked={handleNextCaption}
+          onFillCurrentLetterClicked={handleFillCurrentLetter}
+          onFillCurrentWordClicked={handleFillCurrentWord}
+          onFillCurrentCaptionClicked={handleFillCurrentCaption}
           onReplay05Clicked={() => handleReplayCurrentCaption(0.5)}
           onReplay07Clicked={() => handleReplayCurrentCaption(0.7)}
           onReplay1Clicked={() => handleReplayCurrentCaption(1)}
           onJackpotClicked={() => handleGiveClue()}
-        ></Toolbar>
+        />
       </div>
       <div className={classes.puzzleWrapper}>{renderPuzzle()}</div>
     </div>

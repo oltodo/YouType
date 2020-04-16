@@ -37,6 +37,11 @@ const slice = createSlice({
         return { ...caption, chars, answers, currentIndex: 0 };
       });
     },
+    setSolution(state, { payload: { sequenceIndex, index } }) {
+      const sequence = state.sequences[sequenceIndex];
+      const answer = sequence.answers[index];
+      answer.value = answer.solution;
+    },
     setAnswer(state, { payload: { sequenceIndex, index, value } }: PayloadAction<AnswerPayload>) {
       const sequence = state.sequences[sequenceIndex];
       const answer = sequence.answers[index];
@@ -56,9 +61,69 @@ const slice = createSlice({
   },
 });
 
-export const { initializeGame, setAnswer, deleteAnswer, setCurrentIndex } = slice.actions;
+export const { initializeGame, setSolution, setAnswer, deleteAnswer, setCurrentIndex } = slice.actions;
 
 export default slice.reducer;
+
+export const fillCurrentLetter = (sequenceIndex: number): AppThunk => async (dispatch, getState) => {
+  const {
+    game: { sequences },
+  } = getState();
+
+  const { currentIndex } = sequences[sequenceIndex];
+
+  await dispatch(setSolution({ sequenceIndex, index: currentIndex }));
+  await dispatch(moveNext(sequenceIndex));
+};
+
+export const fillCurrentWord = (sequenceIndex: number): AppThunk => (dispatch, getState) => {
+  const {
+    game: { sequences },
+  } = getState();
+
+  const { currentIndex, answers } = sequences[sequenceIndex];
+  const { word }: Answer = answers.find((curr, index) => index === currentIndex) as Answer;
+
+  answers.forEach((answer: Answer, index) => {
+    if (answer.word === word) {
+      dispatch(setSolution({ sequenceIndex, index }));
+      dispatch(moveNext(sequenceIndex));
+    }
+  });
+};
+
+export const fillWholeCaption = (sequenceIndex: number): AppThunk => (dispatch, getState) => {
+  const {
+    game: { sequences },
+  } = getState();
+
+  const { answers } = sequences[sequenceIndex];
+
+  answers.forEach((answer: Answer, index) => {
+    dispatch(setSolution({ sequenceIndex, index }));
+    dispatch(moveNext(sequenceIndex));
+  });
+};
+
+export const movePrevious = (sequenceIndex: number): AppThunk => (dispatch, getState) => {
+  const {
+    game: { sequences },
+  } = getState();
+
+  const { currentIndex } = sequences[sequenceIndex];
+
+  return dispatch(setCurrentIndex({ sequenceIndex, index: currentIndex - 1 }));
+};
+
+export const moveNext = (sequenceIndex: number): AppThunk => (dispatch, getState) => {
+  const {
+    game: { sequences },
+  } = getState();
+
+  const { currentIndex } = sequences[sequenceIndex];
+
+  return dispatch(setCurrentIndex({ sequenceIndex, index: currentIndex + 1 }));
+};
 
 export const giveClue = (sequenceIndex: number): AppThunk => async (dispatch, getState) => {
   const {
@@ -74,12 +139,6 @@ export const giveClue = (sequenceIndex: number): AppThunk => async (dispatch, ge
   indexes = indexes.slice(0, total);
 
   indexes.forEach(index => {
-    dispatch(
-      setAnswer({
-        sequenceIndex,
-        index,
-        value: answers[index].solution,
-      }),
-    );
+    dispatch(setAnswer({ sequenceIndex, index, value: answers[index].solution }));
   });
 };

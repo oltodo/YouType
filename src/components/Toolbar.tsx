@@ -4,6 +4,9 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import ChevronRightIcon from "components/icons/ChevronRight";
 import ChevronLeftIcon from "components/icons/ChevronLeft";
 import CasinoIcon from "components/icons/Casino";
+import BulbAIcon from "components/icons/BulbA";
+import BulbAbIcon from "components/icons/BulbAb";
+import BulbAZIcon from "components/icons/BulbAZ";
 import ReplayIcon from "components/icons/Replay";
 import Replay07Icon from "components/icons/Replay07";
 import Replay05Icon from "components/icons/Replay05";
@@ -18,6 +21,9 @@ interface Props {
   disableActions?: boolean;
   onPreviousClicked: () => void;
   onNextClicked: () => void;
+  onFillCurrentLetterClicked: () => void;
+  onFillCurrentWordClicked: () => void;
+  onFillCurrentCaptionClicked: () => void;
   onReplay05Clicked: () => void;
   onReplay07Clicked: () => void;
   onReplay1Clicked: () => void;
@@ -62,6 +68,9 @@ const Toolbar = ({
   disableNext = true,
   onPreviousClicked,
   onNextClicked,
+  onFillCurrentLetterClicked,
+  onFillCurrentWordClicked,
+  onFillCurrentCaptionClicked,
   onReplay05Clicked,
   onReplay07Clicked,
   onReplay1Clicked,
@@ -77,6 +86,29 @@ const Toolbar = ({
         onClicked={onPreviousClicked}
         disabled={disablePrevious}
       />
+
+      <ButtonGroup disabled={disableActions}>
+        <Button
+          tooltip="Fill current word"
+          icon={BulbAbIcon}
+          disabled={disableActions}
+          onClicked={onFillCurrentWordClicked}
+        />
+        <Button
+          tooltip="Fill current letter"
+          icon={BulbAIcon}
+          disabled={disableActions}
+          onClicked={onFillCurrentLetterClicked}
+        />
+        <Button
+          tooltip="Fill whole current caption"
+          icon={BulbAZIcon}
+          disabled={disableActions}
+          onClicked={onFillCurrentCaptionClicked}
+        />
+      </ButtonGroup>
+
+      <Separator />
 
       <ButtonGroup disabled={disableActions}>
         <Button
