@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const Playground: React.FC = () => {
+const Game: React.FC = () => {
   const classes = useStyles();
   const videoRef = useRef<HTMLVideoElement>(document.createElement("video"));
   const previousTimeRef = useRef(0);
@@ -310,4 +310,4 @@ const Playground: React.FC = () => {
   );
 };
 
-export default Playground;
+export default Game;

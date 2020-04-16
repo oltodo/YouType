@@ -2,7 +2,7 @@ import React from "react";
 import { CssBaseline } from "@material-ui/core";
 import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import blue from "@material-ui/core/colors/blue";
-import Playground from "./Playground";
+import Game from "./Game";
 
 const theme = createMuiTheme({
   palette: {
@@ -19,7 +19,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Playground />
+      <Game />
     </ThemeProvider>
   );
 }
