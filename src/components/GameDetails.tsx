@@ -3,9 +3,12 @@ import { makeStyles, createStyles, Theme, Link, ButtonBase } from "@material-ui/
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import classnames from "classnames";
 import { VideoState } from "redux/slices/video";
+import { Sequence } from "redux/slices/game";
 
 interface Props {
   video: VideoState;
+  sequence: Sequence | null;
+  totalSequences: number;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -90,15 +93,40 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const GameDetails = ({ video }: Props) => {
+const GameDetails = ({ video, sequence, totalSequences }: Props) => {
   const classes = useStyles();
   const [descExpanded, setDescExpanded] = useState(false);
+
+  const renderSequence = () => {
+    if (sequence === null) {
+      return;
+    }
+
+    const { text, answers } = sequence;
+    const words = text.split(/ |\n/).map(word => word.replace(/^[^\w]+/, "").replace(/[^\w]+$/, ""));
+
+    const completed = answers.reduce((acc, curr) => (acc ? curr.value === curr.solution : acc), true);
+
+    return (
+      <div className={classes.sequenceWrapper}>
+        <div className={classes.sequenceNumber}>Sequence #{sequence.index + 1}</div>
+
+        <div className={classes.sequenceWords}>
+          {words.map((word, index) => (
+            <ButtonBase key={index} className={classes.sequenceWord} disabled={!completed}>
+              <span style={{ visibility: completed ? "visible" : "hidden" }}>{word}</span>
+            </ButtonBase>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className={classes.root}>
       <div className={classes.progressWrapper}>
         <span className={classes.pill} />
-        52% completed / 152 sequences
+        52% completed / {totalSequences} sequences
       </div>
       <div className={classes.title}>{video.title}</div>
       <div className={classes.authorWrapper}>
@@ -112,17 +140,7 @@ const GameDetails = ({ video }: Props) => {
         </Link>
       </div>
       <div className={classes.separator} />
-      <div className={classes.sequenceWrapper}>
-        <div className={classes.sequenceNumber}>Sequence #16</div>
-
-        <div className={classes.sequenceWords}>
-          {"a young cave bear died in the rolling hills".split(" ").map((word, index) => (
-            <ButtonBase key={index} className={classes.sequenceWord}>
-              {word}
-            </ButtonBase>
-          ))}
-        </div>
-      </div>
+      {renderSequence()}
     </div>
   );
 };

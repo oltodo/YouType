@@ -291,6 +291,16 @@ const Game: React.FC = () => {
     );
   };
 
+  const renderDetails = () => {
+    let sequence = null;
+
+    if (currentCaption) {
+      sequence = find(sequences, ["index", currentCaption.index]) || null;
+    }
+
+    return <GameDetails video={video} sequence={sequence} totalSequences={sequences.length} />;
+  };
+
   if (video.error || video.isLoading) {
     return null;
   }
@@ -317,9 +327,7 @@ const Game: React.FC = () => {
         </div>
         <div className={classes.puzzleWrapper}>{renderPuzzle()}</div>
       </div>
-      <div className={classes.rightPanel}>
-        <GameDetails video={video} />
-      </div>
+      <div className={classes.rightPanel}>{renderDetails()}</div>
     </div>
   );
 };
