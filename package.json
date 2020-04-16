@@ -55,6 +55,14 @@
       "arrow-parens": [
         "error",
         "as-needed"
+      ],
+      "prefer-template": "error",
+      "react/self-closing-comp": [
+        "error",
+        {
+          "component": true,
+          "html": true
+        }
       ]
     }
   },
