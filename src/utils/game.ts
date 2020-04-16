@@ -15,6 +15,7 @@ export interface Answer {
   value: string;
   solution: string;
   upper: boolean;
+  line: number;
   word: number;
 }
 
@@ -63,10 +64,11 @@ export function getDefaultAnswers(chars: AbstractChar[]): Answer[] {
   return chars
     .filter(item => item.type === "letter")
     .map(
-      ({ value, word }) => ({
+      ({ value, line, word }) => ({
         value: "",
         solution: value,
         upper: value.toUpperCase() === value,
+        line,
         word,
       }),
       [],

@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme: Theme) =>
       letterSpacing: 2,
       borderRadius: 4,
       marginRight: theme.spacing(1),
-      marginBottom: theme.spacing(2),
+      marginBottom: theme.spacing(1),
     },
   }),
 );
