@@ -293,12 +293,30 @@ const Game: React.FC = () => {
 
   const renderDetails = () => {
     let sequence = null;
-
     if (currentCaption) {
       sequence = find(sequences, ["index", currentCaption.index]) || null;
     }
 
-    return <GameDetails video={video} sequence={sequence} totalSequences={sequences.length} />;
+    const [totalCorrect, totalChar] = sequences.reduce(
+      (total, { answers }) => {
+        answers.forEach(({ value, solution }) => {
+          total[0] += value === solution ? 1 : 0;
+          total[1] += 1;
+        });
+
+        return total;
+      },
+      [0, 0],
+    );
+
+    return (
+      <GameDetails
+        video={video}
+        sequence={sequence}
+        totalSequences={sequences.length}
+        progress={(totalCorrect * 100) / totalChar}
+      />
+    );
   };
 
   if (video.error || video.isLoading) {

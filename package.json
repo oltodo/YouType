@@ -57,6 +57,12 @@
         "as-needed"
       ],
       "prefer-template": "error",
+      "prefer-arrow-callback": [
+        "error",
+        {
+          "allowUnboundThis": false
+        }
+      ],
       "react/self-closing-comp": [
         "error",
         {

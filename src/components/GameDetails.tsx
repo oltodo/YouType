@@ -9,6 +9,7 @@ interface Props {
   video: VideoState;
   sequence: Sequence | null;
   totalSequences: number;
+  progress: number;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -32,6 +33,9 @@ const useStyles = makeStyles((theme: Theme) =>
       height: 8,
       borderRadius: 4,
       marginRight: 8,
+    },
+    completed: {
+      background: "#00d35a",
     },
 
     title: {
@@ -84,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(0, 1),
       height: 32,
       lineHeight: "32px",
-      fontSize: 18,
+      fontSize: 16,
       letterSpacing: 2,
       borderRadius: 4,
       marginRight: theme.spacing(1),
@@ -93,9 +97,10 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const GameDetails = ({ video, sequence, totalSequences }: Props) => {
+const GameDetails = ({ video, sequence, totalSequences, progress }: Props) => {
   const classes = useStyles();
   const [descExpanded, setDescExpanded] = useState(false);
+  const progressRounded = Math.round(progress);
 
   const renderSequence = () => {
     if (sequence === null) {
@@ -125,8 +130,8 @@ const GameDetails = ({ video, sequence, totalSequences }: Props) => {
   return (
     <div className={classes.root}>
       <div className={classes.progressWrapper}>
-        <span className={classes.pill} />
-        52% completed / {totalSequences} sequences
+        <span className={classnames(classes.pill, { [classes.completed]: progressRounded === 100 })} />
+        {progressRounded}% completed / {totalSequences} sequences
       </div>
       <div className={classes.title}>{video.title}</div>
       <div className={classes.authorWrapper}>
