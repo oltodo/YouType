@@ -24,7 +24,10 @@ import GameDetails from "components/GameDetails";
 
 const TOOLBAR_HEIGHT = 56;
 const PUZZLE_HEIGHT = 156;
-const MARGINS = 40;
+const VERTICAL_MARGINS = 40;
+const HORIZONTAL_MARGINS = 32;
+const VIDEO_MARGIN = 24;
+const TOOLBAR_MARGIN = 40;
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -33,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     leftPanel: {
       boxSizing: "border-box",
-      padding: MARGINS,
+      padding: `${VERTICAL_MARGINS}px ${HORIZONTAL_MARGINS}px`,
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
@@ -47,15 +50,17 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(5, 4),
     },
     videoWrapper: {
-      marginBottom: MARGINS,
+      marginBottom: VIDEO_MARGIN,
     },
     video: {
-      maxHeight: `calc(100vh - ${TOOLBAR_HEIGHT + PUZZLE_HEIGHT + MARGINS * 4}px)`,
+      maxHeight: `calc(100vh - ${
+        TOOLBAR_HEIGHT + PUZZLE_HEIGHT + VERTICAL_MARGINS * 2 + VIDEO_MARGIN + TOOLBAR_MARGIN
+      }px)`,
       maxWidth: "100%",
       outline: 0,
     },
     toolbarWrapper: {
-      marginBottom: theme.spacing(4),
+      marginBottom: TOOLBAR_MARGIN,
       width: 440,
       flexShrink: 0,
     },
