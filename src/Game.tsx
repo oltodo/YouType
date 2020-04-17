@@ -47,7 +47,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     rightPanel: {
       borderLeft: "solid 1px rgba(255,255,255,0.1)",
-      width: 480,
+      minWidth: 480,
+      maxWidth: 560,
       padding: theme.spacing(5, 4),
       height: "100%",
       overflowY: "auto",
