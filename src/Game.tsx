@@ -10,14 +10,13 @@ import { fetchVideo } from "redux/slices/video";
 import {
   initializeGame,
   setAnswer,
-  deleteAnswer,
   setCurrentIndex,
   fillCurrentLetter,
   fillCurrentWord,
   fillWholeCaption,
   giveClue,
+  Sequence,
 } from "redux/slices/game";
-import { Caption } from "utils/caption";
 import WordPuzzle from "components/WordPuzzle";
 import Toolbar from "components/Toolbar";
 import GameDetails from "components/GameDetails";
@@ -85,24 +84,25 @@ const Game: React.FC = () => {
   const { captions } = video;
   const { sequences } = game;
 
-  const [currentCaption, setCurrentCaption] = useState<Caption | null>(null);
+  const [currentSequenceIndex, setCurrentSequenceIndex] = useState<number | null>(null);
+  const currentSequence: Sequence | null = currentSequenceIndex !== null ? sequences[currentSequenceIndex] : null;
 
   const isFirstSequence = () => {
-    if (!captions || captions.length === 0 || videoRef.current === null) {
+    if (!sequences || sequences.length === 0 || videoRef.current === null) {
       return true;
     }
 
-    const start = captions[0].start;
+    const start = sequences[0].start;
 
     return videoRef.current.currentTime < start;
   };
 
   const isLastSequence = () => {
-    if (!captions || captions.length === 0 || videoRef.current === null) {
+    if (!sequences || sequences.length === 0 || videoRef.current === null) {
       return true;
     }
 
-    const start = captions[captions.length - 1].start;
+    const start = sequences[sequences.length - 1].start;
 
     return videoRef.current.currentTime >= start;
   };
@@ -114,62 +114,62 @@ const Game: React.FC = () => {
   const handlePreviousCaption = () => {
     videoRef.current.pause();
 
-    if (!currentCaption) {
-      const nextCaption = captions[0];
-      videoRef.current.currentTime = nextCaption.start + 0.01;
+    if (!currentSequence) {
+      const nextSequence = sequences[0];
+      videoRef.current.currentTime = nextSequence.start + 0.01;
       return;
     }
 
-    if (currentCaption.index === 0) {
+    if (currentSequence.index === 0) {
       return;
     }
 
-    const nextCaption = captions[currentCaption.index - 1];
-    videoRef.current.currentTime = nextCaption.start + 0.01;
+    const nextSequence = sequences[currentSequence.index - 1];
+    videoRef.current.currentTime = nextSequence.start + 0.01;
   };
 
-  const handleNextCaption = () => {
+  const handleNextSequence = () => {
     videoRef.current.pause();
 
-    if (!currentCaption) {
-      const nextCaption = captions[0];
-      videoRef.current.currentTime = nextCaption.start + 0.01;
+    if (!currentSequence) {
+      const nextSequence = sequences[0];
+      videoRef.current.currentTime = nextSequence.start + 0.01;
       return;
     }
 
-    if (currentCaption.index === captions.length - 1) {
+    if (currentSequence.index === sequences.length - 1) {
       return;
     }
 
-    const nextCaption = captions[currentCaption.index + 1];
-    videoRef.current.currentTime = nextCaption.start + 0.01;
+    const nextSequence = sequences[currentSequence.index + 1];
+    videoRef.current.currentTime = nextSequence.start + 0.01;
   };
 
   const handleFillCurrentLetter = () => {
-    if (currentCaption) {
-      dispatch(fillCurrentLetter(currentCaption.index));
+    if (currentSequence) {
+      dispatch(fillCurrentLetter(currentSequence.index));
     }
   };
 
   const handleFillCurrentWord = () => {
-    if (currentCaption) {
-      dispatch(fillCurrentWord(currentCaption.index));
+    if (currentSequence) {
+      dispatch(fillCurrentWord(currentSequence.index));
     }
   };
 
   const handleFillCurrentCaption = () => {
-    if (currentCaption) {
-      dispatch(fillWholeCaption(currentCaption.index));
+    if (currentSequence) {
+      dispatch(fillWholeCaption(currentSequence.index));
     }
   };
 
   const handleReplayCurrentCaption = (speed: number) => {
-    if (!currentCaption) {
+    if (!currentSequence) {
       return;
     }
 
-    previousTimeRef.current = currentCaption.start;
-    videoRef.current.currentTime = currentCaption.start + 0.01;
+    previousTimeRef.current = currentSequence.start;
+    videoRef.current.currentTime = currentSequence.start + 0.01;
     videoRef.current.playbackRate = speed;
     handlePlay();
   };
@@ -179,8 +179,8 @@ const Game: React.FC = () => {
   };
 
   const handleGiveClue = () => {
-    if (currentCaption) {
-      dispatch(giveClue(currentCaption.index));
+    if (currentSequence) {
+      dispatch(giveClue(currentSequence.index));
     }
   };
 
@@ -230,23 +230,22 @@ const Game: React.FC = () => {
       const currentTime = videoElt.currentTime;
       const previousTime = previousTimeRef.current;
 
-      if (currentCaption) {
-        if (inRange(currentTime, currentCaption.start, currentCaption.end - 0.01)) {
+      if (currentSequence) {
+        if (inRange(currentTime, currentSequence.start, currentSequence.end - 0.01)) {
           return;
         }
 
-        if (!videoElt.paused && previousTime < currentCaption.end && currentTime >= currentCaption.end) {
+        if (!videoElt.paused && previousTime < currentSequence.end && currentTime >= currentSequence.end) {
           videoElt.pause();
-          videoElt.currentTime = currentCaption.end - 0.01;
+          videoElt.currentTime = currentSequence.end - 0.01;
           videoElt.playbackRate = 1;
           previousTimeRef.current = currentTime;
           return;
         }
       }
 
-      const caption = find(captions, ({ start, end }) => inRange(currentTime, start, end)) as Caption;
-
-      setCurrentCaption(caption);
+      const index = sequences.findIndex(({ start, end }) => inRange(currentTime, start, end));
+      setCurrentSequenceIndex(index);
     };
 
     videoElt.oncanplay = () => {
@@ -254,7 +253,7 @@ const Game: React.FC = () => {
       // handlePlay()
     };
     videoElt.ontimeupdate = () => handleTimeUpdate();
-  }, [currentCaption, captions]);
+  }, [currentSequence, sequences]);
 
   const renderVideo = () => {
     const format = find(video.formats, ["itag", 22]) as videoFormat;
@@ -271,11 +270,11 @@ const Game: React.FC = () => {
   };
 
   const renderPuzzle = () => {
-    if (!currentCaption) {
+    if (!currentSequence) {
       return null;
     }
 
-    const sequence = find(sequences, ["index", currentCaption.index]);
+    const sequence = find(sequences, ["index", currentSequence.index]);
 
     if (!sequence) {
       return null;
@@ -283,7 +282,7 @@ const Game: React.FC = () => {
 
     return (
       <WordPuzzle
-        key={currentCaption.start}
+        key={currentSequence.start}
         sequence={sequence}
         onMoved={index => {
           dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index }));
@@ -293,37 +292,9 @@ const Game: React.FC = () => {
           dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index: index + 1 }));
         }}
         onRemoved={index => {
-          dispatch(deleteAnswer({ sequenceIndex: sequence.index, index }));
+          dispatch(setAnswer({ sequenceIndex: sequence.index, index, value: "" }));
           dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index: index - 1 }));
         }}
-      />
-    );
-  };
-
-  const renderDetails = () => {
-    let sequence = null;
-    if (currentCaption) {
-      sequence = find(sequences, ["index", currentCaption.index]) || null;
-    }
-
-    const [totalCorrect, totalChar] = sequences.reduce(
-      (total, { answers }) => {
-        answers.forEach(({ value, solution }) => {
-          total[0] += value === solution ? 1 : 0;
-          total[1] += 1;
-        });
-
-        return total;
-      },
-      [0, 0],
-    );
-
-    return (
-      <GameDetails
-        video={video}
-        sequence={sequence}
-        totalSequences={sequences.length}
-        progress={(totalCorrect * 100) / totalChar}
       />
     );
   };
@@ -338,11 +309,11 @@ const Game: React.FC = () => {
         <div className={classes.videoWrapper}>{renderVideo()}</div>
         <div className={classes.toolbarWrapper}>
           <Toolbar
-            disableActions={!currentCaption}
+            disableActions={!currentSequence}
             disablePrevious={isFirstSequence()}
             disableNext={isLastSequence()}
             onPreviousClicked={handlePreviousCaption}
-            onNextClicked={handleNextCaption}
+            onNextClicked={handleNextSequence}
             onFillCurrentLetterClicked={handleFillCurrentLetter}
             onFillCurrentWordClicked={handleFillCurrentWord}
             onFillCurrentCaptionClicked={handleFillCurrentCaption}
@@ -354,7 +325,14 @@ const Game: React.FC = () => {
         </div>
         <div className={classes.puzzleWrapper}>{renderPuzzle()}</div>
       </div>
-      <div className={classes.rightPanel}>{renderDetails()}</div>
+      <div className={classes.rightPanel}>
+        <GameDetails
+          video={video}
+          sequence={currentSequence}
+          totalSequences={sequences.length}
+          progress={game.progress}
+        />
+      </div>
     </div>
   );
 };

@@ -9,10 +9,12 @@ export interface Sequence extends Caption {
   chars: (Letter | Symbol)[];
   answers: Answer[];
   currentIndex: number;
+  completed: boolean;
 }
 
 export interface GameState {
   sequences: Sequence[];
+  progress: number;
 }
 
 interface AnswerPayload {
@@ -23,6 +25,7 @@ interface AnswerPayload {
 
 const initialState: GameState = {
   sequences: [],
+  progress: 0,
 };
 
 const slice = createSlice({
@@ -34,22 +37,24 @@ const slice = createSlice({
         const chars = parseCaption(caption.text);
         const answers = getDefaultAnswers(chars);
 
-        return { ...caption, chars, answers, currentIndex: 0 };
+        return {
+          ...caption,
+          chars,
+          answers,
+          currentIndex: 0,
+          completed: false,
+        };
       });
     },
-    setSolution(state, { payload: { sequenceIndex, index } }) {
-      const sequence = state.sequences[sequenceIndex];
-      const answer = sequence.answers[index];
-      answer.value = answer.solution;
-    },
     setAnswer(state, { payload: { sequenceIndex, index, value } }: PayloadAction<AnswerPayload>) {
-      const sequence = state.sequences[sequenceIndex];
+      const { sequences } = state;
+      const sequence = sequences[sequenceIndex];
       const answer = sequence.answers[index];
       answer.value = answer.upper ? value.toUpperCase() : value.toLowerCase();
-    },
-    deleteAnswer(state, { payload: { sequenceIndex, index } }) {
-      const sequence = state.sequences[sequenceIndex];
-      sequence.answers[index].value = "";
+      sequence.completed = sequence.answers.every(curr => curr.value === curr.solution);
+
+      const totalCompleted = sequences.reduce((acc, curr) => (curr.completed ? acc + 1 : acc), 0);
+      state.progress = (totalCompleted * 100) / sequences.length;
     },
     setCurrentIndex(state, { payload: { sequenceIndex, index } }) {
       const sequence = state.sequences[sequenceIndex];
@@ -61,7 +66,7 @@ const slice = createSlice({
   },
 });
 
-export const { initializeGame, setSolution, setAnswer, deleteAnswer, setCurrentIndex } = slice.actions;
+export const { initializeGame, setAnswer, setCurrentIndex } = slice.actions;
 
 export default slice.reducer;
 
@@ -70,9 +75,11 @@ export const fillCurrentLetter = (sequenceIndex: number): AppThunk => async (dis
     game: { sequences },
   } = getState();
 
-  const { currentIndex } = sequences[sequenceIndex];
+  const { currentIndex, answers } = sequences[sequenceIndex];
+  const { solution } = answers[currentIndex];
+  console.log(solution);
 
-  await dispatch(setSolution({ sequenceIndex, index: currentIndex }));
+  await dispatch(setAnswer({ sequenceIndex, index: currentIndex, value: solution }));
   await dispatch(moveNext(sequenceIndex));
 };
 
@@ -86,7 +93,7 @@ export const fillCurrentWord = (sequenceIndex: number): AppThunk => (dispatch, g
 
   answers.forEach((answer: Answer, index) => {
     if (answer.line === line && answer.word === word) {
-      dispatch(setSolution({ sequenceIndex, index }));
+      dispatch(setAnswer({ sequenceIndex, index, value: answer.solution }));
       dispatch(moveNext(sequenceIndex));
     }
   });
@@ -100,7 +107,7 @@ export const fillWholeCaption = (sequenceIndex: number): AppThunk => (dispatch, 
   const { answers } = sequences[sequenceIndex];
 
   answers.forEach((answer: Answer, index) => {
-    dispatch(setSolution({ sequenceIndex, index }));
+    dispatch(setAnswer({ sequenceIndex, index, value: answer.solution }));
     dispatch(moveNext(sequenceIndex));
   });
 };
