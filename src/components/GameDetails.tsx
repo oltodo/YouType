@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles, createStyles, Theme, Link, ButtonBase } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import classnames from "classnames";
+import Translation from "components/Translation";
 import { VideoState } from "redux/slices/video";
 import { Sequence } from "redux/slices/game";
 
@@ -72,7 +73,9 @@ const useStyles = makeStyles((theme: Theme) =>
       height: "auto",
     },
 
-    sequenceWrapper: {},
+    sequenceWrapper: {
+      marginBottom: theme.spacing(4),
+    },
     sequenceNumber: {
       color: fade("#fff", 0.8),
       fontWeight: 500,
@@ -100,7 +103,13 @@ const useStyles = makeStyles((theme: Theme) =>
 const GameDetails = ({ video, sequence, totalSequences, progress }: Props) => {
   const classes = useStyles();
   const [descExpanded, setDescExpanded] = useState(false);
+  const [currentWord, setCurrentWord] = useState<string | null>(null);
   const progressRounded = Math.round(progress);
+  const sequenceIndex = sequence?.index || -1;
+
+  useEffect(() => {
+    setCurrentWord(null);
+  }, [sequenceIndex]);
 
   const renderSequence = () => {
     if (sequence === null) {
@@ -118,7 +127,12 @@ const GameDetails = ({ video, sequence, totalSequences, progress }: Props) => {
 
         <div className={classes.sequenceWords}>
           {words.map((word, index) => (
-            <ButtonBase key={index} className={classes.sequenceWord} disabled={!completed}>
+            <ButtonBase
+              key={index}
+              className={classes.sequenceWord}
+              disabled={!completed}
+              onClick={() => setCurrentWord(word)}
+            >
               <span style={{ visibility: completed ? "visible" : "hidden" }}>{word}</span>
             </ButtonBase>
           ))}
@@ -133,19 +147,26 @@ const GameDetails = ({ video, sequence, totalSequences, progress }: Props) => {
         <span className={classnames(classes.pill, { [classes.completed]: progressRounded === 100 })} />
         {progressRounded}% completed / {totalSequences} sequences
       </div>
+
       <div className={classes.title}>{video.title}</div>
+
       <div className={classes.authorWrapper}>
         <img className={classes.authorAvatar} src={video.author.avatar} alt="Author's avatar" />
         <span className={classes.authorName}>{video.author.name}</span>
       </div>
+
       <div className={classes.descWrapper}>
         <div className={classnames(classes.desc, { [classes.descExpanded]: descExpanded })}>{video.description}</div>
         <Link component="button" onClick={() => setDescExpanded(!descExpanded)}>
           {descExpanded ? "LESS" : "MORE"}
         </Link>
       </div>
+
       <div className={classes.separator} />
+
       {renderSequence()}
+
+      <Translation word={currentWord} />
     </div>
   );
 };

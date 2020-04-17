@@ -33,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       display: "flex",
+      height: "100vh",
     },
     leftPanel: {
       boxSizing: "border-box",
@@ -48,6 +49,8 @@ const useStyles = makeStyles((theme: Theme) =>
       borderLeft: "solid 1px rgba(255,255,255,0.1)",
       width: 480,
       padding: theme.spacing(5, 4),
+      height: "100%",
+      overflowY: "auto",
     },
     videoWrapper: {
       marginBottom: VIDEO_MARGIN,

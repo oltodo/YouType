@@ -1,0 +1,1449 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetchTranslation() 1`] = `
+Object {
+  "terms": Array [
+    Object {
+      "POS": "n",
+      "sense": "January to December",
+      "term": "year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "du calendrier",
+          "term": "année",
+        },
+        Object {
+          "POS": "nm",
+          "sense": "période de douze mois",
+          "term": "an",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "365 or 366 days",
+      "term": "year",
+      "translations": Array [
+        Object {
+          "POS": "nm",
+          "sense": "période de douze mois",
+          "term": "an",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "period within a year",
+      "term": "year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "école, comptabilité",
+          "term": "année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "class of students",
+      "term": "year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "université, grandes écoles",
+          "term": "promotion",
+        },
+        Object {
+          "POS": "nf, abr",
+          "sense": "familier",
+          "term": "promo",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "annual teaching period",
+      "term": "academic year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année scolaire",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "annual teaching period",
+      "term": "academic year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année universitaire",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adv",
+      "sense": "throughout the year",
+      "term": "all year round, all the year round",
+      "translations": Array [
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "toute l'année",
+        },
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "tout au long de l'année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adj",
+      "sense": "lasting the whole year",
+      "term": "all-year",
+      "translations": Array [
+        Object {
+          "POS": "adj",
+          "sense": "",
+          "term": "continu",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "excellent year",
+      "term": "banner year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année exceptionnelle",
+        },
+      ],
+      "usage": "US",
+    },
+    Object {
+      "POS": "n",
+      "sense": "business: financial period",
+      "term": "business year",
+      "translations": Array [
+        Object {
+          "POS": "nm",
+          "sense": "année comptable",
+          "term": "exercice",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "365 days: 1 January to 31 December",
+      "term": "calendar year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année civile",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "12-month period ahead",
+      "term": "coming year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année qui vient",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "npl",
+      "sense": "old age",
+      "term": "declining years",
+      "translations": Array [
+        Object {
+          "POS": "nfpl",
+          "sense": "",
+          "term": "dernières années (de la vie)",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "",
+      "sense": "solar year",
+      "term": "equinoctial year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année tropique, année solaire",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adv",
+      "sense": "annually",
+      "term": "every year",
+      "translations": Array [
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "tous les ans",
+        },
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "chaque année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "person: 50 years of age",
+      "term": "fifty-year-old",
+      "translations": Array [
+        Object {
+          "POS": "nmf",
+          "sense": "",
+          "term": "quinquagénaire",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "personne de 50 ans",
+        },
+        Object {
+          "POS": "nm, nf",
+          "sense": "",
+          "term": "homme de 50 ans, femme de 50 ans",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adj",
+      "sense": "50 years of age",
+      "term": "fifty-year-old",
+      "translations": Array [
+        Object {
+          "POS": "loc adj",
+          "sense": "",
+          "term": "de cinquante ans",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "last 12 months of higher education",
+      "term": "final year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "dernière année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "close of accounting period",
+      "term": "fiscal year end (US), financial year end (UK)",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "clôture de l'année financière",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "12-month financial calendar",
+      "term": "fiscal year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année fiscale",
+        },
+        Object {
+          "POS": "nm",
+          "sense": "Comptabilité",
+          "term": "exercice, exercice comptable",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "official period of four years",
+      "term": "four-year term",
+      "translations": Array [
+        Object {
+          "POS": "nm",
+          "sense": "",
+          "term": "mandat de quatre ans",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "college: 1st year",
+      "term": "freshman year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "première année d'université",
+        },
+      ],
+      "usage": "US",
+    },
+    Object {
+      "POS": "n",
+      "sense": "college: 1st year",
+      "term": "freshman year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "familier, courant",
+          "term": "première année (de fac)",
+        },
+      ],
+      "usage": "US",
+    },
+    Object {
+      "POS": "n",
+      "sense": "college: 1st year",
+      "term": "freshman year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "plus soutenu",
+          "term": "première année d’études supérieures",
+        },
+      ],
+      "usage": "US",
+    },
+    Object {
+      "POS": "n",
+      "sense": "school-leaver's one-year break",
+      "term": "gap year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année de césure, année sabbatique",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "astronomy: full cycle of planets, etc.",
+      "term": "great year, Great Year, Platonic year, Platonic Year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "astronomie",
+          "term": "grande année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "1st January well-wishes",
+      "term": "happy New Year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "bonne année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "interj",
+      "sense": "1st January greeting",
+      "term": "Happy New Year!",
+      "translations": Array [
+        Object {
+          "POS": "interj",
+          "sense": "",
+          "term": "Bonne année !",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "interj",
+      "sense": "greeting: start of lunar year",
+      "term": "Happy New Year!",
+      "translations": Array [
+        Object {
+          "POS": "interj",
+          "sense": "",
+          "term": "Bonne année !",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "eleventh year in school",
+      "term": "junior year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "France : 16-17 ans",
+          "term": "première",
+        },
+      ],
+      "usage": "US",
+    },
+    Object {
+      "POS": "n",
+      "sense": "third year in university",
+      "term": "junior year",
+      "translations": Array [
+        Object {
+          "POS": "",
+          "sense": "jargon universitaire",
+          "term": "L3",
+        },
+      ],
+      "usage": "US",
+    },
+    Object {
+      "POS": "n",
+      "sense": "third year in university",
+      "term": "junior year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "France",
+          "term": "troisième année de (licence)",
+        },
+      ],
+      "usage": "US",
+    },
+    Object {
+      "POS": "n",
+      "sense": "year prior to this one",
+      "term": "last year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "l'année dernière",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adv",
+      "sense": "in year prior to this one",
+      "term": "last year",
+      "translations": Array [
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "l'année dernière, l'an dernier",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "unprosperous 12 months",
+      "term": "lean year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "fig",
+          "term": "année de vaches maigres",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "year: February has 29 days",
+      "term": "leap year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année bissextile",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "astronomy: measure of distance",
+      "term": "light year, light-year, lightyear",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année-lumière",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "12 lunar months",
+      "term": "lunar year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année lunaire",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adj",
+      "sense": "occurring halfway through the year",
+      "term": "mid-year",
+      "translations": Array [
+        Object {
+          "POS": "loc adj",
+          "sense": "",
+          "term": "du milieu de l'année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "period: start of year",
+      "term": "new year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "nouvelle année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "celebration: start of year",
+      "term": "New Year",
+      "translations": Array [
+        Object {
+          "POS": "nm",
+          "sense": "",
+          "term": "nouvel an",
+        },
+        Object {
+          "POS": "interj",
+          "sense": "",
+          "term": "Happy New Year! : Bonne année !",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "New Year's Eve",
+      "term": "New Year's",
+      "translations": Array [
+        Object {
+          "POS": "nm",
+          "sense": "",
+          "term": "réveillon (du Jour de l'an)",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "Saint-Sylvestre",
+        },
+      ],
+      "usage": "informal",
+    },
+    Object {
+      "POS": "n",
+      "sense": "New Year's Day",
+      "term": "New Year's",
+      "translations": Array [
+        Object {
+          "POS": "nm",
+          "sense": "",
+          "term": "Jour de l'An, Premier de l'An, Nouvel An",
+        },
+      ],
+      "usage": "informal",
+    },
+    Object {
+      "POS": "n",
+      "sense": "1st January",
+      "term": "New Year's Day",
+      "translations": Array [
+        Object {
+          "POS": "nm",
+          "sense": "",
+          "term": "Jour de l'An, Premier de l'An, Nouvel An",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "31st December",
+      "term": "New Year's Eve",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "Saint-Sylvestre",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "31st December",
+      "term": "New Year's Eve",
+      "translations": Array [
+        Object {
+          "POS": "nm",
+          "sense": "",
+          "term": "réveillon (du Jour de l'an)",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "Saint-Sylvestre",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "goal set on 1st January",
+      "term": "New Year's resolution",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "bonne résolution",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "résolution pour la nouvelle année",
+        },
+      ],
+      "usage": "often plural",
+    },
+    Object {
+      "POS": "adv",
+      "sense": "during the year after this one",
+      "term": "next year",
+      "translations": Array [
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "l'année prochaine",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adv",
+      "sense": "during the year after this one",
+      "term": "next year",
+      "translations": Array [
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "l'an prochain",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "year without major election",
+      "term": "off year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "États-Unis, Politique",
+          "term": "année sans élection présidentielle",
+        },
+      ],
+      "usage": "US",
+    },
+    Object {
+      "POS": "n",
+      "sense": "year of inferior production",
+      "term": "off year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "mauvaise année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adj",
+      "sense": "lasting one year",
+      "term": "one-year",
+      "translations": Array [
+        Object {
+          "POS": "loc adj",
+          "sense": "",
+          "term": "d'un an",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "3 months",
+      "term": "quarter year",
+      "translations": Array [
+        Object {
+          "POS": "nm",
+          "sense": "",
+          "term": "trimestre",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "England, Wales: first school year, 4-5",
+      "term": "Reception, Reception Year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "France : 4-5 ans",
+          "term": "moyenne section",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "v expr",
+      "sense": "retake studies",
+      "term": "repeat a year",
+      "translations": Array [
+        Object {
+          "POS": "vtr",
+          "sense": "familier",
+          "term": "repiquer",
+        },
+      ],
+      "usage": "informal",
+    },
+    Object {
+      "POS": "v expr",
+      "sense": "retake studies",
+      "term": "repeat a year",
+      "translations": Array [
+        Object {
+          "POS": "vtr",
+          "sense": "",
+          "term": "redoubler",
+        },
+      ],
+      "usage": "informal",
+    },
+    Object {
+      "POS": "v expr",
+      "sense": "celebrate 1st of January",
+      "term": "ring in the New Year",
+      "translations": Array [
+        Object {
+          "POS": "loc v",
+          "sense": "",
+          "term": "fêter la nouvelle année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "v expr",
+      "sense": "celebrate 1st of January",
+      "term": "ring in the New Year",
+      "translations": Array [
+        Object {
+          "POS": "loc v",
+          "sense": "",
+          "term": "fêter le Nouvel An",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "one year of authorized leave",
+      "term": "sabbatical year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année sabbatique",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "work experience",
+      "term": "sandwich year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année en alternance",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "n",
+      "sense": "academic year: autumn to summer",
+      "term": "school year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année scolaire",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "final year of school or college",
+      "term": "senior year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "dernière année",
+        },
+      ],
+      "usage": "US",
+    },
+    Object {
+      "POS": "n",
+      "sense": "final year of school or college",
+      "term": "senior year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "France, lycée",
+          "term": "terminale",
+        },
+      ],
+      "usage": "US",
+    },
+    Object {
+      "POS": "n",
+      "sense": "final year of school or college",
+      "term": "senior year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "Belgique, familier",
+          "term": "rhéto",
+        },
+      ],
+      "usage": "US",
+    },
+    Object {
+      "POS": "n",
+      "sense": "temptation for an extra-marital affair",
+      "term": "seven-year itch",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "Amour",
+          "term": "crise des sept ans",
+        },
+        Object {
+          "POS": "nm",
+          "sense": "",
+          "term": "cap des sept ans",
+        },
+      ],
+      "usage": "slang",
+    },
+    Object {
+      "POS": "adv",
+      "sense": "since a very long time ago",
+      "term": "since the year dot, from the year dot",
+      "translations": Array [
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "depuis la nuit des temps",
+        },
+        Object {
+          "POS": "loc adv",
+          "sense": "familier",
+          "term": "depuis belle lurette",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "n",
+      "sense": "period of 365 days",
+      "term": "solar year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "année tropique, année solaire",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adv",
+      "sense": "during the current year",
+      "term": "this year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "cette année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "season",
+      "term": "time of year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "période de l'année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "particularly fine year for wine",
+      "term": "vintage year",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "",
+          "term": "grande année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "England, Wales: school year, 5-6",
+      "term": "Year 1",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "France : 5-6 ans",
+          "term": "grande section, grande section de maternelle, dernière année de maternelle",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Belgique",
+          "term": "troisième maternelle",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "n",
+      "sense": "England, Wales: school year, 14-15",
+      "term": "Year 10",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "France : 14-15 ans",
+          "term": "troisième",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Belgique",
+          "term": "troisième secondaire",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "n",
+      "sense": "England, Wales: school year, 15-16",
+      "term": "Year 11",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "France : 15-16 ans",
+          "term": "seconde",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Belgique",
+          "term": "quatrième secondaire",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "n",
+      "sense": "England, Wales: school year, 16-17",
+      "term": "Year 12",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "France : 16-17 ans",
+          "term": "première",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Belgique",
+          "term": "cinquième secondaire",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "n",
+      "sense": "England, Wales: final school year, 17-18",
+      "term": "Year 13",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "France : 17-18 ans",
+          "term": "terminale",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Belgique",
+          "term": "sixième secondaire, rhéto",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "n",
+      "sense": "England, Wales: school year, 6-7",
+      "term": "Year 2",
+      "translations": Array [
+        Object {
+          "POS": "nm",
+          "sense": "France : 6-7 ans",
+          "term": "CP, cours préparatoire",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Belgique",
+          "term": "première primaire",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Can",
+          "term": "première année",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "n",
+      "sense": "England, Wales: school year, 7-8",
+      "term": "Year 3",
+      "translations": Array [
+        Object {
+          "POS": "nm",
+          "sense": "France : 7-8 ans",
+          "term": "CE1, cours élémentaire première année",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Belgique",
+          "term": "deuxième primaire",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Can",
+          "term": "deuxième année",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "n",
+      "sense": "England, Wales: school year, 8-9",
+      "term": "Year 4",
+      "translations": Array [
+        Object {
+          "POS": "nm",
+          "sense": "France : 8-9 ans",
+          "term": "CE2, cours élémentaire deuxième année",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Can",
+          "term": "troisième année",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Belgique",
+          "term": "troisième primaire",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "n",
+      "sense": "England, Wales: school year, 9-10",
+      "term": "Year 5",
+      "translations": Array [
+        Object {
+          "POS": "nm",
+          "sense": "France : 9-10 ans",
+          "term": "CM1, cours moyen première année",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Belgique",
+          "term": "quatrième primaire",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Can",
+          "term": "quatrième année",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "n",
+      "sense": "England, Wales: school year, 10-11",
+      "term": "Year 6",
+      "translations": Array [
+        Object {
+          "POS": "nm",
+          "sense": "France : 10-11 ans",
+          "term": "CM2, cours moyen deuxième année",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Belgique",
+          "term": "cinquième primaire",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Can",
+          "term": "cinquième année",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "n",
+      "sense": "England, Wales: school year, 11-12",
+      "term": "Year 7",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "France : 11-12 ans",
+          "term": "sixième",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Belgique",
+          "term": "sixième primaire",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Can",
+          "term": "sixième année",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "n",
+      "sense": "England, Wales: school year, 12-13",
+      "term": "Year 8",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "France : 12-13 ans",
+          "term": "cinquième",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Belgique",
+          "term": "première secondaire",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Can",
+          "term": "septième année",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "n",
+      "sense": "England, Wales: school year, 13-14",
+      "term": "Year 9",
+      "translations": Array [
+        Object {
+          "POS": "nf",
+          "sense": "France : 13-14 ans",
+          "term": "quatrième",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Belgique",
+          "term": "deuxième secondaire",
+        },
+        Object {
+          "POS": "nf",
+          "sense": "Can",
+          "term": "huitième année",
+        },
+      ],
+      "usage": "UK",
+    },
+    Object {
+      "POS": "adv",
+      "sense": "every year",
+      "term": "year after year",
+      "translations": Array [
+        Object {
+          "POS": "adv",
+          "sense": "",
+          "term": "année après année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adv",
+      "sense": "every year",
+      "term": "year after year",
+      "translations": Array [
+        Object {
+          "POS": "adv",
+          "sense": "",
+          "term": "tous les ans",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adv",
+      "sense": "continously; without interruption",
+      "term": "year after year",
+      "translations": Array [
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "sans arrêt",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adv",
+      "sense": "every year",
+      "term": "year in, year out",
+      "translations": Array [
+        Object {
+          "POS": "adv",
+          "sense": "",
+          "term": "année après année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adv",
+      "sense": "every year",
+      "term": "year in, year out",
+      "translations": Array [
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "tous les ans",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "from start of year to now",
+      "term": "year to date",
+      "translations": Array [
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "depuis le début de l'année",
+        },
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "à ce jour",
+        },
+        Object {
+          "POS": "adv",
+          "sense": "",
+          "term": "au",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adj",
+      "sense": "end of year",
+      "term": "year-end",
+      "translations": Array [
+        Object {
+          "POS": "loc adj",
+          "sense": "",
+          "term": "de fin d'année",
+        },
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "en fin d'année",
+        },
+        Object {
+          "POS": "loc adv",
+          "sense": "Comptabilité",
+          "term": "en fin d'exercice",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adj",
+      "sense": "compared to the previous year",
+      "term": "year-over-year",
+      "translations": Array [
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "d'une année sur l'autre",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adj",
+      "sense": "compared to the previous year",
+      "term": "year-over-year",
+      "translations": Array [
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "par rapport à l'année dernière",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "adj",
+      "sense": "lasting all year",
+      "term": "year-round",
+      "translations": Array [
+        Object {
+          "POS": "loc adv",
+          "sense": "",
+          "term": "sur toute l'année, pendant toute l'année",
+        },
+      ],
+      "usage": "",
+    },
+    Object {
+      "POS": "n",
+      "sense": "sth or sb of the specified age",
+      "term": "-year-old",
+      "translations": Array [
+        Object {
+          "POS": "",
+          "sense": "",
+          "term": "homme/femme/garçon/fille/... de x ans",
+        },
+        Object {
+          "POS": "",
+          "sense": "plus soutenu",
+          "term": "homme/femme/garçon/fille/... âgé de x ans",
+        },
+        Object {
+          "POS": "",
+          "sense": "",
+          "term": "avoir x ans",
+        },
+      ],
+      "usage": "as suffix",
+    },
+    Object {
+      "POS": "adj",
+      "sense": "being of the specified age",
+      "term": "-year-old",
+      "translations": Array [
+        Object {
+          "POS": "loc adj",
+          "sense": "",
+          "term": "de x ans",
+        },
+        Object {
+          "POS": "loc adj",
+          "sense": "plus soutenu",
+          "term": "âgé de x ans",
+        },
+      ],
+      "usage": "as suffix",
+    },
+  ],
+  "word": "year",
+}
+`;

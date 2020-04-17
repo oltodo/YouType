@@ -1,0 +1,680 @@
+{
+  "term0": {
+    "PrincipalTranslations": {
+      "0": {
+        "OriginalTerm": { "term": "year", "POS": "n", "sense": "January to December", "usage": "" },
+        "FirstTranslation": { "term": "année", "POS": "nf", "sense": "du calendrier" },
+        "SecondTranslation": { "term": "an", "POS": "nm", "sense": "période de douze mois" },
+        "Note": ""
+      },
+      "1": {
+        "OriginalTerm": { "term": "year", "POS": "n", "sense": "365 or 366 days", "usage": "" },
+        "FirstTranslation": { "term": "an", "POS": "nm", "sense": "période de douze mois" },
+        "Note": ""
+      }
+    },
+    "AdditionalTranslations": {
+      "0": {
+        "OriginalTerm": { "term": "year", "POS": "n", "sense": "period within a year", "usage": "" },
+        "FirstTranslation": { "term": "année", "POS": "nf", "sense": "école, comptabilité" },
+        "Note": ""
+      },
+      "1": {
+        "OriginalTerm": { "term": "year", "POS": "n", "sense": "class of students", "usage": "" },
+        "FirstTranslation": { "term": "promotion", "POS": "nf", "sense": "université, grandes écoles" },
+        "SecondTranslation": { "term": "promo", "POS": "nf, abr", "sense": "familier" },
+        "Note": ""
+      }
+    }
+  },
+  "original": {
+    "Compounds": {
+      "0": {
+        "OriginalTerm": { "term": "academic year", "POS": "n", "sense": "annual teaching period", "usage": "" },
+        "FirstTranslation": { "term": "année scolaire", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "1": {
+        "OriginalTerm": { "term": "academic year", "POS": "n", "sense": "annual teaching period", "usage": "" },
+        "FirstTranslation": { "term": "année universitaire", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "2": {
+        "OriginalTerm": {
+          "term": "all year round, all the year round",
+          "POS": "adv",
+          "sense": "throughout the year",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "toute l'année", "POS": "loc adv", "sense": "" },
+        "SecondTranslation": { "term": "tout au long de l'année", "POS": "loc adv", "sense": "" },
+        "Note": ""
+      },
+      "3": {
+        "OriginalTerm": { "term": "all-year", "POS": "adj", "sense": "lasting the whole year", "usage": "" },
+        "FirstTranslation": { "term": "continu", "POS": "adj", "sense": "" },
+        "Note": ""
+      },
+      "4": {
+        "OriginalTerm": { "term": "banner year", "POS": "n", "sense": "excellent year", "usage": "US" },
+        "FirstTranslation": { "term": "année exceptionnelle", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "5": {
+        "OriginalTerm": { "term": "business year", "POS": "n", "sense": "business: financial period", "usage": "" },
+        "FirstTranslation": { "term": "exercice", "POS": "nm", "sense": "année comptable" },
+        "Note": ""
+      },
+      "6": {
+        "OriginalTerm": {
+          "term": "calendar year",
+          "POS": "n",
+          "sense": "365 days: 1 January to 31 December",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "année civile", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "7": {
+        "OriginalTerm": { "term": "coming year", "POS": "n", "sense": "12-month period ahead", "usage": "" },
+        "FirstTranslation": { "term": "année qui vient", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "8": {
+        "OriginalTerm": {
+          "term": "declining year, replace: declining years",
+          "POS": "npl",
+          "sense": "old age",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "dernières années (de la vie)", "POS": "nfpl", "sense": "" },
+        "Note": ""
+      },
+      "9": {
+        "OriginalTerm": { "term": "equinoctial year", "POS": "", "sense": "solar year", "usage": "" },
+        "FirstTranslation": { "term": "année tropique, année solaire", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "10": {
+        "OriginalTerm": { "term": "every year", "POS": "adv", "sense": "annually", "usage": "" },
+        "FirstTranslation": { "term": "tous les ans", "POS": "loc adv", "sense": "" },
+        "SecondTranslation": { "term": "chaque année", "POS": "loc adv", "sense": "" },
+        "Note": ""
+      },
+      "11": {
+        "OriginalTerm": { "term": "fifty-year-old", "POS": "n", "sense": "person: 50 years of age", "usage": "" },
+        "FirstTranslation": { "term": "quinquagénaire", "POS": "nmf", "sense": "" },
+        "SecondTranslation": { "term": "personne de 50 ans", "POS": "nf", "sense": "" },
+        "ThirdTranslation": { "term": "homme de 50 ans, femme de 50 ans", "POS": "nm, nf", "sense": "" },
+        "Note": ""
+      },
+      "12": {
+        "OriginalTerm": { "term": "fifty-year-old", "POS": "adj", "sense": "50 years of age", "usage": "" },
+        "FirstTranslation": { "term": "de cinquante ans", "POS": "loc adj", "sense": "" },
+        "Note": ""
+      },
+      "13": {
+        "OriginalTerm": {
+          "term": "final year",
+          "POS": "n",
+          "sense": "last 12 months of higher education",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "dernière année", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "14": {
+        "OriginalTerm": {
+          "term": "financial year end, replace: fiscal year end (US), financial year end (UK)",
+          "POS": "n",
+          "sense": "close of accounting period",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "clôture de l'année financière", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "15": {
+        "OriginalTerm": { "term": "fiscal year", "POS": "n", "sense": "12-month financial calendar", "usage": "" },
+        "FirstTranslation": { "term": "année fiscale", "POS": "nf", "sense": "" },
+        "SecondTranslation": { "term": "exercice, exercice comptable", "POS": "nm", "sense": "Comptabilité" },
+        "Note": ""
+      },
+      "16": {
+        "OriginalTerm": { "term": "four-year term", "POS": "n", "sense": "official period of four years", "usage": "" },
+        "FirstTranslation": { "term": "mandat de quatre ans", "POS": "nm", "sense": "" },
+        "Note": ""
+      },
+      "17": {
+        "OriginalTerm": { "term": "freshman year", "POS": "n", "sense": "college: 1st year", "usage": "US" },
+        "FirstTranslation": { "term": "première année d'université", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "18": {
+        "OriginalTerm": { "term": "freshman year", "POS": "n", "sense": "college: 1st year", "usage": "US" },
+        "FirstTranslation": { "term": "première année (de fac)", "POS": "nf", "sense": "familier, courant" },
+        "Note": ""
+      },
+      "19": {
+        "OriginalTerm": { "term": "freshman year", "POS": "n", "sense": "college: 1st year", "usage": "US" },
+        "FirstTranslation": { "term": "première année d’études supérieures", "POS": "nf", "sense": "plus soutenu" },
+        "Note": ""
+      },
+      "20": {
+        "OriginalTerm": { "term": "gap year", "POS": "n", "sense": "school-leaver's one-year break", "usage": "" },
+        "FirstTranslation": { "term": "année de césure, année sabbatique", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "21": {
+        "OriginalTerm": {
+          "term": "great year, Great Year, Platonic year, Platonic Year",
+          "POS": "n",
+          "sense": "astronomy: full cycle of planets, etc.",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "grande année", "POS": "nf", "sense": "astronomie" },
+        "Note": ""
+      },
+      "22": {
+        "OriginalTerm": { "term": "happy New Year", "POS": "n", "sense": "1st January well-wishes", "usage": "" },
+        "FirstTranslation": { "term": "bonne année", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "23": {
+        "OriginalTerm": {
+          "term": "Happy New Year, replace: Happy New Year!",
+          "POS": "interj",
+          "sense": "1st January greeting",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "Bonne année !", "POS": "interj", "sense": "" },
+        "Note": ""
+      },
+      "24": {
+        "OriginalTerm": {
+          "term": "Happy New Year, replace: Happy New Year!",
+          "POS": "interj",
+          "sense": "greeting: start of lunar year",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "Bonne année !", "POS": "interj", "sense": "" },
+        "Note": ""
+      },
+      "25": {
+        "OriginalTerm": { "term": "junior year", "POS": "n", "sense": "eleventh year in school", "usage": "US" },
+        "FirstTranslation": { "term": "première", "POS": "nf", "sense": "France : 16-17 ans" },
+        "Note": ""
+      },
+      "26": {
+        "OriginalTerm": { "term": "junior year", "POS": "n", "sense": "third year in university", "usage": "US" },
+        "FirstTranslation": { "term": "L3", "POS": "", "sense": "jargon universitaire" },
+        "Note": ""
+      },
+      "27": {
+        "OriginalTerm": { "term": "junior year", "POS": "n", "sense": "third year in university", "usage": "US" },
+        "FirstTranslation": { "term": "troisième année de (licence)", "POS": "nf", "sense": "France" },
+        "Note": ""
+      },
+      "28": {
+        "OriginalTerm": { "term": "last year", "POS": "n", "sense": "year prior to this one", "usage": "" },
+        "FirstTranslation": { "term": "l'année dernière", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "29": {
+        "OriginalTerm": { "term": "last year", "POS": "adv", "sense": "in year prior to this one", "usage": "" },
+        "FirstTranslation": { "term": "l'année dernière, l'an dernier", "POS": "loc adv", "sense": "" },
+        "Note": ""
+      },
+      "30": {
+        "OriginalTerm": { "term": "lean year", "POS": "n", "sense": "unprosperous 12 months", "usage": "" },
+        "FirstTranslation": { "term": "année de vaches maigres", "POS": "nf", "sense": "fig" },
+        "Note": ""
+      },
+      "31": {
+        "OriginalTerm": { "term": "leap year", "POS": "n", "sense": "year: February has 29 days", "usage": "" },
+        "FirstTranslation": { "term": "année bissextile", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "32": {
+        "OriginalTerm": {
+          "term": "light year, light-year, lightyear",
+          "POS": "n",
+          "sense": "astronomy: measure of distance",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "année-lumière", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "33": {
+        "OriginalTerm": { "term": "lunar year", "POS": "n", "sense": "12 lunar months", "usage": "" },
+        "FirstTranslation": { "term": "année lunaire", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "34": {
+        "OriginalTerm": {
+          "term": "mid-year",
+          "POS": "adj",
+          "sense": "occurring halfway through the year",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "du milieu de l'année", "POS": "loc adj", "sense": "" },
+        "Note": ""
+      },
+      "35": {
+        "OriginalTerm": { "term": "new year", "POS": "n", "sense": "period: start of year", "usage": "" },
+        "FirstTranslation": { "term": "nouvelle année", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "36": {
+        "OriginalTerm": {
+          "term": "new year, replace: New Year",
+          "POS": "n",
+          "sense": "celebration: start of year",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "nouvel an", "POS": "nm", "sense": "" },
+        "SecondTranslation": { "term": "Happy New Year! : Bonne année !", "POS": "interj", "sense": "" },
+        "Note": ""
+      },
+      "37": {
+        "OriginalTerm": { "term": "New Year's", "POS": "n", "sense": "New Year's Eve", "usage": "informal" },
+        "FirstTranslation": { "term": "réveillon (du Jour de l'an)", "POS": "nm", "sense": "" },
+        "SecondTranslation": { "term": "Saint-Sylvestre", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "38": {
+        "OriginalTerm": { "term": "New Year's", "POS": "n", "sense": "New Year's Day", "usage": "informal" },
+        "FirstTranslation": { "term": "Jour de l'An, Premier de l'An, Nouvel An", "POS": "nm", "sense": "" },
+        "Note": ""
+      },
+      "39": {
+        "OriginalTerm": { "term": "New Year's Day", "POS": "n", "sense": "1st January", "usage": "" },
+        "FirstTranslation": { "term": "Jour de l'An, Premier de l'An, Nouvel An", "POS": "nm", "sense": "" },
+        "Note": ""
+      },
+      "40": {
+        "OriginalTerm": { "term": "New Year's Eve", "POS": "n", "sense": "31st December", "usage": "" },
+        "FirstTranslation": { "term": "Saint-Sylvestre", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "41": {
+        "OriginalTerm": { "term": "New Year's Eve", "POS": "n", "sense": "31st December", "usage": "" },
+        "FirstTranslation": { "term": "réveillon (du Jour de l'an)", "POS": "nm", "sense": "" },
+        "SecondTranslation": { "term": "Saint-Sylvestre", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "42": {
+        "OriginalTerm": {
+          "term": "New Year's resolution",
+          "POS": "n",
+          "sense": "goal set on 1st January",
+          "usage": "often plural"
+        },
+        "FirstTranslation": { "term": "bonne résolution", "POS": "nf", "sense": "" },
+        "SecondTranslation": { "term": "résolution pour la nouvelle année", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "43": {
+        "OriginalTerm": { "term": "next year", "POS": "adv", "sense": "during the year after this one", "usage": "" },
+        "FirstTranslation": { "term": "l'année prochaine", "POS": "loc adv", "sense": "" },
+        "Note": ""
+      },
+      "44": {
+        "OriginalTerm": { "term": "next year", "POS": "adv", "sense": "during the year after this one", "usage": "" },
+        "FirstTranslation": { "term": "l'an prochain", "POS": "loc adv", "sense": "" },
+        "Note": ""
+      },
+      "45": {
+        "OriginalTerm": { "term": "off year", "POS": "n", "sense": "year without major election", "usage": "US" },
+        "FirstTranslation": {
+          "term": "année sans élection présidentielle",
+          "POS": "nf",
+          "sense": "États-Unis, Politique"
+        },
+        "Note": ""
+      },
+      "46": {
+        "OriginalTerm": { "term": "off year", "POS": "n", "sense": "year of inferior production", "usage": "" },
+        "FirstTranslation": { "term": "mauvaise année", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "47": {
+        "OriginalTerm": { "term": "one-year", "POS": "adj", "sense": "lasting one year", "usage": "" },
+        "FirstTranslation": { "term": "d'un an", "POS": "loc adj", "sense": "" },
+        "Note": ""
+      },
+      "48": {
+        "OriginalTerm": { "term": "quarter year", "POS": "n", "sense": "3 months", "usage": "" },
+        "FirstTranslation": { "term": "trimestre", "POS": "nm", "sense": "" },
+        "Note": ""
+      },
+      "49": {
+        "OriginalTerm": {
+          "term": "Reception, Reception Year",
+          "POS": "n",
+          "sense": "England, Wales: first school year, 4-5",
+          "usage": "UK"
+        },
+        "FirstTranslation": { "term": "moyenne section", "POS": "nf", "sense": "France : 4-5 ans" },
+        "Note": ""
+      },
+      "50": {
+        "OriginalTerm": { "term": "repeat a year", "POS": "v expr", "sense": "retake studies", "usage": "informal" },
+        "FirstTranslation": { "term": "repiquer", "POS": "vtr", "sense": "familier" },
+        "Note": ""
+      },
+      "51": {
+        "OriginalTerm": { "term": "repeat a year", "POS": "v expr", "sense": "retake studies", "usage": "informal" },
+        "FirstTranslation": { "term": "redoubler", "POS": "vtr", "sense": "" },
+        "Note": ""
+      },
+      "52": {
+        "OriginalTerm": {
+          "term": "ring in the New Year",
+          "POS": "v expr",
+          "sense": "celebrate 1st of January",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "fêter la nouvelle année", "POS": "loc v", "sense": "" },
+        "Note": ""
+      },
+      "53": {
+        "OriginalTerm": {
+          "term": "ring in the New Year",
+          "POS": "v expr",
+          "sense": "celebrate 1st of January",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "fêter le Nouvel An", "POS": "loc v", "sense": "" },
+        "Note": ""
+      },
+      "54": {
+        "OriginalTerm": { "term": "sabbatical year", "POS": "n", "sense": "one year of authorized leave", "usage": "" },
+        "FirstTranslation": { "term": "année sabbatique", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "55": {
+        "OriginalTerm": { "term": "sandwich year", "POS": "n", "sense": "work experience", "usage": "UK" },
+        "FirstTranslation": { "term": "année en alternance", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "56": {
+        "OriginalTerm": { "term": "school year", "POS": "n", "sense": "academic year: autumn to summer", "usage": "" },
+        "FirstTranslation": { "term": "année scolaire", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "57": {
+        "OriginalTerm": {
+          "term": "senior year",
+          "POS": "n",
+          "sense": "final year of school or college",
+          "usage": "US"
+        },
+        "FirstTranslation": { "term": "dernière année", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "58": {
+        "OriginalTerm": {
+          "term": "senior year",
+          "POS": "n",
+          "sense": "final year of school or college",
+          "usage": "US"
+        },
+        "FirstTranslation": { "term": "terminale", "POS": "nf", "sense": "France, lycée" },
+        "Note": ""
+      },
+      "59": {
+        "OriginalTerm": {
+          "term": "senior year",
+          "POS": "n",
+          "sense": "final year of school or college",
+          "usage": "US"
+        },
+        "FirstTranslation": { "term": "rhéto", "POS": "nf", "sense": "Belgique, familier" },
+        "Note": ""
+      },
+      "60": {
+        "OriginalTerm": {
+          "term": "seven-year itch",
+          "POS": "n",
+          "sense": "temptation for an extra-marital affair",
+          "usage": "slang"
+        },
+        "FirstTranslation": { "term": "crise des sept ans", "POS": "nf", "sense": "Amour" },
+        "SecondTranslation": { "term": "cap des sept ans", "POS": "nm", "sense": "" },
+        "Note": ""
+      },
+      "61": {
+        "OriginalTerm": {
+          "term": "since the year dot, from the year dot",
+          "POS": "adv",
+          "sense": "since a very long time ago",
+          "usage": "UK"
+        },
+        "FirstTranslation": { "term": "depuis la nuit des temps", "POS": "loc adv", "sense": "" },
+        "SecondTranslation": { "term": "depuis belle lurette", "POS": "loc adv", "sense": "familier" },
+        "Note": ""
+      },
+      "62": {
+        "OriginalTerm": { "term": "solar year", "POS": "n", "sense": "period of 365 days", "usage": "" },
+        "FirstTranslation": { "term": "année tropique, année solaire", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "63": {
+        "OriginalTerm": { "term": "this year", "POS": "adv", "sense": "during the current year", "usage": "" },
+        "FirstTranslation": { "term": "cette année", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "64": {
+        "OriginalTerm": { "term": "time of year", "POS": "n", "sense": "season", "usage": "" },
+        "FirstTranslation": { "term": "période de l'année", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "65": {
+        "OriginalTerm": { "term": "vintage year", "POS": "n", "sense": "particularly fine year for wine", "usage": "" },
+        "FirstTranslation": { "term": "grande année", "POS": "nf", "sense": "" },
+        "Note": ""
+      },
+      "66": {
+        "OriginalTerm": { "term": "Year 1", "POS": "n", "sense": "England, Wales: school year, 5-6", "usage": "UK" },
+        "FirstTranslation": {
+          "term": "grande section, grande section de maternelle, dernière année de maternelle",
+          "POS": "nf",
+          "sense": "France : 5-6 ans"
+        },
+        "SecondTranslation": { "term": "troisième maternelle", "POS": "nf", "sense": "Belgique" },
+        "Note": ""
+      },
+      "67": {
+        "OriginalTerm": { "term": "Year 10", "POS": "n", "sense": "England, Wales: school year, 14-15", "usage": "UK" },
+        "FirstTranslation": { "term": "troisième", "POS": "nf", "sense": "France : 14-15 ans" },
+        "SecondTranslation": { "term": "troisième secondaire", "POS": "nf", "sense": "Belgique" },
+        "Note": ""
+      },
+      "68": {
+        "OriginalTerm": { "term": "Year 11", "POS": "n", "sense": "England, Wales: school year, 15-16", "usage": "UK" },
+        "FirstTranslation": { "term": "seconde", "POS": "nf", "sense": "France : 15-16 ans" },
+        "SecondTranslation": { "term": "quatrième secondaire", "POS": "nf", "sense": "Belgique" },
+        "Note": ""
+      },
+      "69": {
+        "OriginalTerm": { "term": "Year 12", "POS": "n", "sense": "England, Wales: school year, 16-17", "usage": "UK" },
+        "FirstTranslation": { "term": "première", "POS": "nf", "sense": "France : 16-17 ans" },
+        "SecondTranslation": { "term": "cinquième secondaire", "POS": "nf", "sense": "Belgique" },
+        "Note": ""
+      },
+      "70": {
+        "OriginalTerm": {
+          "term": "Year 13",
+          "POS": "n",
+          "sense": "England, Wales: final school year, 17-18",
+          "usage": "UK"
+        },
+        "FirstTranslation": { "term": "terminale", "POS": "nf", "sense": "France : 17-18 ans" },
+        "SecondTranslation": { "term": "sixième secondaire, rhéto", "POS": "nf", "sense": "Belgique" },
+        "Note": ""
+      },
+      "71": {
+        "OriginalTerm": { "term": "Year 2", "POS": "n", "sense": "England, Wales: school year, 6-7", "usage": "UK" },
+        "FirstTranslation": { "term": "CP, cours préparatoire", "POS": "nm", "sense": "France : 6-7 ans" },
+        "SecondTranslation": { "term": "première primaire", "POS": "nf", "sense": "Belgique" },
+        "ThirdTranslation": { "term": "première année", "POS": "nf", "sense": "Can" },
+        "Note": ""
+      },
+      "72": {
+        "OriginalTerm": { "term": "Year 3", "POS": "n", "sense": "England, Wales: school year, 7-8", "usage": "UK" },
+        "FirstTranslation": {
+          "term": "CE1, cours élémentaire première année",
+          "POS": "nm",
+          "sense": "France : 7-8 ans"
+        },
+        "SecondTranslation": { "term": "deuxième primaire", "POS": "nf", "sense": "Belgique" },
+        "ThirdTranslation": { "term": "deuxième année", "POS": "nf", "sense": "Can" },
+        "Note": ""
+      },
+      "73": {
+        "OriginalTerm": { "term": "Year 4", "POS": "n", "sense": "England, Wales: school year, 8-9", "usage": "UK" },
+        "FirstTranslation": {
+          "term": "CE2, cours élémentaire deuxième année",
+          "POS": "nm",
+          "sense": "France : 8-9 ans"
+        },
+        "SecondTranslation": { "term": "troisième année", "POS": "nf", "sense": "Can" },
+        "ThirdTranslation": { "term": "troisième primaire", "POS": "nf", "sense": "Belgique" },
+        "Note": ""
+      },
+      "74": {
+        "OriginalTerm": { "term": "Year 5", "POS": "n", "sense": "England, Wales: school year, 9-10", "usage": "UK" },
+        "FirstTranslation": { "term": "CM1, cours moyen première année", "POS": "nm", "sense": "France : 9-10 ans" },
+        "SecondTranslation": { "term": "quatrième primaire", "POS": "nf", "sense": "Belgique" },
+        "ThirdTranslation": { "term": "quatrième année", "POS": "nf", "sense": "Can" },
+        "Note": ""
+      },
+      "75": {
+        "OriginalTerm": { "term": "Year 6", "POS": "n", "sense": "England, Wales: school year, 10-11", "usage": "UK" },
+        "FirstTranslation": { "term": "CM2, cours moyen deuxième année", "POS": "nm", "sense": "France : 10-11 ans" },
+        "SecondTranslation": { "term": "cinquième primaire", "POS": "nf", "sense": "Belgique" },
+        "ThirdTranslation": { "term": "cinquième année", "POS": "nf", "sense": "Can" },
+        "Note": ""
+      },
+      "76": {
+        "OriginalTerm": { "term": "Year 7", "POS": "n", "sense": "England, Wales: school year, 11-12", "usage": "UK" },
+        "FirstTranslation": { "term": "sixième", "POS": "nf", "sense": "France : 11-12 ans" },
+        "SecondTranslation": { "term": "sixième primaire", "POS": "nf", "sense": "Belgique" },
+        "ThirdTranslation": { "term": "sixième année", "POS": "nf", "sense": "Can" },
+        "Note": ""
+      },
+      "77": {
+        "OriginalTerm": { "term": "Year 8", "POS": "n", "sense": "England, Wales: school year, 12-13", "usage": "UK" },
+        "FirstTranslation": { "term": "cinquième", "POS": "nf", "sense": "France : 12-13 ans" },
+        "SecondTranslation": { "term": "première secondaire", "POS": "nf", "sense": "Belgique" },
+        "ThirdTranslation": { "term": "septième année", "POS": "nf", "sense": "Can" },
+        "Note": ""
+      },
+      "78": {
+        "OriginalTerm": { "term": "Year 9", "POS": "n", "sense": "England, Wales: school year, 13-14", "usage": "UK" },
+        "FirstTranslation": { "term": "quatrième", "POS": "nf", "sense": "France : 13-14 ans" },
+        "SecondTranslation": { "term": "deuxième secondaire", "POS": "nf", "sense": "Belgique" },
+        "ThirdTranslation": { "term": "huitième année", "POS": "nf", "sense": "Can" },
+        "Note": ""
+      },
+      "79": {
+        "OriginalTerm": { "term": "year after year", "POS": "adv", "sense": "every year", "usage": "" },
+        "FirstTranslation": { "term": "année après année", "POS": "adv", "sense": "" },
+        "Note": ""
+      },
+      "80": {
+        "OriginalTerm": { "term": "year after year", "POS": "adv", "sense": "every year", "usage": "" },
+        "FirstTranslation": { "term": "tous les ans", "POS": "adv", "sense": "" },
+        "Note": ""
+      },
+      "81": {
+        "OriginalTerm": {
+          "term": "year after year",
+          "POS": "adv",
+          "sense": "continously; without interruption",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "sans arrêt", "POS": "loc adv", "sense": "" },
+        "Note": ""
+      },
+      "82": {
+        "OriginalTerm": { "term": "year in, year out", "POS": "adv", "sense": "every year", "usage": "" },
+        "FirstTranslation": { "term": "année après année", "POS": "adv", "sense": "" },
+        "Note": ""
+      },
+      "83": {
+        "OriginalTerm": { "term": "year in, year out", "POS": "adv", "sense": "every year", "usage": "" },
+        "FirstTranslation": { "term": "tous les ans", "POS": "loc adv", "sense": "" },
+        "Note": ""
+      },
+      "84": {
+        "OriginalTerm": { "term": "year to date", "POS": "n", "sense": "from start of year to now", "usage": "" },
+        "FirstTranslation": { "term": "depuis le début de l'année", "POS": "loc adv", "sense": "" },
+        "SecondTranslation": { "term": "à ce jour", "POS": "loc adv", "sense": "" },
+        "ThirdTranslation": { "term": "au", "POS": "adv", "sense": "" },
+        "Note": ""
+      },
+      "85": {
+        "OriginalTerm": { "term": "year-end", "POS": "adj", "sense": "end of year", "usage": "" },
+        "FirstTranslation": { "term": "de fin d'année", "POS": "loc adj", "sense": "" },
+        "SecondTranslation": { "term": "en fin d'année", "POS": "loc adv", "sense": "" },
+        "ThirdTranslation": { "term": "en fin d'exercice", "POS": "loc adv", "sense": "Comptabilité" },
+        "Note": ""
+      },
+      "86": {
+        "OriginalTerm": {
+          "term": "year-over-year",
+          "POS": "adj",
+          "sense": "compared to the previous year",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "d'une année sur l'autre", "POS": "loc adv", "sense": "" },
+        "Note": ""
+      },
+      "87": {
+        "OriginalTerm": {
+          "term": "year-over-year",
+          "POS": "adj",
+          "sense": "compared to the previous year",
+          "usage": ""
+        },
+        "FirstTranslation": { "term": "par rapport à l'année dernière", "POS": "loc adv", "sense": "" },
+        "Note": ""
+      },
+      "88": {
+        "OriginalTerm": { "term": "year-round", "POS": "adj", "sense": "lasting all year", "usage": "" },
+        "FirstTranslation": { "term": "sur toute l'année, pendant toute l'année", "POS": "loc adv", "sense": "" },
+        "Note": ""
+      },
+      "89": {
+        "OriginalTerm": {
+          "term": "years old, replace: -year-old",
+          "POS": "n",
+          "sense": "sth or sb of the specified age",
+          "usage": "as suffix"
+        },
+        "FirstTranslation": { "term": "homme/femme/garçon/fille/... de x ans", "POS": "", "sense": "" },
+        "SecondTranslation": {
+          "term": "homme/femme/garçon/fille/... âgé de x ans",
+          "POS": "",
+          "sense": "plus soutenu"
+        },
+        "ThirdTranslation": { "term": "avoir x ans", "POS": "", "sense": "" },
+        "Note": "Used in combination: e.g., She is a three-year-old."
+      },
+      "90": {
+        "OriginalTerm": {
+          "term": "years old, replace: -year-old",
+          "POS": "adj",
+          "sense": "being of the specified age",
+          "usage": "as suffix"
+        },
+        "FirstTranslation": { "term": "de x ans", "POS": "loc adj", "sense": "" },
+        "SecondTranslation": { "term": "âgé de x ans", "POS": "loc adj", "sense": "plus soutenu" },
+        "Note": "Used in combination: e.g., That is a three-year-old horse."
+      }
+    }
+  },
+  "Lines": "End Reached",
+  "END": true
+}
