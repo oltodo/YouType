@@ -96,8 +96,8 @@ const Translation = ({ word }: Props) => {
 
     return (
       <div className={classes.terms}>
-        {data.terms.map(({ term, POS, sense, translations }) => (
-          <div className={classes.term}>
+        {data.terms.map(({ term, POS, sense, translations }, index) => (
+          <div key={index} className={classes.term}>
             <div className={classes.original}>
               {term.split(",").map((part, index) => (
                 <div className={classes.originalLine} key={index}>
@@ -108,7 +108,7 @@ const Translation = ({ word }: Props) => {
               ))}
             </div>
             {translations.map((trans, index) => (
-              <div className={classes.trans}>
+              <div key={index} className={classes.trans}>
                 <span>
                   <span className={classes.transValue}>{trans.term}</span>
                   <span className={classes.transPos}>{trans.POS}</span>
