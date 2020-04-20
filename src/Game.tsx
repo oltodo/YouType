@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { videoFormat } from "ytdl-core";
 import find from "lodash/find";
-import inRange from "lodash/inRange";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 import { RootState } from "redux/rootReducer";
@@ -87,62 +86,66 @@ const Game: React.FC = () => {
   const [currentSequenceIndex, setCurrentSequenceIndex] = useState<number | null>(null);
   const currentSequence: Sequence | null = currentSequenceIndex !== null ? sequences[currentSequenceIndex] : null;
 
-  const isFirstSequence = () => {
-    if (!sequences || sequences.length === 0 || videoRef.current === null) {
-      return true;
+  const [playTo, setPlayTo] = useState(0);
+
+  const getPreviousSequence = () => {
+    if (currentSequenceIndex === null) {
+      const index = sequences.findIndex(curr => curr.start >= videoRef.current.currentTime);
+
+      return index > 0 ? sequences[index - 1] : null;
     }
 
-    const start = sequences[0].start;
-
-    return videoRef.current.currentTime < start;
+    return sequences[currentSequenceIndex - 1] || null;
   };
 
-  const isLastSequence = () => {
-    if (!sequences || sequences.length === 0 || videoRef.current === null) {
-      return true;
+  const getNextSequence = () => {
+    if (currentSequenceIndex === null) {
+      return sequences.find(curr => curr.start >= videoRef.current.currentTime);
+    }
+
+    return sequences[currentSequenceIndex + 1] || null;
+  };
+
+  const hasPreviousSequence = () => {
+    if (sequences.length === 0 || videoRef.current === null) {
+      return false;
+    }
+
+    return videoRef.current.currentTime > sequences[0].end;
+  };
+
+  const hasNextSequence = () => {
+    if (sequences.length === 0 || videoRef.current === null) {
+      return false;
+    }
+
+    if (currentSequence && !currentSequence.completed) {
+      return false;
     }
 
     const start = sequences[sequences.length - 1].start;
 
-    return videoRef.current.currentTime >= start;
+    return videoRef.current.currentTime < start;
   };
 
-  const handlePlay = () => {
-    videoRef.current.play();
-  };
-
-  const handlePreviousCaption = () => {
+  const handlePreviousSequence = () => {
     videoRef.current.pause();
 
-    if (!currentSequence) {
-      const nextSequence = sequences[0];
-      videoRef.current.currentTime = nextSequence.start + 0.01;
-      return;
-    }
+    const previousSequence = getPreviousSequence();
 
-    if (currentSequence.index === 0) {
-      return;
+    if (previousSequence) {
+      videoRef.current.currentTime = previousSequence.start + 0.01;
     }
-
-    const nextSequence = sequences[currentSequence.index - 1];
-    videoRef.current.currentTime = nextSequence.start + 0.01;
   };
 
   const handleNextSequence = () => {
     videoRef.current.pause();
 
-    if (!currentSequence) {
-      const nextSequence = sequences[0];
+    const nextSequence = getNextSequence();
+
+    if (nextSequence) {
       videoRef.current.currentTime = nextSequence.start + 0.01;
-      return;
     }
-
-    if (currentSequence.index === sequences.length - 1) {
-      return;
-    }
-
-    const nextSequence = sequences[currentSequence.index + 1];
-    videoRef.current.currentTime = nextSequence.start + 0.01;
   };
 
   const handleFillCurrentLetter = () => {
@@ -163,7 +166,7 @@ const Game: React.FC = () => {
     }
   };
 
-  const handleReplayCurrentCaption = (speed: number) => {
+  const handleReplayCurrentSequence = (speed: number) => {
     if (!currentSequence) {
       return;
     }
@@ -171,7 +174,7 @@ const Game: React.FC = () => {
     previousTimeRef.current = currentSequence.start;
     videoRef.current.currentTime = currentSequence.start + 0.01;
     videoRef.current.playbackRate = speed;
-    handlePlay();
+    videoRef.current.play();
   };
 
   const handlePlayerFocus = () => {
@@ -195,10 +198,38 @@ const Game: React.FC = () => {
   }, [captions, dispatch]);
 
   useEffect(() => {
+    const videoElt = videoRef.current;
+    videoElt.addEventListener("focus", handlePlayerFocus);
+
+    return () => {
+      videoElt.removeEventListener("focus", handlePlayerFocus);
+    };
+  }, []);
+
+  useEffect(() => {
+    const nextUncompletedSequence = sequences.find(seq => seq.completed === false);
+    setPlayTo(nextUncompletedSequence?.end || Infinity);
+  }, [sequences]);
+
+  useEffect(() => {
+    const videoElt = videoRef.current;
+
+    const handleContinue = () => {
+      if (!videoElt.paused) {
+        videoElt.pause();
+        return;
+      }
+
+      if (videoElt.currentTime < playTo - 0.5) {
+        videoElt.play();
+        return;
+      }
+    };
+
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key === "Enter") {
         event.preventDefault();
-        handlePlay();
+        handleContinue();
       }
 
       if (event.key === " ") {
@@ -211,49 +242,30 @@ const Game: React.FC = () => {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, []);
-
-  useEffect(() => {
-    const videoElt = videoRef.current;
-
-    videoElt.addEventListener("focus", handlePlayerFocus);
-
-    return () => {
-      videoElt.removeEventListener("focus", handlePlayerFocus);
-    };
-  }, []);
+  }, [playTo]);
 
   useEffect(() => {
     const videoElt = videoRef.current;
 
     const handleTimeUpdate = () => {
-      const currentTime = videoElt.currentTime;
-      const previousTime = previousTimeRef.current;
+      const { currentTime } = videoElt;
 
-      if (currentSequence) {
-        if (inRange(currentTime, currentSequence.start, currentSequence.end - 0.01)) {
-          return;
-        }
-
-        if (!videoElt.paused && previousTime < currentSequence.end && currentTime >= currentSequence.end) {
-          videoElt.pause();
-          videoElt.currentTime = currentSequence.end - 0.01;
-          videoElt.playbackRate = 1;
-          previousTimeRef.current = currentTime;
-          return;
-        }
+      if (currentTime >= playTo) {
+        videoElt.pause();
+        videoElt.currentTime = playTo - 0.01;
+        return;
       }
 
-      const index = sequences.findIndex(({ start, end }) => inRange(currentTime, start, end));
-      setCurrentSequenceIndex(index);
+      const index = sequences.findIndex(({ start, end }) => currentTime <= end && currentTime >= start);
+      if (index === -1) {
+        setCurrentSequenceIndex(null);
+      } else if (index >= 0 && currentSequenceIndex !== index) {
+        setCurrentSequenceIndex(index);
+      }
     };
 
-    videoElt.oncanplay = () => {
-      // video.currentTime = 202;
-      // handlePlay()
-    };
     videoElt.ontimeupdate = () => handleTimeUpdate();
-  }, [currentSequence, sequences]);
+  }, [currentSequenceIndex, playTo, sequences]);
 
   const renderVideo = () => {
     const format = find(video.formats, ["itag", 22]) as videoFormat;
@@ -310,16 +322,16 @@ const Game: React.FC = () => {
         <div className={classes.toolbarWrapper}>
           <Toolbar
             disableActions={!currentSequence}
-            disablePrevious={isFirstSequence()}
-            disableNext={isLastSequence()}
-            onPreviousClicked={handlePreviousCaption}
+            disablePrevious={!hasPreviousSequence()}
+            disableNext={!hasNextSequence()}
+            onPreviousClicked={handlePreviousSequence}
             onNextClicked={handleNextSequence}
             onFillCurrentLetterClicked={handleFillCurrentLetter}
             onFillCurrentWordClicked={handleFillCurrentWord}
             onFillCurrentCaptionClicked={handleFillCurrentCaption}
-            onReplay05Clicked={() => handleReplayCurrentCaption(0.5)}
-            onReplay07Clicked={() => handleReplayCurrentCaption(0.7)}
-            onReplay1Clicked={() => handleReplayCurrentCaption(1)}
+            onReplay05Clicked={() => handleReplayCurrentSequence(0.5)}
+            onReplay07Clicked={() => handleReplayCurrentSequence(0.7)}
+            onReplay1Clicked={() => handleReplayCurrentSequence(1)}
             onJackpotClicked={() => handleGiveClue()}
           />
         </div>
