@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core";
 import classnames from "classnames";
 import groupBy from "lodash/groupBy";
 import toLower from "lodash/toLower";
+import chunk from "lodash/chunk";
 import { Sequence } from "redux/slices/game";
 import { AbstractChar, Letter, Symbol } from "utils/game";
 
@@ -99,7 +100,10 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
   };
 
   useEffect(() => {
-    setCharsByLineAndWord(Object.values(groupBy(chars, "line")).map(line => Object.values(groupBy(line, "word"))));
+    const words = Object.values(groupBy(chars, ({ line, word }) => `${line}-${word}`));
+    const lines = Math.ceil(chars.length / 25);
+
+    setCharsByLineAndWord(chunk(words, Math.ceil(words.length / lines)));
   }, [chars]);
 
   useEffect(() => {

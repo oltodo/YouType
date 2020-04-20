@@ -32,8 +32,10 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: "flex",
       height: "100vh",
+      minWidth: 940,
     },
     leftPanel: {
+      width: "60%",
       boxSizing: "border-box",
       padding: `${VERTICAL_MARGINS}px ${HORIZONTAL_MARGINS}px`,
       display: "flex",
@@ -44,9 +46,9 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: "0 auto",
     },
     rightPanel: {
+      width: "40%",
+      flexShrink: 1,
       borderLeft: "solid 1px rgba(255,255,255,0.1)",
-      minWidth: 480,
-      maxWidth: 560,
       padding: theme.spacing(5, 4),
       height: "100%",
       overflowY: "auto",
@@ -69,6 +71,7 @@ const useStyles = makeStyles((theme: Theme) =>
     puzzleWrapper: {
       width: "100%",
       minHeight: PUZZLE_HEIGHT,
+      maxWidth: 560,
     },
   }),
 );
