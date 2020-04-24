@@ -6,6 +6,7 @@ import { Caption } from "utils/caption";
 import { parseCaption, getDefaultAnswers, Letter, Symbol, Answer } from "utils/game";
 
 export interface Sequence extends Caption {
+  timeRange: [number, number];
   chars: (Letter | Symbol)[];
   answers: Answer[];
   currentIndex: number;
@@ -33,18 +34,22 @@ const slice = createSlice({
   initialState,
   reducers: {
     initializeGame(state, { payload }: PayloadAction<Caption[]>) {
-      state.sequences = payload.map((caption: Caption) => {
+      state.sequences = payload.map((caption: Caption, index) => {
         const chars = parseCaption(caption.text);
         const answers = getDefaultAnswers(chars);
 
         return {
           ...caption,
+          timeRange: [caption.start, caption.end],
           chars,
           answers,
           currentIndex: 0,
           completed: false,
         };
       });
+    },
+    setTimeRange(state, { payload: { sequenceIndex, value } }) {
+      state.sequences[sequenceIndex].timeRange = value;
     },
     setAnswer(state, { payload: { sequenceIndex, index, value } }: PayloadAction<AnswerPayload>) {
       const { sequences } = state;
@@ -66,7 +71,7 @@ const slice = createSlice({
   },
 });
 
-export const { initializeGame, setAnswer, setCurrentIndex } = slice.actions;
+export const { initializeGame, setTimeRange, setAnswer, setCurrentIndex } = slice.actions;
 
 export default slice.reducer;
 
@@ -77,7 +82,6 @@ export const fillCurrentLetter = (sequenceIndex: number): AppThunk => async (dis
 
   const { currentIndex, answers } = sequences[sequenceIndex];
   const { solution } = answers[currentIndex];
-  console.log(solution);
 
   await dispatch(setAnswer({ sequenceIndex, index: currentIndex, value: solution }));
   await dispatch(moveNext(sequenceIndex));
@@ -148,4 +152,41 @@ export const giveClue = (sequenceIndex: number): AppThunk => async (dispatch, ge
   indexes.forEach(index => {
     dispatch(setAnswer({ sequenceIndex, index, value: answers[index].solution }));
   });
+};
+
+export const adjustSequence = (sequenceIndex: number, [start, end]: [number, number]): AppThunk => (
+  dispatch,
+  getState,
+) => {
+  const {
+    game: { sequences },
+  } = getState();
+
+  dispatch(setTimeRange({ sequenceIndex, value: [start, end] }));
+
+  if (sequences[sequenceIndex - 1]) {
+    const prev = sequences[sequenceIndex - 1];
+
+    if (prev.timeRange[1] > start) {
+      dispatch(
+        setTimeRange({
+          sequenceIndex: prev.index,
+          value: [prev.timeRange[0], start],
+        }),
+      );
+    }
+  }
+
+  if (sequences[sequenceIndex + 1]) {
+    const next = sequences[sequenceIndex + 1];
+
+    if (next.timeRange[0] < end) {
+      dispatch(
+        setTimeRange({
+          sequenceIndex: next.index,
+          value: [end, next.timeRange[1]],
+        }),
+      );
+    }
+  }
 };

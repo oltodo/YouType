@@ -5,12 +5,16 @@ import classnames from "classnames";
 import Translation from "components/Translation";
 import { VideoState } from "redux/slices/video";
 import { Sequence } from "redux/slices/game";
+import IconButton from "components/IconButton";
+import Increaser from "components/Increaser";
+import TuneIcon from "components/icons/Tune";
 
 interface Props {
   video: VideoState;
   sequence: Sequence | null;
   totalSequences: number;
   progress: number;
+  onAdjust: (values: [number, number]) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -74,11 +78,20 @@ const useStyles = makeStyles((theme: Theme) =>
     },
 
     sequenceWrapper: {
+      position: "relative",
+      marginTop: theme.spacing(-2),
       marginBottom: theme.spacing(4),
+    },
+    sequenceHeader: {
+      display: "flex",
+      alignItems: "center",
     },
     sequenceNumber: {
       color: fade("#fff", 0.8),
       fontWeight: 500,
+    },
+    sequenceActions: {
+      marginLeft: "auto",
     },
     sequenceWords: {
       display: "flex",
@@ -97,12 +110,36 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
       marginBottom: theme.spacing(1),
     },
+
+    adjusterWrapper: {
+      background: fade("#000", 0.05),
+      border: "solid 1px",
+      borderColor: fade("#FFF", 0.1),
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(4),
+      padding: theme.spacing(3),
+      display: "flex",
+    },
+    adjuster: {
+      width: "50%",
+    },
+    adjusterStart: {
+      marginRight: theme.spacing(3),
+    },
+    adjusterTitle: {
+      marginBottom: theme.spacing(1),
+      fontSize: 14,
+      color: fade("#FFF", 0.6),
+    },
   }),
 );
 
-const GameDetails = ({ video, sequence, totalSequences, progress }: Props) => {
+const round = (value: number): number => Math.round(value * 10) / 10;
+
+const GameDetails = ({ video, sequence, totalSequences, progress, onAdjust }: Props) => {
   const classes = useStyles();
   const [descExpanded, setDescExpanded] = useState(false);
+  const [adjusterDisplayed, setAdjusterDisplayed] = useState(false);
   const [currentWord, setCurrentWord] = useState<string | null>(null);
   const progressRounded = Math.round(progress);
   const sequenceIndex = sequence?.index || -1;
@@ -110,6 +147,41 @@ const GameDetails = ({ video, sequence, totalSequences, progress }: Props) => {
   useEffect(() => {
     setCurrentWord(null);
   }, [sequenceIndex]);
+
+  const renderAdjuster = () => {
+    if (!sequence) {
+      return;
+    }
+
+    const format = (value: number) => `${Math.round(value * 10) / 10}s`;
+
+    return (
+      <div className={classes.adjusterWrapper}>
+        <div className={classnames(classes.adjuster, classes.adjusterStart)}>
+          <div className={classes.adjusterTitle}>Start</div>
+          <Increaser
+            value={sequence.timeRange[0]}
+            min={sequence.start - 1}
+            max={sequence.start + 1}
+            step={0.1}
+            format={format}
+            onChange={value => onAdjust([round(value), sequence.timeRange[1]])}
+          />
+        </div>
+        <div className={classes.adjuster}>
+          <div className={classes.adjusterTitle}>End</div>
+          <Increaser
+            value={sequence.timeRange[1]}
+            min={sequence.end - 1}
+            max={sequence.end + 1}
+            step={0.1}
+            format={format}
+            onChange={value => onAdjust([sequence.timeRange[0], round(value)])}
+          />
+        </div>
+      </div>
+    );
+  };
 
   const renderSequence = () => {
     if (!sequence) {
@@ -120,7 +192,17 @@ const GameDetails = ({ video, sequence, totalSequences, progress }: Props) => {
 
     return (
       <div className={classes.sequenceWrapper}>
-        <div className={classes.sequenceNumber}>Sequence #{sequence.index + 1}</div>
+        <div className={classes.sequenceHeader}>
+          <div className={classes.sequenceNumber}>Sequence #{sequence.index + 1}</div>
+
+          <div className={classes.sequenceActions}>
+            <IconButton highlighted={adjusterDisplayed} onClicked={() => setAdjusterDisplayed(!adjusterDisplayed)}>
+              <TuneIcon fontSize="small" />
+            </IconButton>
+          </div>
+        </div>
+
+        {adjusterDisplayed && renderAdjuster()}
 
         <div className={classes.sequenceWords}>
           {words.map((word, index) => (

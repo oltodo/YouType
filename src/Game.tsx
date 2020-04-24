@@ -13,6 +13,7 @@ import {
   fillCurrentLetter,
   fillCurrentWord,
   fillWholeCaption,
+  adjustSequence,
   giveClue,
   Sequence,
 } from "redux/slices/game";
@@ -47,6 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     rightPanel: {
       width: "40%",
+      maxWidth: 560,
       flexShrink: 1,
       borderLeft: "solid 1px rgba(255,255,255,0.1)",
       padding: theme.spacing(5, 4),
@@ -79,7 +81,6 @@ const useStyles = makeStyles((theme: Theme) =>
 const Game: React.FC = () => {
   const classes = useStyles();
   const videoRef = useRef<HTMLVideoElement>(document.createElement("video"));
-  const previousTimeRef = useRef(0);
 
   const dispatch = useDispatch();
   const [video, game] = useSelector((state: RootState) => [state.video, state.game]);
@@ -87,13 +88,13 @@ const Game: React.FC = () => {
   const { sequences } = game;
 
   const [currentSequenceIndex, setCurrentSequenceIndex] = useState<number | null>(null);
-  const currentSequence: Sequence | null = currentSequenceIndex !== null ? sequences[currentSequenceIndex] : null;
-
   const [playTo, setPlayTo] = useState(0);
+
+  const currentSequence: Sequence | null = currentSequenceIndex !== null ? sequences[currentSequenceIndex] : null;
 
   const getPreviousSequence = () => {
     if (currentSequenceIndex === null) {
-      const index = sequences.findIndex(curr => curr.start >= videoRef.current.currentTime);
+      const index = sequences.findIndex(curr => curr.timeRange[0] >= videoRef.current.currentTime);
 
       return index > 0 ? sequences[index - 1] : null;
     }
@@ -103,10 +104,26 @@ const Game: React.FC = () => {
 
   const getNextSequence = () => {
     if (currentSequenceIndex === null) {
-      return sequences.find(curr => curr.start >= videoRef.current.currentTime);
+      return sequences.find(curr => curr.timeRange[0] >= videoRef.current.currentTime);
     }
 
     return sequences[currentSequenceIndex + 1] || null;
+  };
+
+  const findSequenceIndex = (sequences: Sequence[], currentTime: number) => {
+    for (let i = 0; i < sequences.length; i += 1) {
+      const { timeRange } = sequences[i];
+
+      if (currentTime < timeRange[0]) {
+        return i - 1;
+      }
+    }
+
+    return -1;
+  };
+
+  const handlePlayerFocus = () => {
+    videoRef.current.blur();
   };
 
   const hasPreviousSequence = () => {
@@ -126,28 +143,26 @@ const Game: React.FC = () => {
       return false;
     }
 
-    const start = sequences[sequences.length - 1].start;
+    const start = sequences[sequences.length - 1].timeRange[0];
 
     return videoRef.current.currentTime < start;
   };
 
   const handlePreviousSequence = () => {
     videoRef.current.pause();
-
     const previousSequence = getPreviousSequence();
 
     if (previousSequence) {
-      videoRef.current.currentTime = previousSequence.start + 0.01;
+      videoRef.current.currentTime = previousSequence.timeRange[0] + 0.01;
     }
   };
 
   const handleNextSequence = () => {
     videoRef.current.pause();
-
     const nextSequence = getNextSequence();
 
     if (nextSequence) {
-      videoRef.current.currentTime = nextSequence.start + 0.01;
+      videoRef.current.currentTime = nextSequence.timeRange[0] + 0.01;
     }
   };
 
@@ -169,25 +184,20 @@ const Game: React.FC = () => {
     }
   };
 
+  const handleGiveClue = () => {
+    if (currentSequence) {
+      dispatch(giveClue(currentSequence.index));
+    }
+  };
+
   const handleReplayCurrentSequence = (speed: number) => {
     if (!currentSequence) {
       return;
     }
 
-    previousTimeRef.current = currentSequence.start;
-    videoRef.current.currentTime = currentSequence.start + 0.01;
+    videoRef.current.currentTime = currentSequence.timeRange[0] + 0.01;
     videoRef.current.playbackRate = speed;
     videoRef.current.play();
-  };
-
-  const handlePlayerFocus = () => {
-    videoRef.current.blur();
-  };
-
-  const handleGiveClue = () => {
-    if (currentSequence) {
-      dispatch(giveClue(currentSequence.index));
-    }
   };
 
   useEffect(() => {
@@ -211,7 +221,12 @@ const Game: React.FC = () => {
 
   useEffect(() => {
     const nextUncompletedSequence = sequences.find(seq => seq.completed === false);
-    setPlayTo(nextUncompletedSequence?.end || Infinity);
+
+    if (nextUncompletedSequence) {
+      setPlayTo(nextUncompletedSequence.timeRange[1]);
+    } else {
+      setPlayTo(Infinity);
+    }
   }, [sequences]);
 
   useEffect(() => {
@@ -259,7 +274,7 @@ const Game: React.FC = () => {
         return;
       }
 
-      const index = sequences.findIndex(({ start, end }) => currentTime <= end && currentTime >= start);
+      const index = findSequenceIndex(sequences, currentTime);
       if (index === -1) {
         setCurrentSequenceIndex(null);
       } else if (index >= 0 && currentSequenceIndex !== index) {
@@ -297,7 +312,7 @@ const Game: React.FC = () => {
 
     return (
       <WordPuzzle
-        key={currentSequence.start}
+        key={currentSequence.timeRange[0]}
         sequence={sequence}
         onMoved={index => {
           dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index }));
@@ -346,6 +361,11 @@ const Game: React.FC = () => {
           sequence={currentSequence}
           totalSequences={sequences.length}
           progress={game.progress}
+          onAdjust={value => {
+            if (currentSequence) {
+              dispatch(adjustSequence(currentSequence.index, value));
+            }
+          }}
         />
       </div>
     </div>
