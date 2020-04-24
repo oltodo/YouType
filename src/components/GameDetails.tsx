@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles, createStyles, Theme, Link, ButtonBase } from "@material-ui/core";
+import { makeStyles, createStyles, Theme, ButtonBase } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
+import Link from "@material-ui/core/Link";
+import Button from "@material-ui/core/Button";
 import classnames from "classnames";
 import Translation from "components/Translation";
 import { VideoState } from "redux/slices/video";
@@ -110,6 +112,18 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
       marginBottom: theme.spacing(1),
     },
+    sequenceTranslation: {
+      padding: theme.spacing(2, 0),
+      marginTop: theme.spacing(3),
+      color: fade("#FFF", 0.6),
+      fontSize: 16,
+      lineHeight: 1.6,
+      fontStyle: "italic",
+    },
+    sequenceTranslationDisplayed: {
+      background: fade("#FFF", 0.02),
+      padding: theme.spacing(2),
+    },
 
     adjusterWrapper: {
       background: fade("#000", 0.05),
@@ -140,12 +154,14 @@ const GameDetails = ({ video, sequence, totalSequences, progress, onAdjust }: Pr
   const classes = useStyles();
   const [descExpanded, setDescExpanded] = useState(false);
   const [adjusterDisplayed, setAdjusterDisplayed] = useState(false);
+  const [translationDisplayed, setTranslationDisplayed] = useState(false);
   const [currentWord, setCurrentWord] = useState<string | null>(null);
   const progressRounded = Math.round(progress);
   const sequenceIndex = sequence?.index || -1;
 
   useEffect(() => {
     setCurrentWord(null);
+    setTranslationDisplayed(false);
   }, [sequenceIndex]);
 
   const renderAdjuster = () => {
@@ -183,9 +199,29 @@ const GameDetails = ({ video, sequence, totalSequences, progress, onAdjust }: Pr
     );
   };
 
+  const renderTranslation = () => {
+    if (!sequence?.translation) {
+      return null;
+    }
+
+    return (
+      <div
+        className={classnames(classes.sequenceTranslation, {
+          [classes.sequenceTranslationDisplayed]: translationDisplayed,
+        })}
+      >
+        {translationDisplayed ? (
+          sequence.translation
+        ) : (
+          <Button onClick={() => setTranslationDisplayed(true)}>Show translation</Button>
+        )}
+      </div>
+    );
+  };
+
   const renderSequence = () => {
     if (!sequence) {
-      return;
+      return null;
     }
 
     const words = sequence.text.split(/ |\n/).map(word => word.replace(/^[^\w]+/, "").replace(/[^\w]+$/, ""));
@@ -216,6 +252,8 @@ const GameDetails = ({ video, sequence, totalSequences, progress, onAdjust }: Pr
             </ButtonBase>
           ))}
         </div>
+
+        {renderTranslation()}
       </div>
     );
   };

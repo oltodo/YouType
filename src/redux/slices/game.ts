@@ -2,13 +2,14 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import shuffle from "lodash/shuffle";
 import range from "lodash/range";
 import { AppThunk } from "redux/store";
-import { Caption } from "utils/caption";
+import { findCaption, Caption } from "utils/caption";
 import { parseCaption, getDefaultAnswers, Letter, Symbol, Answer } from "utils/game";
 
 export interface Sequence extends Caption {
   timeRange: [number, number];
   chars: (Letter | Symbol)[];
   answers: Answer[];
+  translation: string;
   currentIndex: number;
   completed: boolean;
 }
@@ -16,6 +17,11 @@ export interface Sequence extends Caption {
 export interface GameState {
   sequences: Sequence[];
   progress: number;
+}
+
+interface InitializePayload {
+  originalCaptions: Caption[] | null;
+  translatedCaptions: Caption[] | null;
 }
 
 interface AnswerPayload {
@@ -33,16 +39,28 @@ const slice = createSlice({
   name: "game",
   initialState,
   reducers: {
-    initializeGame(state, { payload }: PayloadAction<Caption[]>) {
-      state.sequences = payload.map((caption: Caption, index) => {
+    initializeGame(state, { payload: { originalCaptions, translatedCaptions } }: PayloadAction<InitializePayload>) {
+      if (!originalCaptions) {
+        return state;
+      }
+
+      console.log(translatedCaptions);
+      state.sequences = originalCaptions.map((caption: Caption, index) => {
         const chars = parseCaption(caption.text);
         const answers = getDefaultAnswers(chars);
+
+        let translation = "";
+        if (translatedCaptions) {
+          const translatedCaption = findCaption(translatedCaptions, (caption.end - caption.start) / 2 + caption.start);
+          translation = translatedCaption?.text || "";
+        }
 
         return {
           ...caption,
           timeRange: [caption.start, caption.end],
           chars,
           answers,
+          translation,
           currentIndex: 0,
           completed: false,
         };

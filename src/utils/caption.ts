@@ -25,3 +25,7 @@ export function parse(xml: string): Caption[] {
     })(parseFloat(curr.getAttribute("start") || ""), parseFloat(curr.getAttribute("dur") || "")),
   }));
 }
+
+export function findCaption(captions: Caption[], time: number): Caption | null {
+  return captions.find(caption => time >= caption.start && time <= caption.end) || null;
+}

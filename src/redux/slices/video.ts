@@ -8,7 +8,8 @@ import { parse, Caption } from "utils/caption";
 
 import videoDataUrl from "data/video.json.raw";
 import videoUrl from "data/video.mp4";
-import captionsDataPath from "data/en.xml.raw";
+import captionsEnPath from "data/en.xml.raw";
+import captionsFrPath from "data/fr.xml.raw";
 
 interface VideoAuthor {
   name: string;
@@ -21,15 +22,22 @@ export interface VideoState {
   author: VideoAuthor;
   duration: number;
   formats: videoFormat[];
-  captions: Caption[];
+  originalCaptions: Caption[] | null;
+  translatedCaptions: Caption[] | null;
   isLoading: boolean;
   error: string | null;
 }
 
 interface VideoSuccessPayload {
   video: videoInfo;
-  captions: Caption[];
+  originalCaptions: Caption[] | null;
+  translatedCaptions: Caption[] | null;
 }
+
+const captionsPaths = {
+  en: captionsEnPath,
+  fr: captionsFrPath,
+};
 
 const initialState: VideoState = {
   title: "",
@@ -40,7 +48,8 @@ const initialState: VideoState = {
   },
   duration: 0,
   formats: [],
-  captions: [],
+  originalCaptions: null,
+  translatedCaptions: null,
   isLoading: false,
   error: null,
 };
@@ -52,16 +61,16 @@ async function getVideo(url: string) {
   return await fetch(videoDataUrl).then(res => res.json());
 }
 
-async function getCaptions(video: videoInfo) {
+async function getCaptions(video: videoInfo, languageCode: "en" | "fr") {
   const captionsList = get(video, "player_response.captions.playerCaptionsTracklistRenderer.captionTracks");
-  const captions = find(captionsList, ["languageCode", "en"]);
+  const captions = find(captionsList, ["languageCode", languageCode]);
 
   if (!captions) {
-    return [];
+    return null;
   }
 
   // return fetch(caption.baseUrl)
-  return fetch(captionsDataPath)
+  return fetch(captionsPaths[languageCode])
     .then(res => res.text())
     .then(data => parse(data));
 }
@@ -82,7 +91,8 @@ const slice = createSlice({
     getVideoSuccess(state, { payload }: PayloadAction<VideoSuccessPayload>) {
       const {
         video: { title, description, author, length_seconds, formats },
-        captions,
+        originalCaptions,
+        translatedCaptions,
       } = payload;
 
       state.title = title;
@@ -94,7 +104,8 @@ const slice = createSlice({
         ...format,
         url: videoUrl,
       }));
-      state.captions = captions;
+      state.originalCaptions = originalCaptions;
+      state.translatedCaptions = translatedCaptions;
       state.isLoading = false;
       state.error = null;
     },
@@ -111,8 +122,9 @@ export const fetchVideo = (url: string): AppThunk => async dispatch => {
   try {
     dispatch(getVideoStart());
     const video = await getVideo(url);
-    const captions = await getCaptions(video);
-    dispatch(getVideoSuccess({ video, captions }));
+    const originalCaptions = await getCaptions(video, "en");
+    const translatedCaptions = await getCaptions(video, "fr");
+    dispatch(getVideoSuccess({ video, originalCaptions, translatedCaptions }));
   } catch (err) {
     dispatch(getVideoFailure(err.toString()));
   }
