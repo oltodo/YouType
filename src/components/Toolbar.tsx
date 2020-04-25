@@ -11,7 +11,7 @@ import ReplayIcon from "components/icons/Replay";
 import Replay07Icon from "components/icons/Replay07";
 import Replay05Icon from "components/icons/Replay05";
 
-import Button from "./ToolbarButton";
+import Button from "./IconButton";
 import ButtonGroup from "./ToolbarButtonGroup";
 import Separator from "./ToolbarSeparator";
 
@@ -80,57 +80,45 @@ const Toolbar = ({
 
   return (
     <div className={classes.root}>
-      <Button
-        tooltip="Go to previous sequence"
-        icon={ChevronLeftIcon}
-        onClicked={onPreviousClicked}
-        disabled={disablePrevious}
-      />
+      <Button tooltip="Go to previous sequence" onClicked={onPreviousClicked} disabled={disablePrevious}>
+        <ChevronLeftIcon />
+      </Button>
 
       <ButtonGroup disabled={disableActions}>
-        <Button
-          tooltip="Fill current word"
-          icon={BulbAbIcon}
-          disabled={disableActions}
-          onClicked={onFillCurrentWordClicked}
-        />
-        <Button
-          tooltip="Fill current letter"
-          icon={BulbAIcon}
-          disabled={disableActions}
-          onClicked={onFillCurrentLetterClicked}
-        />
-        <Button
-          tooltip="Fill whole current caption"
-          icon={BulbAZIcon}
-          disabled={disableActions}
-          onClicked={onFillCurrentCaptionClicked}
-        />
+        <Button tooltip="Fill current word" disabled={disableActions} onClicked={onFillCurrentWordClicked}>
+          <BulbAbIcon />
+        </Button>
+        <Button tooltip="Fill current letter" disabled={disableActions} onClicked={onFillCurrentLetterClicked}>
+          <BulbAIcon />
+        </Button>
+        <Button tooltip="Fill whole current caption" disabled={disableActions} onClicked={onFillCurrentCaptionClicked}>
+          <BulbAZIcon />
+        </Button>
       </ButtonGroup>
 
       <Separator />
 
       <ButtonGroup disabled={disableActions}>
-        <Button
-          tooltip="Replay sequence 0.5x slower"
-          icon={Replay05Icon}
-          disabled={disableActions}
-          onClicked={onReplay05Clicked}
-        />
-        <Button tooltip="Replay sequence" icon={ReplayIcon} disabled={disableActions} onClicked={onReplay1Clicked} />
-        <Button
-          tooltip="Replay sequence 0.7x slower"
-          icon={Replay07Icon}
-          disabled={disableActions}
-          onClicked={onReplay07Clicked}
-        />
+        <Button tooltip="Replay sequence 0.5x slower" disabled={disableActions} onClicked={onReplay05Clicked}>
+          <Replay05Icon />
+        </Button>
+        <Button tooltip="Replay sequence" disabled={disableActions} onClicked={onReplay1Clicked}>
+          <ReplayIcon />
+        </Button>
+        <Button tooltip="Replay sequence 0.7x slower" disabled={disableActions} onClicked={onReplay07Clicked}>
+          <Replay07Icon />
+        </Button>
       </ButtonGroup>
 
       <Separator />
 
-      <Button tooltip="Jackpot" icon={CasinoIcon} disabled={disableActions} onClicked={onJackpotClicked} />
+      <Button tooltip="Jackpot" disabled={disableActions} onClicked={onJackpotClicked}>
+        <CasinoIcon />
+      </Button>
 
-      <Button tooltip="Go to next sequence" icon={ChevronRightIcon} onClicked={onNextClicked} disabled={disableNext} />
+      <Button tooltip="Go to next sequence" onClicked={onNextClicked} disabled={disableNext}>
+        <ChevronRightIcon />
+      </Button>
     </div>
   );
 };

@@ -1,10 +1,12 @@
 import React from "react";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
 import IconButton from "@material-ui/core/IconButton";
+import Tooltip from "@material-ui/core/Tooltip";
 import classnames from "classnames";
 
 interface Props {
   children: React.ReactElement;
+  tooltip?: string;
   disabled?: boolean;
   highlighted?: boolean;
   onClicked?: () => void;
@@ -26,10 +28,16 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-const IconButtonExtended = ({ children, disabled = false, highlighted = false, onClicked = () => {} }: Props) => {
+const IconButtonExtended = ({
+  children,
+  tooltip,
+  disabled = false,
+  highlighted = false,
+  onClicked = () => {},
+}: Props) => {
   const classes = useStyles();
 
-  return (
+  const button = (
     <IconButton
       className={classnames(classes.button, { [classes.highlighted]: highlighted })}
       onClick={onClicked}
@@ -39,6 +47,16 @@ const IconButtonExtended = ({ children, disabled = false, highlighted = false, o
       {children}
     </IconButton>
   );
+
+  if (tooltip) {
+    return (
+      <Tooltip title={tooltip} placement="top">
+        <span>{button}</span>
+      </Tooltip>
+    );
+  }
+
+  return button;
 };
 
 export default IconButtonExtended;

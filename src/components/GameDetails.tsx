@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { makeStyles, createStyles, Theme, ButtonBase } from "@material-ui/core";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import Link from "@material-ui/core/Link";
-import Button from "@material-ui/core/Button";
 import classnames from "classnames";
 import Translation from "components/Translation";
 import { VideoState } from "redux/slices/video";
@@ -10,6 +9,7 @@ import { Sequence } from "redux/slices/game";
 import IconButton from "components/IconButton";
 import Increaser from "components/Increaser";
 import TuneIcon from "components/icons/Tune";
+import TranslateIcon from "components/icons/Translate";
 
 interface Props {
   video: VideoState;
@@ -113,16 +113,13 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(1),
     },
     sequenceTranslation: {
-      padding: theme.spacing(2, 0),
-      marginTop: theme.spacing(3),
+      background: fade("#FFF", 0.02),
+      padding: theme.spacing(2),
+      marginTop: theme.spacing(2),
       color: fade("#FFF", 0.6),
       fontSize: 16,
       lineHeight: 1.6,
       fontStyle: "italic",
-    },
-    sequenceTranslationDisplayed: {
-      background: fade("#FFF", 0.02),
-      padding: theme.spacing(2),
     },
 
     adjusterWrapper: {
@@ -158,6 +155,10 @@ const GameDetails = ({ video, sequence, totalSequences, progress, onAdjust }: Pr
   const [currentWord, setCurrentWord] = useState<string | null>(null);
   const progressRounded = Math.round(progress);
   const sequenceIndex = sequence?.index || -1;
+
+  const translationShown = sequence
+    ? sequence.translation !== "" && (translationDisplayed || sequence.completed)
+    : false;
 
   useEffect(() => {
     setCurrentWord(null);
@@ -200,23 +201,11 @@ const GameDetails = ({ video, sequence, totalSequences, progress, onAdjust }: Pr
   };
 
   const renderTranslation = () => {
-    if (!sequence?.translation) {
+    if (!translationShown) {
       return null;
     }
 
-    return (
-      <div
-        className={classnames(classes.sequenceTranslation, {
-          [classes.sequenceTranslationDisplayed]: translationDisplayed,
-        })}
-      >
-        {translationDisplayed ? (
-          sequence.translation
-        ) : (
-          <Button onClick={() => setTranslationDisplayed(true)}>Show translation</Button>
-        )}
-      </div>
-    );
+    return <div className={classes.sequenceTranslation}>{sequence?.translation}</div>;
   };
 
   const renderSequence = () => {
@@ -232,7 +221,19 @@ const GameDetails = ({ video, sequence, totalSequences, progress, onAdjust }: Pr
           <div className={classes.sequenceNumber}>Sequence #{sequence.index + 1}</div>
 
           <div className={classes.sequenceActions}>
-            <IconButton highlighted={adjusterDisplayed} onClicked={() => setAdjusterDisplayed(!adjusterDisplayed)}>
+            <IconButton
+              tooltip="Show translation"
+              highlighted={translationShown && !sequence.completed}
+              disabled={sequence.completed}
+              onClicked={() => setTranslationDisplayed(!translationDisplayed)}
+            >
+              <TranslateIcon fontSize="small" />
+            </IconButton>
+            <IconButton
+              tooltip="Show adjustment controls"
+              highlighted={adjusterDisplayed}
+              onClicked={() => setAdjusterDisplayed(!adjusterDisplayed)}
+            >
               <TuneIcon fontSize="small" />
             </IconButton>
           </div>
