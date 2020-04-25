@@ -1,15 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { videoInfo, videoFormat } from "ytdl-core";
+import { videoInfo, videoFormat, getVideoID } from "ytdl-core";
 import get from "lodash/get";
 import find from "lodash/find";
 
 import { AppThunk } from "redux/store";
 import { parse, Caption } from "utils/caption";
-
-import videoDataUrl from "data/video.json.raw";
-import videoUrl from "data/video.mp4";
-import captionsEnPath from "data/en.xml.raw";
-import captionsFrPath from "data/fr.xml.raw";
 
 interface VideoAuthor {
   name: string;
@@ -34,11 +29,6 @@ interface VideoSuccessPayload {
   translatedCaptions: Caption[] | null;
 }
 
-const captionsPaths = {
-  en: captionsEnPath,
-  fr: captionsFrPath,
-};
-
 const initialState: VideoState = {
   title: "",
   description: "",
@@ -54,11 +44,10 @@ const initialState: VideoState = {
   error: null,
 };
 
-async function getVideo(url: string) {
-  // const videoId = getVideoID(url);
+function getVideo(url: string) {
+  const videoId = getVideoID(url);
 
-  // fetch(`http://localhost:8000/v/${videoId}`)
-  return await fetch(videoDataUrl).then(res => res.json());
+  return fetch(`/api/video?id=${videoId}`).then(res => res.json());
 }
 
 async function getCaptions(video: videoInfo, languageCode: "en" | "fr") {
@@ -69,8 +58,7 @@ async function getCaptions(video: videoInfo, languageCode: "en" | "fr") {
     return null;
   }
 
-  // return fetch(caption.baseUrl)
-  return fetch(captionsPaths[languageCode])
+  return fetch(captions.baseUrl)
     .then(res => res.text())
     .then(data => parse(data));
 }
@@ -100,10 +88,7 @@ const slice = createSlice({
       state.author.name = author.name;
       state.author.avatar = author.avatar;
       state.duration = parseInt(length_seconds, 10);
-      state.formats = formats.map(format => ({
-        ...format,
-        url: videoUrl,
-      }));
+      state.formats = formats;
       state.originalCaptions = originalCaptions;
       state.translatedCaptions = translatedCaptions;
       state.isLoading = false;

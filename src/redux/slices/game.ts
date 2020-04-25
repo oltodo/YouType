@@ -44,7 +44,6 @@ const slice = createSlice({
         return state;
       }
 
-      console.log(translatedCaptions);
       state.sequences = originalCaptions.map((caption: Caption, index) => {
         const chars = parseCaption(caption.text);
         const answers = getDefaultAnswers(chars);

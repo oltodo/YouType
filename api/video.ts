@@ -12,13 +12,18 @@ export default (req: NowRequest, res: NowResponse) => {
     return;
   }
 
+  if (id === "hLltkC-G5dY") {
+    const data = require("./data/video.json");
+    res.json(data);
+    return;
+  }
+
   getInfo(`${id}`)
     .catch(() => {
       res.status(404);
       res.json({ error: "Video not found" });
     })
     .then((data: any) => {
-      res.status(200);
       res.json(data);
     });
 };
