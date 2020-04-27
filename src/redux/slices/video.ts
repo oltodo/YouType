@@ -19,6 +19,7 @@ export interface VideoState {
   formats: videoFormat[];
   originalCaptions: Caption[] | null;
   translatedCaptions: Caption[] | null;
+  isLoaded: boolean;
   isLoading: boolean;
   error: string | null;
 }
@@ -40,14 +41,13 @@ const initialState: VideoState = {
   formats: [],
   originalCaptions: null,
   translatedCaptions: null,
+  isLoaded: false,
   isLoading: false,
   error: null,
 };
 
-function getVideo(url: string) {
-  const videoId = getVideoID(url);
-
-  return fetch(`/api/video?id=${videoId}`).then(res => res.json());
+function getVideo(id: string) {
+  return fetch(`/api/video?id=${id}`).then(res => res.json());
 }
 
 async function getCaptions(video: videoInfo, languageCode: "en" | "fr") {
@@ -64,10 +64,12 @@ async function getCaptions(video: videoInfo, languageCode: "en" | "fr") {
 }
 
 function startLoading(state: VideoState) {
+  state.isLoaded = false;
   state.isLoading = true;
 }
 
 function loadingFailed(state: VideoState, action: PayloadAction<string>) {
+  state.isLoaded = false;
   state.isLoading = false;
   state.error = action.payload;
 }
@@ -91,6 +93,7 @@ const slice = createSlice({
       state.formats = formats;
       state.originalCaptions = originalCaptions;
       state.translatedCaptions = translatedCaptions;
+      state.isLoaded = true;
       state.isLoading = false;
       state.error = null;
     },
@@ -103,10 +106,10 @@ export const { getVideoStart, getVideoSuccess, getVideoFailure } = slice.actions
 
 export default slice.reducer;
 
-export const fetchVideo = (url: string): AppThunk => async dispatch => {
+export const fetchVideo = (id: string): AppThunk => async dispatch => {
   try {
     dispatch(getVideoStart());
-    const video = await getVideo(url);
+    const video = await getVideo(id);
     const originalCaptions = await getCaptions(video, "en");
     const translatedCaptions = await getCaptions(video, "fr");
     dispatch(getVideoSuccess({ video, originalCaptions, translatedCaptions }));

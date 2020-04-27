@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { videoFormat } from "ytdl-core";
+import { useParams } from "react-router";
+import { videoFormat, validateURL } from "ytdl-core";
 import find from "lodash/find";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
@@ -81,6 +82,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const Game: React.FC = () => {
   const classes = useStyles();
   const videoRef = useRef<HTMLVideoElement>(document.createElement("video"));
+  const { id } = useParams();
 
   const dispatch = useDispatch();
   const [video, game] = useSelector((state: RootState) => [state.video, state.game]);
@@ -201,8 +203,10 @@ const Game: React.FC = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchVideo("https://www.youtube.com/watch?v=hLltkC-G5dY"));
-  }, [dispatch]);
+    if (id) {
+      dispatch(fetchVideo(id));
+    }
+  }, [dispatch, id]);
 
   useEffect(() => {
     dispatch(initializeGame({ originalCaptions, translatedCaptions }));
@@ -327,7 +331,7 @@ const Game: React.FC = () => {
     );
   };
 
-  if (video.error || video.isLoading) {
+  if (!video.isLoaded || video.error || video.isLoading) {
     return null;
   }
 
