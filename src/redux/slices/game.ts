@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import shuffle from "lodash/shuffle";
 import range from "lodash/range";
 import { AppThunk } from "redux/store";
-import { findCaption, Caption } from "utils/caption";
+import { findTextInRange, Caption } from "utils/caption";
 import { parseCaption, getDefaultAnswers, Letter, Symbol, Answer } from "utils/game";
 
 export interface Sequence extends Caption {
@@ -50,8 +50,7 @@ const slice = createSlice({
 
         let translation = "";
         if (translatedCaptions) {
-          const translatedCaption = findCaption(translatedCaptions, (caption.end - caption.start) / 2 + caption.start);
-          translation = translatedCaption?.text || "";
+          translation = findTextInRange(translatedCaptions, caption.start, caption.end);
         }
 
         return {

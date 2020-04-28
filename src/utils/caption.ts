@@ -26,6 +26,27 @@ export function parse(xml: string): Caption[] {
   }));
 }
 
-export function findCaption(captions: Caption[], time: number): Caption | null {
-  return captions.find(caption => time >= caption.start && time <= caption.end) || null;
+export function findTextInRange(captions: Caption[], start: number, end: number): string {
+  let text = "";
+
+  for (let i = 0; i < captions.length; i += 1) {
+    if (captions[i].start > end) {
+      return text;
+    }
+
+    if (captions[i].end <= start) {
+      continue;
+    }
+
+    const duration = captions[i].end - captions[i].start;
+    const min = Math.max(start, captions[i].start);
+    const max = Math.min(end, captions[i].end);
+    const percent = ((max - min) / duration) * 100;
+
+    if (percent >= 50) {
+      text += ` ${captions[i].text}`;
+    }
+  }
+
+  return text;
 }
