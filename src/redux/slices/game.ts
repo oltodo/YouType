@@ -21,7 +21,7 @@ export interface GameState {
 
 interface InitializePayload {
   originalCaptions: Caption[] | null;
-  translatedCaptions: Caption[] | null;
+  localCaptions: Caption[] | null;
 }
 
 interface AnswerPayload {
@@ -39,7 +39,7 @@ const slice = createSlice({
   name: "game",
   initialState,
   reducers: {
-    initializeGame(state, { payload: { originalCaptions, translatedCaptions } }: PayloadAction<InitializePayload>) {
+    initializeGame(state, { payload: { originalCaptions, localCaptions } }: PayloadAction<InitializePayload>) {
       if (!originalCaptions) {
         return state;
       }
@@ -49,8 +49,8 @@ const slice = createSlice({
         const answers = getDefaultAnswers(chars);
 
         let translation = "";
-        if (translatedCaptions) {
-          translation = findTextInRange(translatedCaptions, caption.start, caption.end);
+        if (localCaptions) {
+          translation = findTextInRange(localCaptions, caption.start, caption.end);
         }
 
         return {

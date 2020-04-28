@@ -86,7 +86,7 @@ const Game: React.FC = () => {
 
   const dispatch = useDispatch();
   const [video, game] = useSelector((state: RootState) => [state.video, state.game]);
-  const { originalCaptions, translatedCaptions } = video;
+  const { originalCaptions, localCaptions } = video;
   const { sequences } = game;
 
   const [currentSequenceIndex, setCurrentSequenceIndex] = useState<number | null>(null);
@@ -209,8 +209,8 @@ const Game: React.FC = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    dispatch(initializeGame({ originalCaptions, translatedCaptions }));
-  }, [originalCaptions, dispatch, translatedCaptions]);
+    dispatch(initializeGame({ originalCaptions, localCaptions }));
+  }, [originalCaptions, dispatch, localCaptions]);
 
   useEffect(() => {
     const videoElt = videoRef.current;

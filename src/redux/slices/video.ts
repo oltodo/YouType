@@ -18,7 +18,7 @@ export interface VideoState {
   duration: number;
   formats: videoFormat[];
   originalCaptions: Caption[] | null;
-  translatedCaptions: Caption[] | null;
+  localCaptions: Caption[] | null;
   isLoaded: boolean;
   isLoading: boolean;
   error: string | null;
@@ -27,7 +27,7 @@ export interface VideoState {
 interface VideoSuccessPayload {
   video: videoInfo;
   originalCaptions: Caption[] | null;
-  translatedCaptions: Caption[] | null;
+  localCaptions: Caption[] | null;
 }
 
 const initialState: VideoState = {
@@ -40,7 +40,7 @@ const initialState: VideoState = {
   duration: 0,
   formats: [],
   originalCaptions: null,
-  translatedCaptions: null,
+  localCaptions: null,
   isLoaded: false,
   isLoading: false,
   error: null,
@@ -82,7 +82,7 @@ const slice = createSlice({
       const {
         video: { title, description, author, length_seconds, formats },
         originalCaptions,
-        translatedCaptions,
+        localCaptions,
       } = payload;
 
       state.title = title;
@@ -92,7 +92,7 @@ const slice = createSlice({
       state.duration = parseInt(length_seconds, 10);
       state.formats = formats;
       state.originalCaptions = originalCaptions;
-      state.translatedCaptions = translatedCaptions;
+      state.localCaptions = localCaptions;
       state.isLoaded = true;
       state.isLoading = false;
       state.error = null;
@@ -111,8 +111,8 @@ export const fetchVideo = (id: string): AppThunk => async dispatch => {
     dispatch(getVideoStart());
     const video = await getVideo(id);
     const originalCaptions = await getCaptions(video, "en");
-    const translatedCaptions = await getCaptions(video, "fr");
-    dispatch(getVideoSuccess({ video, originalCaptions, translatedCaptions }));
+    const localCaptions = await getCaptions(video, "fr");
+    dispatch(getVideoSuccess({ video, originalCaptions, localCaptions }));
   } catch (err) {
     dispatch(getVideoFailure(err.toString()));
   }
