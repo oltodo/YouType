@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router";
-import { videoFormat, validateURL } from "ytdl-core";
+import { videoFormat } from "ytdl-core";
 import find from "lodash/find";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 

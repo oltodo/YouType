@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { videoInfo, videoFormat, getVideoID } from "ytdl-core";
+import { videoInfo, videoFormat } from "ytdl-core";
 import get from "lodash/get";
 import find from "lodash/find";
 

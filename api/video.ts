@@ -1,19 +1,35 @@
 import { NowRequest, NowResponse } from "@now/node";
-import { getInfo } from "ytdl-core";
+import { getInfo, videoInfo, captionTrack } from "ytdl-core";
+import update from "lodash/update";
+
+const mocks = ["hLltkC-G5dY", "8KkKuTCFvzI"];
 
 export default (req: NowRequest, res: NowResponse) => {
   const {
     query: { id },
   } = req;
 
-  if (!id) {
+  if (!id || Array.isArray(id)) {
     res.status(403);
     res.json({ error: "No id provided" });
     return;
   }
 
-  if (id === "hLltkC-G5dY") {
-    const data = require("./data/video.json");
+  if (mocks.includes(id)) {
+    const data: videoInfo = require(`./data/${id}.json`);
+
+    data.formats = data.formats.map(format => ({ ...format, url: `/mock/${id}/video.mp4` }));
+
+    update(
+      data,
+      ["player_response", "captions", "playerCaptionsTracklistRenderer", "captionTracks"],
+      (captionTracks: captionTrack[]) =>
+        captionTracks.map((captionTrack: captionTrack) => ({
+          ...captionTrack,
+          baseUrl: `/mock/${id}/${captionTrack.languageCode}.xml`,
+        })),
+    );
+
     res.json(data);
     return;
   }
