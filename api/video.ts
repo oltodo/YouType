@@ -1,10 +1,10 @@
-import { NowRequest, NowResponse } from "@now/node";
+import { NowRequest, NowResponse } from "@vercel/node";
 import { getInfo, videoInfo, captionTrack } from "ytdl-core";
 import update from "lodash/update";
 
 const mocks = ["hLltkC-G5dY", "8KkKuTCFvzI"];
 
-export default (req: NowRequest, res: NowResponse) => {
+const video = (req: NowRequest, res: NowResponse) => {
   const {
     query: { id },
   } = req;
@@ -43,3 +43,5 @@ export default (req: NowRequest, res: NowResponse) => {
       res.json(data);
     });
 };
+
+export default video;

@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { videoInfo, videoFormat } from "ytdl-core";
 import get from "lodash/get";
 import find from "lodash/find";
+import type { videoInfo, videoFormat } from "ytdl-core";
 
 import { AppThunk } from "redux/store";
 import { parse, Caption } from "utils/caption";
@@ -80,16 +80,19 @@ const slice = createSlice({
   reducers: {
     getVideoSuccess(state, { payload }: PayloadAction<VideoSuccessPayload>) {
       const {
-        video: { title, description, author, length_seconds, formats },
+        video: {
+          videoDetails: { title, description, author, lengthSeconds },
+          formats,
+        },
         originalCaptions,
         localCaptions,
       } = payload;
 
       state.title = title;
-      state.description = description;
+      state.description = description || "";
       state.author.name = author.name;
       state.author.avatar = author.avatar;
-      state.duration = parseInt(length_seconds, 10);
+      state.duration = parseInt(lengthSeconds, 10);
       state.formats = formats;
       state.originalCaptions = originalCaptions;
       state.localCaptions = localCaptions;
