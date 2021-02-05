@@ -22,6 +22,10 @@ import WordPuzzle from "components/WordPuzzle";
 import Toolbar from "components/Toolbar";
 import GameDetails from "components/GameDetails";
 
+interface QueryParams {
+  id: string;
+}
+
 const TOOLBAR_HEIGHT = 56;
 const PUZZLE_HEIGHT = 156;
 const VERTICAL_MARGINS = 40;
@@ -82,10 +86,11 @@ const useStyles = makeStyles((theme: Theme) =>
 const Game: React.FC = () => {
   const classes = useStyles();
   const videoRef = useRef<HTMLVideoElement>(document.createElement("video"));
-  const { id } = useParams();
+  const { id } = useParams<QueryParams>();
 
   const dispatch = useDispatch();
-  const [video, game] = useSelector((state: RootState) => [state.video, state.game]);
+  const video = useSelector((state: RootState) => state.video);
+  const game = useSelector((state: RootState) => state.game);
   const { originalCaptions, localCaptions } = video;
   const { sequences } = game;
 
