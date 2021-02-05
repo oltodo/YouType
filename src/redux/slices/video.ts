@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import get from "lodash/get";
 import find from "lodash/find";
-import type { videoInfo, videoFormat } from "ytdl-core";
+import type { videoInfo, videoFormat, thumbnail } from "ytdl-core";
 
 import { AppThunk } from "redux/store";
 import { parse, Caption } from "utils/caption";
 
 interface VideoAuthor {
   name: string;
-  avatar: string;
+  thumbnail: thumbnail | null;
 }
 
 export interface VideoState {
@@ -35,7 +35,7 @@ const initialState: VideoState = {
   description: "",
   author: {
     name: "",
-    avatar: "",
+    thumbnail: null,
   },
   duration: 0,
   formats: [],
@@ -88,10 +88,12 @@ const slice = createSlice({
         localCaptions,
       } = payload;
 
+      const { thumbnails } = author;
+
       state.title = title;
       state.description = description || "";
       state.author.name = author.name;
-      state.author.avatar = author.avatar;
+      state.author.thumbnail = (thumbnails && thumbnails[0]) || null;
       state.duration = parseInt(lengthSeconds, 10);
       state.formats = formats;
       state.originalCaptions = originalCaptions;

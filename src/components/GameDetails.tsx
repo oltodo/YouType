@@ -269,7 +269,7 @@ const GameDetails = ({ video, sequence, totalSequences, progress, onAdjust }: Pr
       <div className={classes.title}>{video.title}</div>
 
       <div className={classes.authorWrapper}>
-        <img className={classes.authorAvatar} src={video.author.avatar} alt="Author's avatar" />
+        <img className={classes.authorAvatar} src={video.author.thumbnail?.url} alt="Author's thumbnail" />
         <span className={classes.authorName}>{video.author.name}</span>
       </div>
 
