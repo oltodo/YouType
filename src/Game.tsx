@@ -239,6 +239,7 @@ const Game: React.FC = () => {
       }
 
       if (videoElt.currentTime < playTo - 0.5) {
+        videoElt.playbackRate = 1;
         videoElt.play();
         return;
       }
@@ -282,7 +283,9 @@ const Game: React.FC = () => {
       }
     };
 
-    videoElt.ontimeupdate = () => handleTimeUpdate();
+    if (videoElt) {
+      videoElt.ontimeupdate = () => handleTimeUpdate();
+    }
   }, [currentSequenceIndex, playTo, sequences]);
 
   const renderVideo = () => {
