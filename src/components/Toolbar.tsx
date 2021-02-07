@@ -3,7 +3,6 @@ import { makeStyles, createStyles, Theme } from "@material-ui/core";
 
 import ChevronRightIcon from "components/icons/ChevronRight";
 import ChevronLeftIcon from "components/icons/ChevronLeft";
-import CasinoIcon from "components/icons/Casino";
 import BulbAIcon from "components/icons/BulbA";
 import BulbAbIcon from "components/icons/BulbAb";
 import BulbAZIcon from "components/icons/BulbAZ";
@@ -27,7 +26,6 @@ interface Props {
   onReplay05Clicked: () => void;
   onReplay07Clicked: () => void;
   onReplay1Clicked: () => void;
-  onJackpotClicked: () => void;
 }
 
 export const BUTTON_WIDTH = 48;
@@ -74,7 +72,6 @@ const Toolbar = ({
   onReplay05Clicked,
   onReplay07Clicked,
   onReplay1Clicked,
-  onJackpotClicked,
 }: Props) => {
   const classes = useStyles();
 
@@ -109,12 +106,6 @@ const Toolbar = ({
           <Replay07Icon />
         </Button>
       </ButtonGroup>
-
-      <Separator />
-
-      <Button tooltip="Jackpot" disabled={disableActions} onClicked={onJackpotClicked}>
-        <CasinoIcon />
-      </Button>
 
       <Button tooltip="Go to next sequence" onClicked={onNextClicked} disabled={disableNext}>
         <ChevronRightIcon />

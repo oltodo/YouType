@@ -1,6 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import shuffle from "lodash/shuffle";
-import range from "lodash/range";
 import { AppThunk } from "redux/store";
 import { findTextInRange, Caption } from "utils/caption";
 import { parseCaption, getDefaultAnswers, Letter, Symbol, Answer } from "utils/game";
@@ -150,24 +148,6 @@ export const moveNext = (sequenceIndex: number): AppThunk => (dispatch, getState
   const { currentIndex } = sequences[sequenceIndex];
 
   return dispatch(setCurrentIndex({ sequenceIndex, index: currentIndex + 1 }));
-};
-
-export const giveClue = (sequenceIndex: number): AppThunk => async (dispatch, getState) => {
-  const {
-    game: { sequences },
-  } = getState();
-
-  const { answers } = sequences[sequenceIndex];
-  const total = Math.ceil((answers.length * 10) / 100);
-
-  let indexes = range(0, answers.length);
-  indexes = indexes.filter(index => answers[index].value.length === 0);
-  indexes = shuffle(indexes);
-  indexes = indexes.slice(0, total);
-
-  indexes.forEach(index => {
-    dispatch(setAnswer({ sequenceIndex, index, value: answers[index].solution }));
-  });
 };
 
 export const adjustSequence = (sequenceIndex: number, [start, end]: [number, number]): AppThunk => (

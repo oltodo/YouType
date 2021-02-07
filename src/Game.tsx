@@ -15,7 +15,6 @@ import {
   fillCurrentWord,
   fillWholeCaption,
   adjustSequence,
-  giveClue,
   Sequence,
 } from "redux/slices/game";
 import WordPuzzle from "components/WordPuzzle";
@@ -191,12 +190,6 @@ const Game: React.FC = () => {
     }
   };
 
-  const handleGiveClue = () => {
-    if (currentSequence) {
-      dispatch(giveClue(currentSequence.index));
-    }
-  };
-
   const handleReplayCurrentSequence = (speed: number) => {
     if (!currentSequence) {
       return;
@@ -357,7 +350,6 @@ const Game: React.FC = () => {
             onReplay05Clicked={() => handleReplayCurrentSequence(0.5)}
             onReplay07Clicked={() => handleReplayCurrentSequence(0.7)}
             onReplay1Clicked={() => handleReplayCurrentSequence(1)}
-            onJackpotClicked={() => handleGiveClue()}
           />
         </div>
         <div className={classes.puzzleWrapper}>{renderPuzzle()}</div>
