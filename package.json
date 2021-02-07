@@ -18,6 +18,7 @@
     "classnames": "2.2.6",
     "cors": "2.8.5",
     "express": "4.17.1",
+    "history": "5.0.0",
     "lodash": "4.17.20",
     "parse-entities": "2.0.0",
     "react": "17.0.1",
