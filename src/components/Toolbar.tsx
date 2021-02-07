@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles, createStyles, Theme } from "@material-ui/core";
-
+import Shortcut from "react-shortcut";
 import ChevronRightIcon from "components/icons/ChevronRight";
 import ChevronLeftIcon from "components/icons/ChevronLeft";
 import BulbAIcon from "components/icons/BulbA";
@@ -77,18 +77,30 @@ const Toolbar = ({
 
   return (
     <div className={classes.root}>
+      <Shortcut keys="option+e" onKeysPressed={() => onReplay05Clicked()} />
+      <Shortcut keys="option+r" onKeysPressed={() => onReplay1Clicked()} />
+      <Shortcut keys="option+t" onKeysPressed={() => onReplay07Clicked()} />
+
+      <Shortcut keys="option+d" onKeysPressed={() => onFillCurrentWordClicked()} />
+      <Shortcut keys="option+f" onKeysPressed={() => onFillCurrentLetterClicked()} />
+      <Shortcut keys="option+g" onKeysPressed={() => onFillCurrentCaptionClicked()} />
+
       <Button tooltip="Go to previous sequence" onClicked={onPreviousClicked} disabled={disablePrevious}>
         <ChevronLeftIcon />
       </Button>
 
       <ButtonGroup disabled={disableActions}>
-        <Button tooltip="Fill current word" disabled={disableActions} onClicked={onFillCurrentWordClicked}>
+        <Button tooltip="Fill current word [⌥+D]" disabled={disableActions} onClicked={onFillCurrentWordClicked}>
           <BulbAbIcon />
         </Button>
-        <Button tooltip="Fill current letter" disabled={disableActions} onClicked={onFillCurrentLetterClicked}>
+        <Button tooltip="Fill current letter [⌥+F]" disabled={disableActions} onClicked={onFillCurrentLetterClicked}>
           <BulbAIcon />
         </Button>
-        <Button tooltip="Fill whole current caption" disabled={disableActions} onClicked={onFillCurrentCaptionClicked}>
+        <Button
+          tooltip="Fill whole current caption [⌥+G]"
+          disabled={disableActions}
+          onClicked={onFillCurrentCaptionClicked}
+        >
           <BulbAZIcon />
         </Button>
       </ButtonGroup>
@@ -96,13 +108,13 @@ const Toolbar = ({
       <Separator />
 
       <ButtonGroup disabled={disableActions}>
-        <Button tooltip="Replay sequence 0.5x slower" disabled={disableActions} onClicked={onReplay05Clicked}>
+        <Button tooltip="Replay sequence 0.5x slower [⌥+E]" disabled={disableActions} onClicked={onReplay05Clicked}>
           <Replay05Icon />
         </Button>
-        <Button tooltip="Replay sequence" disabled={disableActions} onClicked={onReplay1Clicked}>
+        <Button tooltip="Replay sequence [⌥+R]" disabled={disableActions} onClicked={onReplay1Clicked}>
           <ReplayIcon />
         </Button>
-        <Button tooltip="Replay sequence 0.7x slower" disabled={disableActions} onClicked={onReplay07Clicked}>
+        <Button tooltip="Replay sequence 0.7x slower [⌥+T]" disabled={disableActions} onClicked={onReplay07Clicked}>
           <Replay07Icon />
         </Button>
       </ButtonGroup>
