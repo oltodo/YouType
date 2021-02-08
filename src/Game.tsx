@@ -324,9 +324,13 @@ const Game: React.FC = () => {
           dispatch(setAnswer({ sequenceIndex: sequence.index, index, value }));
           dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index: index + 1 }));
         }}
-        onRemoved={index => {
-          dispatch(setAnswer({ sequenceIndex: sequence.index, index, value: "" }));
-          dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index: index - 1 }));
+        onRemoved={async index => {
+          if (index > 0 && currentSequence.answers[index].value === "") {
+            dispatch(setAnswer({ sequenceIndex: sequence.index, index: index - 1, value: "" }));
+            await dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index: index - 1 }));
+          } else {
+            await dispatch(setAnswer({ sequenceIndex: sequence.index, index, value: "" }));
+          }
         }}
       />
     );
