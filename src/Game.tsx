@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import find from "lodash/find";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import type { videoFormat } from "ytdl-core";
+import { useBeforeunload } from "react-beforeunload";
 
 import { RootState } from "redux/rootReducer";
 import { fetchVideo } from "redux/slices/video";
@@ -198,6 +199,8 @@ const Game: React.FC = () => {
     videoRef.current.playbackRate = speed;
     videoRef.current.play();
   };
+
+  useBeforeunload(() => "Are you sure you want to leave?");
 
   useEffect(() => {
     if (id) {
