@@ -51,6 +51,11 @@ const useStyles = makeStyles({
   error: {
     borderBottomColor: "red",
   },
+  disabled: {
+    color: "rgba(255,255,255,0.7)",
+    background: "transparent !important",
+    cursor: "default",
+  },
 });
 
 function findNearerIndex(refs: RefObject<RefObject<any>[]>, currentIndex: number, position: "above" | "below"): number {
@@ -89,7 +94,7 @@ function findNearerIndex(refs: RefObject<RefObject<any>[]>, currentIndex: number
 function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, ref: any) {
   const classes = useStyles();
 
-  const { chars, answers, currentIndex } = sequence;
+  const { chars, answers, currentIndex, completed } = sequence;
 
   const [charsByLineAndWord, setCharsByLineAndWord] = useState<AbstractChar[][][]>([]);
 
@@ -132,7 +137,7 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
     };
 
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.altKey || event.ctrlKey || event.metaKey) {
+      if (completed || event.altKey || event.ctrlKey || event.metaKey) {
         return;
       }
 
@@ -169,7 +174,7 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [answers.length, currentIndex, onMoved, onRemoved, onTyped]);
+  }, [answers.length, completed, currentIndex, onMoved, onRemoved, onTyped]);
 
   const renderLetter = (letter: Letter, charId: string) => {
     const { value, solution } = answers[letter.index];
@@ -181,6 +186,7 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
         key={charId}
         ref={charRefs.current![letter.index]}
         className={classnames(classes.char, classes.letter, {
+          [classes.disabled]: completed,
           [classes.current]: currentIndex === letter.index,
           [classes.success]: isSuccess,
           [classes.error]: isError,
@@ -196,7 +202,12 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
 
   const renderSymbol = (symbol: Symbol, charId: string) => {
     return (
-      <div className={classnames(classes.char, classes.symbol)} key={charId}>
+      <div
+        className={classnames(classes.char, classes.symbol, {
+          [classes.disabled]: completed,
+        })}
+        key={charId}
+      >
         {symbol.value}
       </div>
     );
