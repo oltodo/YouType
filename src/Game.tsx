@@ -334,7 +334,7 @@ const Game: React.FC = () => {
           dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index: index + 1 }));
         }}
         onRemoved={index => {
-          if (index > 0 && currentSequence.answers[index].value === "") {
+          if (index > 0 && currentSequence.chars[index].answer === "") {
             dispatch(setAnswer({ sequenceIndex: sequence.index, index: index - 1, value: "" }));
             dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index: index - 1 }));
           } else {

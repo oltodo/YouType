@@ -5,7 +5,7 @@ import groupBy from "lodash/groupBy";
 import toLower from "lodash/toLower";
 import chunk from "lodash/chunk";
 import { Sequence } from "redux/slices/game";
-import { AbstractChar, Letter, Symbol } from "utils/game";
+import { Char } from "utils/game";
 
 interface WordPuzzleProps {
   sequence: Sequence;
@@ -94,11 +94,13 @@ function findNearerIndex(refs: RefObject<RefObject<any>[]>, currentIndex: number
 function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, ref: any) {
   const classes = useStyles();
 
-  const { chars, answers, currentIndex, completed } = sequence;
+  const { chars, currentIndex, completed } = sequence;
 
-  const [charsByLineAndWord, setCharsByLineAndWord] = useState<AbstractChar[][][]>([]);
+  const [charsByLineAndWord, setCharsByLineAndWord] = useState<Char[][][]>([]);
 
-  const charRefs: RefObject<RefObject<any>[]> = useRef(answers.map(() => createRef()));
+  const charRefs: RefObject<RefObject<any>[]> = useRef(chars.map(() => createRef()));
+
+  const lettersCount = chars.reduce<number>((acc, char) => (char.type === "letter" ? acc + 1 : acc), 0);
 
   const handleClickLetter = (index: number) => {
     onMoved(index);
@@ -117,7 +119,7 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
     };
 
     const moveRight = () => {
-      onMoved(Math.min(answers.length - 1, currentIndex + 1));
+      onMoved(Math.min(lettersCount - 1, currentIndex + 1));
     };
 
     const moveUp = () => {
@@ -174,12 +176,12 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [answers.length, completed, currentIndex, onMoved, onRemoved, onTyped]);
+  }, [lettersCount, completed, currentIndex, onMoved, onRemoved, onTyped]);
 
-  const renderLetter = (letter: Letter, charId: string) => {
-    const { value, solution } = answers[letter.index];
-    const isError = value.length && toLower(value) !== toLower(solution);
-    const isSuccess = value.length && toLower(value) === toLower(solution);
+  const renderLetter = (letter: Char, charId: string) => {
+    const { value, answer } = letter;
+    const isError = answer.length > 0 && toLower(answer) !== toLower(value);
+    const isSuccess = answer.length > 0 && toLower(answer) === toLower(value);
 
     return (
       <div
@@ -195,12 +197,12 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
           handleClickLetter(letter.index);
         }}
       >
-        {value}
+        {answer}
       </div>
     );
   };
 
-  const renderSymbol = (symbol: Symbol, charId: string) => {
+  const renderSymbol = (symbol: Char, charId: string) => {
     return (
       <div
         className={classnames(classes.char, classes.symbol, {
@@ -213,22 +215,20 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
     );
   };
 
-  const renderWord = (word: AbstractChar[], wordId: string) => {
+  const renderWord = (word: Char[], wordId: string) => {
     return (
       <div className={classes.word} key={wordId}>
-        {word.map((char: AbstractChar, index) =>
-          char.type === "letter"
-            ? renderLetter(char as Letter, `${wordId}-${index}`)
-            : renderSymbol(char, `${wordId}-${index}`),
+        {word.map((char: Char, index) =>
+          char.type === "letter" ? renderLetter(char, `${wordId}-${index}`) : renderSymbol(char, `${wordId}-${index}`),
         )}
       </div>
     );
   };
 
-  const renderLine = (line: AbstractChar[][], lineId: number) => {
+  const renderLine = (line: Char[][], lineId: number) => {
     return (
       <div className={classes.line} key={lineId}>
-        {line.map((word: AbstractChar[], index) => renderWord(word, `${lineId}-${index}`))}
+        {line.map((word: Char[], index) => renderWord(word, `${lineId}-${index}`))}
       </div>
     );
   };

@@ -1,12 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk } from "redux/store";
 import { findTextInRange, Caption } from "utils/caption";
-import { parseCaption, getDefaultAnswers, Letter, Symbol, Answer } from "utils/game";
+import { parseCaption, Char } from "utils/game";
 
 export interface Sequence extends Caption {
   timeRange: [number, number];
-  chars: (Letter | Symbol)[];
-  answers: Answer[];
+  chars: Char[];
   translation: string;
   currentIndex: number;
   completed: boolean;
@@ -44,7 +43,6 @@ const slice = createSlice({
 
       state.sequences = originalCaptions.map((caption: Caption, index) => {
         const chars = parseCaption(caption.text);
-        const answers = getDefaultAnswers(chars);
 
         let translation = "";
         if (localCaptions) {
@@ -55,7 +53,6 @@ const slice = createSlice({
           ...caption,
           timeRange: [caption.start, caption.end],
           chars,
-          answers,
           translation,
           currentIndex: 0,
           completed: false,
@@ -68,9 +65,9 @@ const slice = createSlice({
     setAnswer(state, { payload: { sequenceIndex, index, value } }: PayloadAction<AnswerPayload>) {
       const { sequences } = state;
       const sequence = sequences[sequenceIndex];
-      const answer = sequence.answers[index];
-      answer.value = answer.upper ? value.toUpperCase() : value.toLowerCase();
-      sequence.completed = sequence.answers.every(curr => curr.value === curr.solution);
+      const char = sequence.chars[index];
+      char.answer = char.upper ? value.toUpperCase() : value.toLowerCase();
+      sequence.completed = sequence.chars.every(curr => (curr.type === "letter" ? curr.value === curr.answer : true));
 
       const totalCompleted = sequences.reduce((acc, curr) => (curr.completed ? acc + 1 : acc), 0);
       state.progress = (totalCompleted * 100) / sequences.length;
@@ -78,7 +75,7 @@ const slice = createSlice({
     setCurrentIndex(state, { payload: { sequenceIndex, index } }) {
       const sequence = state.sequences[sequenceIndex];
 
-      if (index >= 0 && index < sequence.answers.length) {
+      if (index >= 0 && index < sequence.chars.length) {
         state.sequences[sequenceIndex].currentIndex = index;
       }
     },
@@ -94,10 +91,10 @@ export const fillCurrentLetter = (sequenceIndex: number): AppThunk => async (dis
     game: { sequences },
   } = getState();
 
-  const { currentIndex, answers } = sequences[sequenceIndex];
-  const { solution } = answers[currentIndex];
+  const { currentIndex, chars } = sequences[sequenceIndex];
+  const { value } = chars[currentIndex];
 
-  await dispatch(setAnswer({ sequenceIndex, index: currentIndex, value: solution }));
+  await dispatch(setAnswer({ sequenceIndex, index: currentIndex, value: value }));
   await dispatch(moveNext(sequenceIndex));
 };
 
@@ -106,12 +103,12 @@ export const fillCurrentWord = (sequenceIndex: number): AppThunk => (dispatch, g
     game: { sequences },
   } = getState();
 
-  const { currentIndex, answers } = sequences[sequenceIndex];
-  const { line, word }: Answer = answers.find((curr, index) => index === currentIndex) as Answer;
+  const { currentIndex, chars } = sequences[sequenceIndex];
+  const { line, word } = chars.find((curr, index) => index === currentIndex) as Char;
 
-  answers.forEach((answer: Answer, index) => {
-    if (answer.line === line && answer.word === word) {
-      dispatch(setAnswer({ sequenceIndex, index, value: answer.solution }));
+  chars.forEach((char: Char, index) => {
+    if (char.line === line && char.word === word) {
+      dispatch(setAnswer({ sequenceIndex, index, value: char.value }));
       dispatch(moveNext(sequenceIndex));
     }
   });
@@ -122,10 +119,10 @@ export const fillWholeCaption = (sequenceIndex: number): AppThunk => (dispatch, 
     game: { sequences },
   } = getState();
 
-  const { answers } = sequences[sequenceIndex];
+  const { chars } = sequences[sequenceIndex];
 
-  answers.forEach((answer: Answer, index) => {
-    dispatch(setAnswer({ sequenceIndex, index, value: answer.solution }));
+  chars.forEach((char: Char, index) => {
+    dispatch(setAnswer({ sequenceIndex, index, value: char.value }));
     dispatch(moveNext(sequenceIndex));
   });
 };
