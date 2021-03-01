@@ -107,7 +107,7 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
   };
 
   useEffect(() => {
-    const words = Object.values(groupBy(chars, ({ line, word }) => `${line}-${word}`));
+    const words = Object.values(groupBy(chars, ({ lineIndex, wordIndex }) => `${lineIndex}-${wordIndex}`));
     const lines = Math.ceil(chars.length / 25);
 
     setCharsByLineAndWord(chunk(words, Math.ceil(words.length / lines)));

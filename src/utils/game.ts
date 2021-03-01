@@ -1,9 +1,9 @@
 export interface Char {
   type: "letter" | "symbol";
   value: string;
-  line: number;
-  word: number;
   index: number;
+  lineIndex: number;
+  wordIndex: number;
   upper: boolean;
   answer: string;
 }
@@ -14,18 +14,21 @@ function isSymbol(char: string) {
 
 export function parseCaption(text: string): Char[] {
   let index = 0;
+  let wordIndex = -1;
 
-  return text.split("\n").reduce<Char[]>((acc, line, lineId) => {
-    line.split(/ +/).forEach((word, wordId) => {
+  return text.split("\n").reduce<Char[]>((acc, line, lineIndex) => {
+    line.split(/ +/).forEach(word => {
+      wordIndex += 1;
+
       acc = acc.concat(
         Array.from(word).map(value => ({
           type: isSymbol(value) ? "symbol" : "letter",
           index: index++,
+          lineIndex,
+          wordIndex,
           value: value,
           answer: "",
           upper: value.toUpperCase() === value,
-          line: lineId,
-          word: wordId,
         })),
       );
     });

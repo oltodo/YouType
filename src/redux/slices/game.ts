@@ -104,10 +104,10 @@ export const fillCurrentWord = (sequenceIndex: number): AppThunk => (dispatch, g
   } = getState();
 
   const { currentIndex, chars } = sequences[sequenceIndex];
-  const { line, word } = chars.find((curr, index) => index === currentIndex) as Char;
+  const { lineIndex, wordIndex } = chars.find((curr, index) => index === currentIndex) as Char;
 
   chars.forEach((char: Char, index) => {
-    if (char.line === line && char.word === word) {
+    if (char.lineIndex === lineIndex && char.wordIndex === wordIndex) {
       dispatch(setAnswer({ sequenceIndex, index, value: char.value }));
       dispatch(moveNext(sequenceIndex));
     }
