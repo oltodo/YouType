@@ -91,6 +91,26 @@ function findNearerIndex(refs: RefObject<RefObject<any>[]>, currentIndex: number
   )[0];
 }
 
+function findPreviousIndex(chars: Char[], currentIndex: number): number {
+  for (let i = currentIndex - 1; i >= 0; i -= 1) {
+    if (chars[i].type === "letter") {
+      return i;
+    }
+  }
+
+  return currentIndex;
+}
+
+function findNextIndex(chars: Char[], currentIndex: number): number {
+  for (let i = currentIndex + 1; i < chars.length; i += 1) {
+    if (chars[i].type === "letter") {
+      return i;
+    }
+  }
+
+  return currentIndex;
+}
+
 function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, ref: any) {
   const classes = useStyles();
 
@@ -115,11 +135,11 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
 
   useEffect(() => {
     const moveLeft = () => {
-      onMoved(Math.max(0, currentIndex - 1));
+      onMoved(findPreviousIndex(chars, currentIndex));
     };
 
     const moveRight = () => {
-      onMoved(Math.min(lettersCount - 1, currentIndex + 1));
+      onMoved(findNextIndex(chars, currentIndex));
     };
 
     const moveUp = () => {
@@ -146,11 +166,18 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
       if (/^[a-zA-Z0-9]$/.test(event.key)) {
         event.preventDefault();
         onTyped(currentIndex, event.key);
+        moveRight();
       }
 
       if (event.key === "Backspace") {
         event.preventDefault();
-        onRemoved(currentIndex);
+
+        if (currentIndex > 0 && sequence.chars[currentIndex].answer === "") {
+          onRemoved(currentIndex - 1);
+          moveLeft();
+        } else {
+          onRemoved(currentIndex);
+        }
       }
 
       if (event.key === "ArrowRight") {

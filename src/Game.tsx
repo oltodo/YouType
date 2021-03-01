@@ -331,15 +331,9 @@ const Game: React.FC = () => {
         }}
         onTyped={(index, value) => {
           dispatch(setAnswer({ sequenceIndex: sequence.index, index, value }));
-          dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index: index + 1 }));
         }}
         onRemoved={index => {
-          if (index > 0 && currentSequence.chars[index].answer === "") {
-            dispatch(setAnswer({ sequenceIndex: sequence.index, index: index - 1, value: "" }));
-            dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index: index - 1 }));
-          } else {
-            dispatch(setAnswer({ sequenceIndex: sequence.index, index, value: "" }));
-          }
+          dispatch(setAnswer({ sequenceIndex: sequence.index, index: index, value: "" }));
         }}
       />
     );
