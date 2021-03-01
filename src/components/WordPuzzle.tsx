@@ -11,7 +11,6 @@ interface WordPuzzleProps {
   sequence: Sequence;
   onMoved: (index: number) => void;
   onTyped: (index: number, value: string) => void;
-  onRemoved: (index: number) => void;
 }
 
 const useStyles = makeStyles({
@@ -111,7 +110,7 @@ function findNextIndex(chars: Char[], currentIndex: number): number {
   return currentIndex;
 }
 
-function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, ref: any) {
+function WordPuzzle({ sequence, onTyped, onMoved }: WordPuzzleProps, ref: any) {
   const classes = useStyles();
 
   const { chars, currentIndex, completed } = sequence;
@@ -137,11 +136,9 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
     const moveLeft = () => {
       onMoved(findPreviousIndex(chars, currentIndex));
     };
-
     const moveRight = () => {
       onMoved(findNextIndex(chars, currentIndex));
     };
-
     const moveUp = () => {
       const nextIndex = findNearerIndex(charRefs, currentIndex, "above");
 
@@ -149,12 +146,18 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
         onMoved(nextIndex);
       }
     };
-
     const moveDown = () => {
       const nextIndex = findNearerIndex(charRefs, currentIndex, "below");
 
       if (nextIndex >= 0) {
         onMoved(nextIndex);
+      }
+    };
+    const type = (index: number, char: string) => {
+      const { value, answer } = sequence.chars[index];
+
+      if (value !== answer) {
+        onTyped(index, char);
       }
     };
 
@@ -165,18 +168,19 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
 
       if (/^[a-zA-Z0-9]$/.test(event.key)) {
         event.preventDefault();
-        onTyped(currentIndex, event.key);
+        type(currentIndex, event.key);
         moveRight();
       }
 
       if (event.key === "Backspace") {
         event.preventDefault();
+        const { answer, value } = sequence.chars[currentIndex];
 
-        if (currentIndex > 0 && sequence.chars[currentIndex].answer === "") {
-          onRemoved(currentIndex - 1);
+        if (answer === "" || answer === value) {
+          type(currentIndex - 1, "");
           moveLeft();
         } else {
-          onRemoved(currentIndex);
+          type(currentIndex, "");
         }
       }
 
@@ -203,7 +207,7 @@ function WordPuzzle({ sequence, onTyped, onMoved, onRemoved }: WordPuzzleProps, 
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [lettersCount, completed, currentIndex, onMoved, onRemoved, onTyped]);
+  }, [lettersCount, completed, currentIndex, onMoved, onTyped, chars, sequence.chars]);
 
   const renderLetter = (letter: Char, charId: string) => {
     const { value, answer } = letter;
