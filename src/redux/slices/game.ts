@@ -104,14 +104,23 @@ export const fillCurrentWord = (sequenceIndex: number): AppThunk => (dispatch, g
   } = getState();
 
   const { currentIndex, chars } = sequences[sequenceIndex];
-  const { lineIndex, wordIndex } = chars.find((curr, index) => index === currentIndex) as Char;
+  const { wordIndex } = chars.find((curr, index) => index === currentIndex) as Char;
+
+  let nextIndex = currentIndex;
+  for (let i = currentIndex; i < chars.length; i += 1) {
+    if (wordIndex !== chars[i].wordIndex) {
+      break;
+    }
+    nextIndex = i;
+  }
 
   chars.forEach((char: Char, index) => {
-    if (char.lineIndex === lineIndex && char.wordIndex === wordIndex) {
+    if (char.wordIndex === wordIndex) {
       dispatch(setAnswer({ sequenceIndex, index, value: char.value }));
-      dispatch(moveNext(sequenceIndex));
     }
   });
+
+  dispatch(setCurrentIndex({ sequenceIndex, index: nextIndex }));
 };
 
 export const fillWholeCaption = (sequenceIndex: number): AppThunk => (dispatch, getState) => {
