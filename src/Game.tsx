@@ -13,9 +13,8 @@ import {
   completeSequences,
   setAnswer,
   setCurrentIndex,
-  fillCurrentLetter,
-  fillCurrentWord,
-  fillWholeCaption,
+  fillWord,
+  fillCaption,
   adjustSequence,
   Sequence,
 } from "redux/slices/game";
@@ -94,27 +93,27 @@ const Game: React.FC = () => {
   const game = useSelector((state: RootState) => state.game);
   const { sequences } = game;
 
-  const [currentSequenceIndex, setCurrentSequenceIndex] = useState<number | null>(null);
+  const [sequenceIndex, setSequenceIndex] = useState<number | null>(null);
   const [playTo, setPlayTo] = useState(0);
 
-  const currentSequence: Sequence | null = currentSequenceIndex !== null ? sequences[currentSequenceIndex] : null;
+  const currentSequence: Sequence | null = sequenceIndex !== null ? sequences[sequenceIndex] : null;
 
   const getPreviousSequence = () => {
-    if (currentSequenceIndex === null) {
+    if (sequenceIndex === null) {
       const index = sequences.findIndex(curr => curr.timeRange[0] >= videoRef.current.currentTime);
 
       return index > 0 ? sequences[index - 1] : null;
     }
 
-    return sequences[currentSequenceIndex - 1] || null;
+    return sequences[sequenceIndex - 1] || null;
   };
 
   const getNextSequence = () => {
-    if (currentSequenceIndex === null) {
+    if (sequenceIndex === null) {
       return sequences.find(curr => curr.timeRange[0] >= videoRef.current.currentTime);
     }
 
-    return sequences[currentSequenceIndex + 1] || null;
+    return sequences[sequenceIndex + 1] || null;
   };
 
   const findSequenceIndex = (sequences: Sequence[], currentTime: number) => {
@@ -174,20 +173,22 @@ const Game: React.FC = () => {
   };
 
   const handleFillCurrentLetter = () => {
-    if (currentSequence) {
-      dispatch(fillCurrentLetter(currentSequence.index));
+    if (sequenceIndex !== null && currentSequence) {
+      const { chars, currentIndex } = currentSequence;
+      dispatch(setAnswer({ sequenceIndex, index: currentIndex, value: chars[currentIndex].value }));
     }
   };
 
   const handleFillCurrentWord = () => {
-    if (currentSequence) {
-      dispatch(fillCurrentWord(currentSequence.index));
+    if (sequenceIndex !== null && currentSequence) {
+      const { chars, currentIndex } = currentSequence;
+      dispatch(fillWord(sequenceIndex, chars[currentIndex].wordIndex));
     }
   };
 
   const handleFillCurrentCaption = () => {
-    if (currentSequence) {
-      dispatch(fillWholeCaption(currentSequence.index));
+    if (sequenceIndex !== null) {
+      dispatch(fillCaption(sequenceIndex));
     }
   };
 
@@ -203,7 +204,7 @@ const Game: React.FC = () => {
 
   const handleReachSequence = (index: number) => {
     dispatch(completeSequences(index));
-    setCurrentSequenceIndex(index);
+    setSequenceIndex(index);
     videoRef.current.currentTime = sequences[index].timeRange[0] + 0.01;
   };
 
@@ -293,16 +294,16 @@ const Game: React.FC = () => {
 
       const index = findSequenceIndex(sequences, currentTime);
       if (index === -1) {
-        setCurrentSequenceIndex(null);
-      } else if (index >= 0 && currentSequenceIndex !== index) {
-        setCurrentSequenceIndex(index);
+        setSequenceIndex(null);
+      } else if (index >= 0 && sequenceIndex !== index) {
+        setSequenceIndex(index);
       }
     };
 
     if (videoElt) {
       videoElt.ontimeupdate = () => handleTimeUpdate();
     }
-  }, [currentSequenceIndex, playTo, sequences]);
+  }, [sequenceIndex, playTo, sequences]);
 
   const renderVideo = () => {
     const format = find(video.formats, ["itag", 22]) as videoFormat;
@@ -319,25 +320,19 @@ const Game: React.FC = () => {
   };
 
   const renderPuzzle = () => {
-    if (!currentSequence) {
-      return null;
-    }
-
-    const sequence = find(sequences, ["index", currentSequence.index]);
-
-    if (!sequence) {
+    if (!currentSequence || sequenceIndex === null) {
       return null;
     }
 
     return (
       <WordPuzzle
         key={currentSequence.timeRange[0]}
-        sequence={sequence}
+        sequence={currentSequence}
         onMoved={index => {
-          dispatch(setCurrentIndex({ sequenceIndex: sequence.index, index }));
+          dispatch(setCurrentIndex({ sequenceIndex, index }));
         }}
         onTyped={(index, value) => {
-          dispatch(setAnswer({ sequenceIndex: sequence.index, index, value }));
+          dispatch(setAnswer({ sequenceIndex, index, value }));
         }}
       />
     );
@@ -376,8 +371,8 @@ const Game: React.FC = () => {
           progress={game.progress}
           onRechSequenceSubmited={handleReachSequence}
           onAdjusted={value => {
-            if (currentSequence) {
-              dispatch(adjustSequence(currentSequence.index, value));
+            if (sequenceIndex) {
+              dispatch(adjustSequence(sequenceIndex, value));
             }
           }}
         />

@@ -25,6 +25,11 @@ interface SetSequencesPayload {
   sequences: Sequence[];
 }
 
+interface SetSequencePayload {
+  sequenceIndex: number;
+  data: Sequence;
+}
+
 interface SetAnswerPayload {
   sequenceIndex: number;
   index: number;
@@ -69,6 +74,9 @@ const slice = createSlice({
     setSequences(state, { payload: { sequences } }: PayloadAction<SetSequencesPayload>) {
       state.sequences = sequences;
     },
+    setSequence(state, { payload: { sequenceIndex, data } }: PayloadAction<SetSequencePayload>) {
+      state.sequences[sequenceIndex] = data;
+    },
     setAnswer(state, { payload: { sequenceIndex, index, value } }: PayloadAction<SetAnswerPayload>) {
       const { sequences } = state;
       const sequence = sequences[sequenceIndex];
@@ -89,48 +97,11 @@ const slice = createSlice({
   },
 });
 
-export const { initializeGame, setSequences, setTimeRange, setAnswer, setCurrentIndex } = slice.actions;
+export const { initializeGame, setSequences, setSequence, setTimeRange, setAnswer, setCurrentIndex } = slice.actions;
 
 export default slice.reducer;
 
-export const fillCurrentLetter = (sequenceIndex: number): AppThunk => async (dispatch, getState) => {
-  const {
-    game: { sequences },
-  } = getState();
-
-  const { currentIndex, chars } = sequences[sequenceIndex];
-  const { value } = chars[currentIndex];
-
-  await dispatch(setAnswer({ sequenceIndex, index: currentIndex, value: value }));
-  await dispatch(moveNext(sequenceIndex));
-};
-
-export const fillCurrentWord = (sequenceIndex: number): AppThunk => (dispatch, getState) => {
-  const {
-    game: { sequences },
-  } = getState();
-
-  const { currentIndex, chars } = sequences[sequenceIndex];
-  const { wordIndex } = chars.find((curr, index) => index === currentIndex) as Char;
-
-  let nextIndex = currentIndex;
-  for (let i = currentIndex; i < chars.length; i += 1) {
-    if (wordIndex !== chars[i].wordIndex) {
-      break;
-    }
-    nextIndex = i;
-  }
-
-  chars.forEach((char: Char, index) => {
-    if (char.wordIndex === wordIndex) {
-      dispatch(setAnswer({ sequenceIndex, index, value: char.value }));
-    }
-  });
-
-  dispatch(setCurrentIndex({ sequenceIndex, index: nextIndex }));
-};
-
-export const fillWholeCaption = (sequenceIndex: number): AppThunk => (dispatch, getState) => {
+export const fillWord = (sequenceIndex: number, wordIndex: number): AppThunk => (dispatch, getState) => {
   const {
     game: { sequences },
   } = getState();
@@ -138,29 +109,32 @@ export const fillWholeCaption = (sequenceIndex: number): AppThunk => (dispatch, 
   const { chars } = sequences[sequenceIndex];
 
   chars.forEach((char: Char, index) => {
-    dispatch(setAnswer({ sequenceIndex, index, value: char.value }));
-    dispatch(moveNext(sequenceIndex));
+    if (char.wordIndex === wordIndex) {
+      dispatch(setAnswer({ sequenceIndex, index, value: char.value }));
+    }
   });
 };
 
-export const movePrevious = (sequenceIndex: number): AppThunk => (dispatch, getState) => {
+export const fillCaption = (sequenceIndex: number): AppThunk => (dispatch, getState) => {
   const {
     game: { sequences },
   } = getState();
 
-  const { currentIndex } = sequences[sequenceIndex];
+  const sequence = sequences[sequenceIndex];
 
-  return dispatch(setCurrentIndex({ sequenceIndex, index: currentIndex - 1 }));
-};
-
-export const moveNext = (sequenceIndex: number): AppThunk => (dispatch, getState) => {
-  const {
-    game: { sequences },
-  } = getState();
-
-  const { currentIndex } = sequences[sequenceIndex];
-
-  return dispatch(setCurrentIndex({ sequenceIndex, index: currentIndex + 1 }));
+  dispatch(
+    setSequence({
+      sequenceIndex,
+      data: {
+        ...sequence,
+        completed: true,
+        chars: sequence.chars.map((char: Char, index) => ({
+          ...char,
+          answer: char.value,
+        })),
+      },
+    }),
+  );
 };
 
 export const adjustSequence = (sequenceIndex: number, [start, end]: [number, number]): AppThunk => (
