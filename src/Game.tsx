@@ -201,6 +201,12 @@ const Game: React.FC = () => {
     videoRef.current.play();
   };
 
+  const handleReachSequence = (index: number) => {
+    dispatch(completeSequences(index));
+    setCurrentSequenceIndex(index);
+    videoRef.current.currentTime = sequences[index].timeRange[0] + 0.01;
+  };
+
   useBeforeunload(() => "Are you sure you want to leave?");
 
   useEffect(() => {
@@ -368,10 +374,7 @@ const Game: React.FC = () => {
           sequence={currentSequence}
           totalSequences={sequences.length}
           progress={game.progress}
-          onRechSequenceSubmited={index => {
-            dispatch(completeSequences(index));
-            setCurrentSequenceIndex(index);
-          }}
+          onRechSequenceSubmited={handleReachSequence}
           onAdjusted={value => {
             if (currentSequence) {
               dispatch(adjustSequence(currentSequence.index, value));
