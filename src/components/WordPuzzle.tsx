@@ -133,6 +133,10 @@ function WordPuzzle({ sequence, onTyped, onMoved }: WordPuzzleProps, ref: any) {
   }, [chars]);
 
   useEffect(() => {
+    if (completed) {
+      return () => {};
+    }
+
     const moveLeft = () => {
       onMoved(findPreviousIndex(chars, currentIndex));
     };
