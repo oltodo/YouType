@@ -7,7 +7,7 @@ import isInteger from "lodash/isInteger";
 import classnames from "classnames";
 import Translation from "components/Translation";
 import { VideoState } from "redux/slices/video";
-import { Sequence } from "redux/slices/game";
+import { Sequence } from "utils/game";
 import IconButton from "components/IconButton";
 import Increaser from "components/Increaser";
 import TuneIcon from "components/icons/Tune";

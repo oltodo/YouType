@@ -1,3 +1,13 @@
+import { Caption } from "utils/caption";
+
+export interface Sequence extends Caption {
+  timeRange: [number, number];
+  chars: Char[];
+  translation: string;
+  currentIndex: number;
+  completed: boolean;
+}
+
 export interface Char {
   type: "letter" | "symbol";
   value: string;
@@ -35,4 +45,53 @@ export function parseCaption(text: string): Char[] {
 
     return acc;
   }, []);
+}
+
+export function findPreviousIndex(sequence: Sequence): number {
+  const { chars, currentIndex } = sequence;
+
+  for (let i = currentIndex - 1; i >= 0; i -= 1) {
+    if (chars[i].type === "letter") {
+      return i;
+    }
+  }
+
+  return currentIndex;
+}
+
+export function findNextLetterIndex(sequence: Sequence) {
+  const { chars, currentIndex } = sequence;
+
+  for (let i = currentIndex + 1; i < chars.length; i += 1) {
+    if (chars[i].type === "letter") {
+      return i;
+    }
+  }
+
+  return currentIndex;
+}
+
+export function findPreviousLetterIndex(sequence: Sequence): number {
+  const { chars, currentIndex } = sequence;
+
+  for (let i = currentIndex - 1; i >= 0; i -= 1) {
+    if (chars[i].type === "letter") {
+      return i;
+    }
+  }
+
+  return currentIndex;
+}
+
+export function findNextWordLetterIndex(sequence: Sequence) {
+  const { chars, currentIndex } = sequence;
+  const { wordIndex } = chars[currentIndex];
+
+  for (let i = currentIndex + 1; i < chars.length; i += 1) {
+    if (chars[i].wordIndex !== wordIndex) {
+      return i;
+    }
+  }
+
+  return currentIndex;
 }

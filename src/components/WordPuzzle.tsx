@@ -4,8 +4,7 @@ import classnames from "classnames";
 import groupBy from "lodash/groupBy";
 import toLower from "lodash/toLower";
 import chunk from "lodash/chunk";
-import { Sequence } from "redux/slices/game";
-import { Char } from "utils/game";
+import { Char, findNextLetterIndex, findPreviousIndex, Sequence } from "utils/game";
 
 interface WordPuzzleProps {
   sequence: Sequence;
@@ -90,26 +89,6 @@ function findNearerIndex(refs: RefObject<RefObject<any>[]>, currentIndex: number
   )[0];
 }
 
-function findPreviousIndex(chars: Char[], currentIndex: number): number {
-  for (let i = currentIndex - 1; i >= 0; i -= 1) {
-    if (chars[i].type === "letter") {
-      return i;
-    }
-  }
-
-  return currentIndex;
-}
-
-function findNextIndex(chars: Char[], currentIndex: number): number {
-  for (let i = currentIndex + 1; i < chars.length; i += 1) {
-    if (chars[i].type === "letter") {
-      return i;
-    }
-  }
-
-  return currentIndex;
-}
-
 function WordPuzzle({ sequence, onTyped, onMoved }: WordPuzzleProps, ref: any) {
   const classes = useStyles();
 
@@ -138,10 +117,10 @@ function WordPuzzle({ sequence, onTyped, onMoved }: WordPuzzleProps, ref: any) {
     }
 
     const moveLeft = () => {
-      onMoved(findPreviousIndex(chars, currentIndex));
+      onMoved(findPreviousIndex(sequence));
     };
     const moveRight = () => {
-      onMoved(findNextIndex(chars, currentIndex));
+      onMoved(findNextLetterIndex(sequence));
     };
     const moveUp = () => {
       const nextIndex = findNearerIndex(charRefs, currentIndex, "above");

@@ -1,15 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk } from "redux/store";
 import { findTextInRange, Caption } from "utils/caption";
-import { parseCaption, Char } from "utils/game";
-
-export interface Sequence extends Caption {
-  timeRange: [number, number];
-  chars: Char[];
-  translation: string;
-  currentIndex: number;
-  completed: boolean;
-}
+import { parseCaption, Char, Sequence } from "utils/game";
 
 export interface GameState {
   sequences: Sequence[];
@@ -28,6 +20,17 @@ interface SetSequencesPayload {
 interface SetSequencePayload {
   sequenceIndex: number;
   data: Sequence;
+}
+
+interface SetAnswerPayload {
+  sequenceIndex: number;
+  index: number;
+  value: string;
+}
+
+interface SetCurrentIndexPayload {
+  sequenceIndex: number;
+  index: number;
 }
 
 interface SetAnswerPayload {
@@ -87,7 +90,7 @@ const slice = createSlice({
       const totalCompleted = sequences.reduce((acc, curr) => (curr.completed ? acc + 1 : acc), 0);
       state.progress = (totalCompleted * 100) / sequences.length;
     },
-    setCurrentIndex(state, { payload: { sequenceIndex, index } }) {
+    setCurrentIndex(state, { payload: { sequenceIndex, index } }: PayloadAction<SetCurrentIndexPayload>) {
       const sequence = state.sequences[sequenceIndex];
 
       if (index >= 0 && index < sequence.chars.length) {

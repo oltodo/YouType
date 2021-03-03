@@ -16,8 +16,8 @@ import {
   fillWord,
   fillCaption,
   adjustSequence,
-  Sequence,
 } from "redux/slices/game";
+import { findNextLetterIndex, findNextWordLetterIndex, Sequence } from "utils/game";
 import WordPuzzle from "components/WordPuzzle";
 import Toolbar from "components/Toolbar";
 import GameDetails from "components/GameDetails";
@@ -178,6 +178,7 @@ const Game: React.FC = () => {
     if (sequenceIndex !== null && currentSequence) {
       const { chars, currentIndex } = currentSequence;
       dispatch(setAnswer({ sequenceIndex, index: currentIndex, value: chars[currentIndex].value }));
+      dispatch(setCurrentIndex({ sequenceIndex, index: findNextLetterIndex(currentSequence) }));
     }
   };
 
@@ -185,6 +186,7 @@ const Game: React.FC = () => {
     if (sequenceIndex !== null && currentSequence) {
       const { chars, currentIndex } = currentSequence;
       dispatch(fillWord(sequenceIndex, chars[currentIndex].wordIndex));
+      dispatch(setCurrentIndex({ sequenceIndex, index: findNextWordLetterIndex(currentSequence) }));
     }
   };
 
