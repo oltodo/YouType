@@ -181,7 +181,7 @@ function WordPuzzle({ sequence, onTyped, onMoved }: WordPuzzleProps, ref: any) {
         const { answer, value } = sequence.chars[currentIndex];
 
         if (answer === "" || answer === value) {
-          type(currentIndex - 1, "");
+          type(Math.max(0, currentIndex - 1), "");
           moveLeft();
         } else {
           type(currentIndex, "");
