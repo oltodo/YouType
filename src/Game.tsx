@@ -117,15 +117,17 @@ const Game: React.FC = () => {
   };
 
   const findSequenceIndex = (sequences: Sequence[], currentTime: number) => {
-    for (let i = 0; i < sequences.length; i += 1) {
-      const { timeRange } = sequences[i];
+    let index = 0;
+
+    for (; index < sequences.length; index += 1) {
+      const { timeRange } = sequences[index];
 
       if (currentTime < timeRange[0]) {
-        return i - 1;
+        break;
       }
     }
 
-    return -1;
+    return index - 1;
   };
 
   const handlePlayerFocus = () => {
