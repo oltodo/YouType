@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles, createStyles, Theme, ButtonBase } from "@material-ui/core";
+import { makeStyles, createStyles, Theme, ButtonBase, Menu, Box } from "@material-ui/core";
+import { MoreVert } from "@material-ui/icons";
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import Link from "@material-ui/core/Link";
+import isInteger from "lodash/isInteger";
 import classnames from "classnames";
 import Translation from "components/Translation";
 import { VideoState } from "redux/slices/video";
@@ -10,13 +12,15 @@ import IconButton from "components/IconButton";
 import Increaser from "components/Increaser";
 import TuneIcon from "components/icons/Tune";
 import TranslateIcon from "components/icons/Translate";
+import MenuItemWithTextField from "./MenuItemWithTextField";
 
 interface Props {
   video: VideoState;
   sequence: Sequence | null;
   totalSequences: number;
   progress: number;
-  onAdjust: (values: [number, number]) => void;
+  onRechSequenceSubmited: (index: number) => void;
+  onAdjusted: (values: [number, number]) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -147,12 +151,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const round = (value: number): number => Math.round(value * 10) / 10;
 
-const GameDetails = ({ video, sequence, totalSequences, progress, onAdjust }: Props) => {
+const GameDetails = ({ video, sequence, totalSequences, progress, onRechSequenceSubmited, onAdjusted }: Props) => {
   const classes = useStyles();
   const [descExpanded, setDescExpanded] = useState(false);
   const [adjusterDisplayed, setAdjusterDisplayed] = useState(false);
   const [translationDisplayed, setTranslationDisplayed] = useState(false);
   const [currentWord, setCurrentWord] = useState<string | null>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const progressRounded = Math.round(progress);
   const sequenceIndex = sequence?.index || -1;
 
@@ -182,7 +187,7 @@ const GameDetails = ({ video, sequence, totalSequences, progress, onAdjust }: Pr
             max={sequence.start + 1}
             step={0.1}
             format={format}
-            onChange={value => onAdjust([round(value), sequence.timeRange[1]])}
+            onChange={value => onAdjusted([round(value), sequence.timeRange[1]])}
           />
         </div>
         <div className={classes.adjuster}>
@@ -193,7 +198,7 @@ const GameDetails = ({ video, sequence, totalSequences, progress, onAdjust }: Pr
             max={sequence.end + 1}
             step={0.1}
             format={format}
-            onChange={value => onAdjust([sequence.timeRange[0], round(value)])}
+            onChange={value => onAdjusted([sequence.timeRange[0], round(value)])}
           />
         </div>
       </div>
@@ -264,6 +269,46 @@ const GameDetails = ({ video, sequence, totalSequences, progress, onAdjust }: Pr
       <div className={classes.progressWrapper}>
         <span className={classnames(classes.pill, { [classes.completed]: progressRounded === 100 })} />
         {progressRounded}% completed / {totalSequences} sequences
+        <Box marginLeft="auto">
+          <IconButton
+            aria-label="more"
+            aria-controls="long-menu"
+            aria-haspopup="true"
+            size="small"
+            onClicked={event => {
+              setAnchorEl(event.currentTarget);
+            }}
+          >
+            <MoreVert fontSize="small" />
+          </IconButton>
+        </Box>
+        <Menu
+          id="long-menu"
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          autoFocus={false}
+          onClose={() => {
+            setAnchorEl(null);
+          }}
+        >
+          <MenuItemWithTextField
+            label="Reach sequence"
+            validate={value => {
+              if (!isInteger(parseInt(value))) {
+                return "Must be an integer";
+              }
+              if (parseInt(value) > totalSequences) {
+                return `Must be lower than ${totalSequences}`;
+              }
+
+              return true;
+            }}
+            onSubmited={value => {
+              onRechSequenceSubmited(parseInt(value) - 1);
+              setAnchorEl(null);
+            }}
+          />
+        </Menu>
       </div>
 
       <div className={classes.title}>{video.title}</div>

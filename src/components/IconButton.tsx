@@ -9,7 +9,8 @@ interface Props {
   tooltip?: string;
   disabled?: boolean;
   highlighted?: boolean;
-  onClicked?: () => void;
+  size?: "medium" | "small";
+  onClicked?: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -33,12 +34,14 @@ const IconButtonExtended = ({
   tooltip,
   disabled = false,
   highlighted = false,
+  size = "medium",
   onClicked = () => {},
 }: Props) => {
   const classes = useStyles();
 
   const button = (
     <IconButton
+      size={size}
       className={classnames(classes.button, { [classes.highlighted]: highlighted })}
       onClick={onClicked}
       disabled={disabled}

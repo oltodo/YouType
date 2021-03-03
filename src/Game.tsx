@@ -10,6 +10,7 @@ import { RootState } from "redux/rootReducer";
 import { fetchVideo } from "redux/slices/video";
 import {
   initializeGame,
+  completeSequences,
   setAnswer,
   setCurrentIndex,
   fillCurrentLetter,
@@ -367,7 +368,11 @@ const Game: React.FC = () => {
           sequence={currentSequence}
           totalSequences={sequences.length}
           progress={game.progress}
-          onAdjust={value => {
+          onRechSequenceSubmited={index => {
+            dispatch(completeSequences(index));
+            setCurrentSequenceIndex(index);
+          }}
+          onAdjusted={value => {
             if (currentSequence) {
               dispatch(adjustSequence(currentSequence.index, value));
             }

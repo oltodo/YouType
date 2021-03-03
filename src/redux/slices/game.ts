@@ -21,7 +21,11 @@ interface InitializePayload {
   localCaptions: Caption[] | null;
 }
 
-interface AnswerPayload {
+interface SetSequencesPayload {
+  sequences: Sequence[];
+}
+
+interface SetAnswerPayload {
   sequenceIndex: number;
   index: number;
   value: string;
@@ -62,7 +66,10 @@ const slice = createSlice({
     setTimeRange(state, { payload: { sequenceIndex, value } }) {
       state.sequences[sequenceIndex].timeRange = value;
     },
-    setAnswer(state, { payload: { sequenceIndex, index, value } }: PayloadAction<AnswerPayload>) {
+    setSequences(state, { payload: { sequences } }: PayloadAction<SetSequencesPayload>) {
+      state.sequences = sequences;
+    },
+    setAnswer(state, { payload: { sequenceIndex, index, value } }: PayloadAction<SetAnswerPayload>) {
       const { sequences } = state;
       const sequence = sequences[sequenceIndex];
       const char = sequence.chars[index];
@@ -82,7 +89,7 @@ const slice = createSlice({
   },
 });
 
-export const { initializeGame, setTimeRange, setAnswer, setCurrentIndex } = slice.actions;
+export const { initializeGame, setSequences, setTimeRange, setAnswer, setCurrentIndex } = slice.actions;
 
 export default slice.reducer;
 
@@ -191,4 +198,24 @@ export const adjustSequence = (sequenceIndex: number, [start, end]: [number, num
       );
     }
   }
+};
+
+export const completeSequences = (until: number): AppThunk => (dispatch, getState) => {
+  const {
+    game: { sequences },
+  } = getState();
+
+  return dispatch(
+    setSequences({
+      sequences: sequences.map((sequence, index) =>
+        index <= until
+          ? {
+              ...sequence,
+              chars: sequence.chars.map(char => ({ ...char, answer: char.value })),
+              completed: true,
+            }
+          : sequence,
+      ),
+    }),
+  );
 };
