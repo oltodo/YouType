@@ -218,7 +218,24 @@ const GameDetails = ({ video, sequence, totalSequences, progress, onRechSequence
       return null;
     }
 
-    const words = sequence.text.split(/ |\n/).map(word => word.replace(/^[^\w]+/, "").replace(/[^\w]+$/, ""));
+    const words = sequence.chars.reduce<{ value: string; complete: boolean }[]>((acc, curr) => {
+      if (curr.type === "symbol") {
+        return acc;
+      }
+
+      if (acc[curr.wordIndex]) {
+        acc[curr.wordIndex].value += curr.value;
+      } else {
+        acc[curr.wordIndex] = {
+          value: curr.value,
+          complete: true,
+        };
+      }
+
+      acc[curr.wordIndex].complete = acc[curr.wordIndex].complete && curr.answer === curr.value;
+
+      return acc;
+    }, []);
 
     return (
       <div className={classes.sequenceWrapper}>
@@ -251,10 +268,10 @@ const GameDetails = ({ video, sequence, totalSequences, progress, onRechSequence
             <ButtonBase
               key={index}
               className={classes.sequenceWord}
-              disabled={!sequence.completed}
-              onClick={() => setCurrentWord(word)}
+              disabled={!word.complete}
+              onClick={() => setCurrentWord(word.value)}
             >
-              <span style={{ visibility: sequence.completed ? "visible" : "hidden" }}>{word}</span>
+              <span style={{ visibility: word.complete ? "visible" : "hidden" }}>{word.value}</span>
             </ButtonBase>
           ))}
         </div>
