@@ -11,6 +11,7 @@ interface Term {
   POS: string;
   sense: string;
   usage: string;
+  note: string;
   translations: Translation[];
 }
 
@@ -42,7 +43,7 @@ export async function fetchTranslation(word: string, from: string, to: string): 
   let terms: Term[] = [];
 
   const addTerm = (data: any) => {
-    const term = { ...data.OriginalTerm, translations: [] };
+    const term = { ...data.OriginalTerm, note: data.Note, translations: [] };
 
     const match = /replace: (.+)/.exec(data.OriginalTerm.term);
     if (match) {
